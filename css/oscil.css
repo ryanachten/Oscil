@@ -1,5 +1,18 @@
 body{
 	margin: inherit;
+	font-family: 'Roboto', sans-serif;
+}
+h1{
+	font-family: 'Nova Mono', monospace;
+	text-transform: lowercase;
+	margin: 0px;
+}
+h2{
+	font-family: 'Roboto', sans-serif;
+	text-transform: uppercase;
+	font-weight: bold;
+	letter-spacing: 2px;
+	font-size: 1em;
 }
 #container{
 	position: relative;
@@ -8,9 +21,12 @@ body{
 	position: absolute;
 }
 #ui-panel{
-	padding: 10px;
+	margin: 30px;
+	text-align: center;
 }
-.ui-viscontrol{
-	border: 1px solid black;
-	background-color: rgba(255,255,255,0.5);
+#ui-panel select, option{
+	border: none;
+	background-color: rgba(255,255,255,0);
+	font-size: 15px;
+	/*border-radius: 0px;*/
 }

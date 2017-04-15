@@ -119,8 +119,7 @@ function waveForm(){
 		canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
 		//line width and color
-		canvasCtx.lineWidth = 1;
-			canvasCtx.strokeStyle = 'rgb(0,0,0)';
+		canvasCtx.lineWidth = 2;
 			canvasCtx.beginPath();
 
 		//width of ea. segment = canv.w / arraylength
@@ -129,6 +128,7 @@ function waveForm(){
 
 		for(var i=0; i <bufferLength; i++){
 			var v = dataArray[i] / 128.0; //128.0 height based on the data point value form the array
+			canvasCtx.strokeStyle = 'hsl('+ dataArray[i]*5 +',80%,70%)';
 			var y = v * canvHeight/2;
 
 			if(i===0){
