@@ -1,0 +1,16 @@
+body{
+	margin: inherit;
+}
+#container{
+	position: relative;
+}
+#ui-panel, #visualiser{
+	position: absolute;
+}
+#ui-panel{
+	padding: 10px;
+}
+.ui-viscontrol{
+	border: 1px solid black;
+	background-color: rgba(255,255,255,0.5);
+}
