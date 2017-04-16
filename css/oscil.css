@@ -13,6 +13,8 @@ h2{
 	font-weight: bold;
 	letter-spacing: 2px;
 	font-size: 1em;
+	margin-bottom: 5px;
+    margin-top: 20px;
 }
 #container{
 	position: relative;
@@ -24,9 +26,15 @@ h2{
 	margin: 30px;
 	text-align: center;
 }
-#ui-panel select, option{
+
+select, option{
 	border: none;
-	background-color: rgba(255,255,255,0);
+	background-color: rgba(255,255,255,0.5);
 	font-size: 15px;
 	/*border-radius: 0px;*/
 }
+.input-field{
+	border: none;
+	background-color: rgba(255,255,255,0.5);
+	margin-left: 10px;
+ }
