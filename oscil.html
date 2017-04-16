@@ -9,16 +9,24 @@
 </head>
 <body>
 	<div id="container">
-		<canvas id='visualiser'></canvas>
+		<canvas id='visualiser'>Sorry, your browser doesn't seem to support Oscil's canvas. Please try opening in another browser</canvas>
 		<div id="ui-panel">
 			<h1>Oscil</h1>
 			<hr>
-			<h2>Visualisation:</h2>
-			<select id="visual-select" name="visual">
-			 	<option value="WaveForm">SineWave</option>
-				 <option value="BarGraph" selected>BarGraph</option>
-				 <option value="Off">Off</option>
-			</select>
+			<div class="ui-section">
+				<h2>Visualisation:</h2>
+				<select id="visual-select" name="visual">
+				 	<option value="Shapes" selected>Shapes</option>
+				 	<option value="WaveForm">SineWave</option>
+					 <option value="BarGraph">BarGraph</option>
+					 <option value="Off">Off</option>
+				</select>
+			</div>
+			<div class="ui-section">
+				<h2>Settings:</h2>
+				<label for="smoothing-input">Smoothing</label>
+				<input id="smoothing-input" class="input-field" type="number" placeholder="Set smoothing 1-10" min="0" max="10" value="0" >
+			</div>
 		</div>
 	</div>
 
