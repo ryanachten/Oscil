@@ -15,7 +15,7 @@
 			<hr>
 			<div class="ui-section">
 				<h2>Visualisation:</h2>
-				<select id="visual-select" name="visual">
+				<select id="visual-select" class="input-field" name="visual">
 				 	<option value="Shapes" selected>Shapes</option>
 				 	<option value="WaveForm">SineWave</option>
 					 <option value="BarGraph">BarGraph</option>
@@ -24,8 +24,15 @@
 			</div>
 			<div class="ui-section">
 				<h2>Settings:</h2>
+				<label for="fft-input">Fft Size</label>
+				<select id="fft-input" class="input-field" name="fft">
+				 	<option value="256" selected>256</option>
+				 	<option value="1024">1024</option>
+					 <option value="2048">2048</option>
+					 <option value="4096">4096</option>
+				</select>
 				<label for="smoothing-input">Smoothing</label>
-				<input id="smoothing-input" class="input-field" type="number" placeholder="Set smoothing 1-10" min="0" max="10" value="0" >
+				<input id="smoothing-input" class="input-field" type="number" min="0" max="10" value="0" >
 			</div>
 		</div>
 	</div>
