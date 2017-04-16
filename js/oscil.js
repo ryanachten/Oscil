@@ -11,40 +11,48 @@ var analyser = audioCtx.createAnalyser();
 //Smoothing / calibration settings - these should all be sliders
 // analyser.minDecibels = -90;
 // analyser.maxDecibels = -10;
-// analyser.smoothingTimeConstant = 0.85;
+var smoothingRange = document.getElementById("smoothing-input");
+smoothingRange.onchange = function(){
+	console.log("val: " + smoothingRange.value);
+	analyser.smoothingTimeConstant = smoothingRange.value/10;
+}
+
 
 
 //Canvas Setup
 var bgColor = 'rgb(237, 230, 224)';
 var canvas = document.querySelector("#visualiser");
+	
+if(canvas.getContext){
 	canvas.width = $(window).width();
 	canvas.height = $(window).height();
-var canvWidth = canvas.width;
-var canvHeight = canvas.height;
-var canvasCtx = canvas.getContext('2d'); //wonder what this does?
-canvasCtx.fillStyle = bgColor;
-canvasCtx.fillRect(0,0, canvWidth, canvHeight);
+	var canvWidth = canvas.width;
+	var canvHeight = canvas.height;
+	var canvasCtx = canvas.getContext('2d'); //wonder what this does?
+	canvasCtx.fillStyle = bgColor;
+	canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
-var visualisationMode = document.querySelector('#visual-select');
-var drawVisual;
+	var visualisationMode = document.querySelector('#visual-select');
+	var drawVisual;
 
+	//Microphone access
+	navigator.getUserMedia (
+		{
+			audio: true
+		},
+		function(stream) {
+			source = audioCtx.createMediaStreamSource(stream);
+			source.connect(analyser);
 
-//Microphone access
-navigator.getUserMedia (
-	{
-		audio: true
-	},
-	function(stream) {
-		source = audioCtx.createMediaStreamSource(stream);
-		source.connect(analyser);
+			visualise(visualisationMode.value);
+		  },
 
-		visualise(visualisationMode.value);
-	  },
+		function(err) {
+			console.log('The following gUM error occured: ' + err);
+		}
+	);
+}
 
-	function(err) {
-		console.log('The following gUM error occured: ' + err);
-	}
-);
 
 function visualise(visMode){
 	console.log(visMode);
@@ -53,6 +61,9 @@ function visualise(visMode){
 	}
 	else if(visMode === 'WaveForm'){
 		waveForm();
+	}
+	else if(visMode === 'Shapes'){
+		shapes();
 	}
 	else if(visMode === 'Off'){
 		visOff();
@@ -86,7 +97,7 @@ function barGraph(){
       var x = 0;
 
       for(var i = 0; i < bufferLength; i++) {
-        barHeight = dataArray[i]*2;
+        barHeight = dataArray[i]*3; //heres where you increase the barheight size bitch
 
         var y = canvHeight/2-barHeight/2;
         // console.log('barHeight: ' + barHeight);
@@ -106,7 +117,7 @@ function barGraph(){
 //Waveform/oscilloscope
 function waveForm(){
 
-	analyser.fftSize = 2048; //defines Fast Fourier Transform rate 
+	analyser.fftSize = 1024; //defines Fast Fourier Transform rate 
 	var bufferLength = analyser.frequencyBinCount; // length of freqBinCount is half the fft
 	var dataArray = new Uint8Array(bufferLength); //defines how many datapoints collecting for that fft size
 
@@ -145,7 +156,76 @@ function waveForm(){
 		draw();
 }
 
+
+function shapes(){
+	canvasCtx.clearRect(0,0,canvWidth, canvHeight);
+	canvasCtx.fillStyle = bgColor;
+	canvasCtx.fillRect(0,0,canvWidth, canvHeight);
+
+	function drawRect(){
+		canvasCtx.fillStyle =  "black";
+
+		var originX = canvWidth/2;
+		var originY = canvHeight/2;
+		var fillRectWidth = canvWidth/2; var fillRectHeight = canvHeight/2;
+		var clearRectWidth = canvWidth/4; var clearRectHeight = canvHeight/4;
+		var strokeRectWidth = canvWidth/8; var strokeRectHeight = canvHeight/8;
+
+		canvasCtx.fillRect(originX-fillRectWidth/2, originY-fillRectHeight/2, fillRectWidth, fillRectHeight);
+		canvasCtx.clearRect(originX-clearRectWidth/2, originY-clearRectHeight/2, clearRectWidth, clearRectHeight);
+		canvasCtx.strokeRect(originX-strokeRectWidth/2, originY-strokeRectHeight/2, strokeRectWidth, strokeRectHeight);
+	}
+	
+	function drawTriangle(){
+		canvasCtx.fillStyle =  "black";
+
+		var originX = canvWidth/2;
+		var originY = canvHeight/2;
+		var radiusX = canvWidth/4;
+		var radiusY = canvHeight/4;
+		canvasCtx.beginPath();
+		canvasCtx.moveTo(originX, originY-radiusY); //top corner
+		canvasCtx.lineTo(originX+radiusX, originY+radiusY); //right
+		canvasCtx.lineTo(originX-radiusX, originY+radiusY); //left corner
+		canvasCtx.fill();
+	}
+
+	function drawSmiley(){
+		
+		canvasCtx.fillStyle =  "black";	
+
+		var originX = canvWidth/2;
+		var originY = canvHeight/2;
+		var outerRadius = canvWidth/4;
+		var mouthLength = outerRadius/2;
+		var mouthHeight = outerRadius/4;
+		var eyeRadius = outerRadius/4;
+
+		canvasCtx.arc(originX, originY, outerRadius, 0, Math.PI * 2, true); //outer circle
+		canvasCtx.moveTo(originX-mouthLength, originY+mouthHeight); //left point of mouth
+		canvasCtx.arc(originX, originY+mouthHeight, mouthLength, 0, Math.PI, false); //right point of mouth
+		canvasCtx.moveTo((originX+eyeRadius/2)-eyeRadius, originY-eyeRadius);
+		canvasCtx.arc((originX-eyeRadius/2)-eyeRadius, originY-eyeRadius, eyeRadius, 0, Math.PI * 2, true); //left eye
+		canvasCtx.moveTo((originX+eyeRadius/2)+eyeRadius*2, originY-eyeRadius);
+		canvasCtx.arc((originX-eyeRadius/2)+eyeRadius*2, originY-eyeRadius, eyeRadius, 0, Math.PI * 2, true); //left eye
+
+		canvasCtx.stroke();
+	}
+
+	// drawRect();
+	// drawTriangle();
+	drawSmiley();
+
+}
+
 visualisationMode.onchange = function(){
 	window.cancelAnimationFrame(drawVisual);
 	visualise(visualisationMode.value);
 }
+
+$(window).resize(function(){
+	canvas.width = $(window).width();
+	canvas.height = $(window).height();
+	canvWidth = canvas.width;
+	canvHeight = canvas.height;
+});
