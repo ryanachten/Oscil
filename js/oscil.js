@@ -11,13 +11,18 @@ var analyser = audioCtx.createAnalyser();
 //Smoothing / calibration settings - these should all be sliders
 // analyser.minDecibels = -90;
 // analyser.maxDecibels = -10;
+var fftInput = document.getElementById("fft-input");
 var smoothingRange = document.getElementById("smoothing-input");
+var visualisationMode = document.querySelector('#visual-select');
+fftInput.onchange = function(){
+	visualise(visualisationMode.value);
+}
+
+
 smoothingRange.onchange = function(){
 	console.log("val: " + smoothingRange.value);
 	analyser.smoothingTimeConstant = smoothingRange.value/10;
 }
-
-
 
 //Canvas Setup
 var bgColor = 'rgb(237, 230, 224)';
@@ -32,7 +37,7 @@ if(canvas.getContext){
 	canvasCtx.fillStyle = bgColor;
 	canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
-	var visualisationMode = document.querySelector('#visual-select');
+	
 	var drawVisual;
 
 	//Microphone access
@@ -53,14 +58,35 @@ if(canvas.getContext){
 	);
 }
 
+function getBuffer(fftSize){
+	analyser.fftSize = fftSize; //1024
+    var bufferLength = analyser.frequencyBinCount;
+    console.log(bufferLength);
+    var dataArray = new Uint8Array(bufferLength);
+    var dataBuffer = {
+    	"buffer" : bufferLength,
+    	"data" : dataArray
+    }
+    return dataBuffer;
+}
+
 
 function visualise(visMode){
+
+	// canvasCtx.clearRect(0,0,canvWidth, canvHeight);
+	// canvasCtx.fillStyle = bgColor;
+	// canvasCtx.fillRect(0,0,canvWidth, canvHeight);
+
+	var dataBuffer = getBuffer(fftInput.value);
+	var bufferLength = dataBuffer.buffer;
+	var dataArray = dataBuffer.data;
+
 	console.log(visMode);
 	if(visMode === 'BarGraph'){
-		barGraph(); 
+		barGraph(dataArray, bufferLength); 
 	}
 	else if(visMode === 'WaveForm'){
-		waveForm();
+		waveForm(dataArray, bufferLength);
 	}
 	else if(visMode === 'Shapes'){
 		shapes();
@@ -76,11 +102,9 @@ function visOff(){
 	canvasCtx.fillRect(0,0,canvWidth, canvHeight);
 }
 
-function barGraph(){
-	analyser.fftSize = 256;
-    var bufferLength = analyser.frequencyBinCount;
-    console.log(bufferLength);
-    var dataArray = new Uint8Array(bufferLength);
+function barGraph(dataArray, bufferLength){
+
+	// analyser.fftSize = 256;
 
     canvasCtx.clearRect(0, 0, canvWidth, canvHeight);
 
@@ -115,11 +139,9 @@ function barGraph(){
 
 
 //Waveform/oscilloscope
-function waveForm(){
+function waveForm(dataArray, bufferLength){
 
-	analyser.fftSize = 1024; //defines Fast Fourier Transform rate 
-	var bufferLength = analyser.frequencyBinCount; // length of freqBinCount is half the fft
-	var dataArray = new Uint8Array(bufferLength); //defines how many datapoints collecting for that fft size
+	//analyser.fftSize = 1024; //defines Fast Fourier Transform rate 
 
 	canvasCtx.clearRect(0,0,canvWidth,canvHeight); //reset canvas for new vis
 
@@ -165,8 +187,7 @@ function shapes(){
 	function drawRect(){
 		canvasCtx.fillStyle =  "black";
 
-		var originX = canvWidth/2;
-		var originY = canvHeight/2;
+		var originX = canvWidth/2; var originY = canvHeight/2;
 		var fillRectWidth = canvWidth/2; var fillRectHeight = canvHeight/2;
 		var clearRectWidth = canvWidth/4; var clearRectHeight = canvHeight/4;
 		var strokeRectWidth = canvWidth/8; var strokeRectHeight = canvHeight/8;
@@ -179,10 +200,8 @@ function shapes(){
 	function drawTriangle(){
 		canvasCtx.fillStyle =  "black";
 
-		var originX = canvWidth/2;
-		var originY = canvHeight/2;
-		var radiusX = canvWidth/4;
-		var radiusY = canvHeight/4;
+		var originX = canvWidth/2; var originY = canvHeight/2;
+		var radiusX = canvWidth/4; var radiusY = canvHeight/4;
 		canvasCtx.beginPath();
 		canvasCtx.moveTo(originX, originY-radiusY); //top corner
 		canvasCtx.lineTo(originX+radiusX, originY+radiusY); //right
@@ -194,11 +213,9 @@ function shapes(){
 		
 		canvasCtx.fillStyle =  "black";	
 
-		var originX = canvWidth/2;
-		var originY = canvHeight/2;
-		var outerRadius = canvWidth/4;
-		var mouthLength = outerRadius/2;
-		var mouthHeight = outerRadius/4;
+		var originX = canvWidth/2; var originY = canvHeight/2;
+		var outerRadius = (canvWidth > canvHeight ? canvHeight : canvWidth)/3;
+		var mouthLength = outerRadius/2; var mouthHeight = outerRadius/4;
 		var eyeRadius = outerRadius/4;
 
 		canvasCtx.arc(originX, originY, outerRadius, 0, Math.PI * 2, true); //outer circle
@@ -222,6 +239,10 @@ visualisationMode.onchange = function(){
 	window.cancelAnimationFrame(drawVisual);
 	visualise(visualisationMode.value);
 }
+
+
+
+
 
 $(window).resize(function(){
 	canvas.width = $(window).width();
