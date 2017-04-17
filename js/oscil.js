@@ -126,7 +126,7 @@ function barGraph(dataArray, bufferLength){
         var y = canvHeight/2-barHeight/2;
         // console.log('barHeight: ' + barHeight);
 
-        canvasCtx.fillStyle = 'hsl('+ barHeight +',80%,70%)';
+        canvasCtx.fillStyle = 'hsl('+ barHeight +',50%,70%)';
         // console.log('rgb(' + (barHeight+100) + ',' + (barHeight+100) + ',50)');
         canvasCtx.fillRect(x,y,barWidth,barHeight);
 
@@ -211,13 +211,12 @@ function shapes(){
 
 	function drawSmiley(){
 		
-		canvasCtx.fillStyle =  "black";	
-
 		var originX = canvWidth/2; var originY = canvHeight/2;
 		var outerRadius = (canvWidth > canvHeight ? canvHeight : canvWidth)/3;
 		var mouthLength = outerRadius/2; var mouthHeight = outerRadius/4;
 		var eyeRadius = outerRadius/4;
 
+		canvasCtx.fillStyle =  "black";	
 		canvasCtx.arc(originX, originY, outerRadius, 0, Math.PI * 2, true); //outer circle
 		canvasCtx.moveTo(originX-mouthLength, originY+mouthHeight); //left point of mouth
 		canvasCtx.arc(originX, originY+mouthHeight, mouthLength, 0, Math.PI, false); //right point of mouth
@@ -229,9 +228,97 @@ function shapes(){
 		canvasCtx.stroke();
 	}
 
+	function drawPath(){
+
+		canvasCtx.fillStyle =  "black";	
+
+		var p = new Path2D('M101.4 28.8c10.6 0 21.2 0 31.8 0 0.9 0 2.1-0.1 2.3 1 0.1 0.7-0.4 1.7-0.9 2.2 -8.1 8.1-16.2 16.1-24.4 24.1 -0.8 0.8-1.1 1.5-1.1 2.7 0.1 6 0 12 0.1 18 0 1.4-0.4 2.2-1.7 2.9 -3.7 2-7.2 4.1-10.9 6.2 -2 1.1-3 0.5-3-1.8 0-8.4 0-16.9 0-25.3 0-1.1-0.3-1.9-1.1-2.6 -8-7.8-16-15.7-23.9-23.6 -0.3-0.3-0.6-0.5-0.8-0.8 -0.3-0.6-0.8-1.5-0.6-1.9 0.3-0.5 1.2-1 1.8-1 5.6-0.1 11.2 0 16.9 0C91.1 28.8 96.3 28.8 101.4 28.8zM200 0H0v111.4h200V0z');
+		canvasCtx.fill(p);
+	}
+
+	function drawGrid(){
+
+		var cellCount = 20;
+
+		for (var i = 0; i < cellCount; i++) {
+			for (var j = 0; j < cellCount; j++) {
+				canvasCtx.fillStyle = 'hsl(' + Math.floor(360/cellCount *(i+j)) + ',50%, 70%)';
+
+				//square grid
+				// canvasCtx.fillRect(j * canvWidth/cellCount, i * canvHeight/cellCount, canvWidth/cellCount, canvHeight/cellCount);
+
+				//circle grid
+				canvasCtx.beginPath();
+				canvasCtx.arc((j * canvWidth/cellCount)+canvWidth/cellCount/2, (i * canvHeight/cellCount)+canvHeight/cellCount/2,
+								((canvWidth+canvHeight)/2)/cellCount/4, 0, Math.PI * 2, true);
+				canvasCtx.fill();
+			};
+		};		
+	}
+
+	function drawCircles(){
+
+		var circleCount = 10;
+		var circleRadScale = (canvWidth > canvHeight ? canvHeight : canvWidth)/circleCount/2;
+		console.log(circleRadScale);
+
+		for (var i = 0; i < circleCount; i++) {
+			canvasCtx.beginPath();
+			canvasCtx.fillStyle = 'hsl(' + Math.floor((360/circleCount)*(i*2)) + ',50%, 70%)';
+			canvasCtx.globalAlpha = 1/i*2;
+			console.log(canvasCtx.globalAlpha);
+			canvasCtx.arc(canvWidth/2, canvHeight/2, circleRadScale*i,0, Math.PI*2, true);
+			canvasCtx.fill();
+		};
+	}
+
+	function drawLines(){
+
+		var lineCount = 20;
+
+		for (var i = 1; i < lineCount; i++) {
+			
+			canvasCtx.strokeStyle = 'hsl(' + Math.floor((360/lineCount)*(i*2)) + ',80%, 70%)';
+
+			canvasCtx.lineWidth = (canvWidth/lineCount)/i;
+			console.log(canvasCtx.lineWidth);
+			canvasCtx.beginPath();
+
+			canvasCtx.moveTo(canvWidth/lineCount * i, 0);
+			canvasCtx.lineTo(canvWidth/lineCount * i, canvHeight);
+
+			canvasCtx.stroke();
+		};
+	}
+
+	function drawGradient(){
+
+		var colourStops = 5;
+
+		//Linear
+		// var grad = canvasCtx.createLinearGradient(0,0, canvWidth, canvHeight);
+
+		//Radial
+		var grad = canvasCtx.createRadialGradient(canvWidth/2,canvHeight/2, 0, //inner circle
+													canvWidth/2, canvHeight/2,(canvWidth > canvHeight ? canvHeight : canvWidth)/2);	//outer circle
+		
+		for (var i = 1; i < colourStops; i++) {
+			grad.addColorStop(1/i,'hsl(' + Math.floor((360/colourStops)*i) + ',80%, 70%)');
+		};
+
+		canvasCtx.fillStyle = grad;
+		canvasCtx.fillRect(0,0,canvWidth, canvHeight);
+		
+	}
+
 	// drawRect();
 	// drawTriangle();
-	drawSmiley();
+	// drawSmiley();
+	// drawPath();	
+	// drawGrid();
+	// drawCircles();
+	// drawLines();
+	drawGradient();
 
 }
 
