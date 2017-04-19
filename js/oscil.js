@@ -60,14 +60,14 @@ if(canvas.getContext){
 
 function getBuffer(fftSize){
 	analyser.fftSize = fftSize; //1024
-    var bufferLength = analyser.frequencyBinCount;
-    console.log(bufferLength);
-    var dataArray = new Uint8Array(bufferLength);
-    var dataBuffer = {
-    	"buffer" : bufferLength,
-    	"data" : dataArray
-    }
-    return dataBuffer;
+	var bufferLength = analyser.frequencyBinCount;
+	console.log(bufferLength);
+	var dataArray = new Uint8Array(bufferLength);
+	var dataBuffer = {
+		"buffer" : bufferLength,
+		"data" : dataArray
+	}
+	return dataBuffer;
 }
 
 
@@ -106,35 +106,35 @@ function barGraph(dataArray, bufferLength){
 
 	// analyser.fftSize = 256;
 
-    canvasCtx.clearRect(0, 0, canvWidth, canvHeight);
+	canvasCtx.clearRect(0, 0, canvWidth, canvHeight);
 
-    function draw() {
-      drawVisual = requestAnimationFrame(draw);
+	function draw() {
+	  drawVisual = requestAnimationFrame(draw);
 
-      analyser.getByteFrequencyData(dataArray);
+	  analyser.getByteFrequencyData(dataArray);
 
-      canvasCtx.fillStyle = bgColor;
-      canvasCtx.fillRect(0, 0, canvWidth, canvHeight);
+	  canvasCtx.fillStyle = bgColor;
+	  canvasCtx.fillRect(0, 0, canvWidth, canvHeight);
 
-      var barWidth = (canvWidth / bufferLength) * 2;
-      var barHeight;
-      var x = 0;
+	  var barWidth = (canvWidth / bufferLength) * 2;
+	  var barHeight;
+	  var x = 0;
 
-      for(var i = 0; i < bufferLength; i++) {
-        barHeight = dataArray[i]*3; //heres where you increase the barheight size bitch
+	  for(var i = 0; i < bufferLength; i++) {
+		barHeight = dataArray[i]*3; //heres where you increase the barheight size bitch
 
-        var y = canvHeight/2-barHeight/2;
-        // console.log('barHeight: ' + barHeight);
+		var y = canvHeight/2-barHeight/2;
+		// console.log('barHeight: ' + barHeight);
 
-        canvasCtx.fillStyle = 'hsl('+ barHeight +',50%,70%)';
-        // console.log('rgb(' + (barHeight+100) + ',' + (barHeight+100) + ',50)');
-        canvasCtx.fillRect(x,y,barWidth,barHeight);
+		canvasCtx.fillStyle = 'hsl('+ barHeight +',50%,70%)';
+		// console.log('rgb(' + (barHeight+100) + ',' + (barHeight+100) + ',50)');
+		canvasCtx.fillRect(x,y,barWidth,barHeight);
 
-        x += barWidth;
-      }
-    };
+		x += barWidth;
+	  }
+	};
 
-    draw();
+	draw();
 }
 
 
@@ -202,6 +202,11 @@ function shapes(){
 
 		var originX = canvWidth/2; var originY = canvHeight/2;
 		var radiusX = canvWidth/4; var radiusY = canvHeight/4;
+
+		canvasCtx.shadowOffsetX = canvWidth/8; canvasCtx.shadowOffsetY = canvHeight/8;
+		canvasCtx.shadowBlur = 100;
+		canvasCtx.shadowColor = 'rgba(0,0,0,0.5)';
+
 		canvasCtx.beginPath();
 		canvasCtx.moveTo(originX, originY-radiusY); //top corner
 		canvasCtx.lineTo(originX+radiusX, originY+radiusY); //right
@@ -299,7 +304,7 @@ function shapes(){
 		// var grad = canvasCtx.createLinearGradient(0,0, canvWidth, canvHeight);
 
 		//Radial
-		var grad = canvasCtx.createRadialGradient(canvWidth/2,canvHeight/2, 0, //inner circle
+		var grad = canvasCtx.createRadialGradient(canvWidth/2,canvHeight/2, 0, //inner circle - can move this later
 													canvWidth/2, canvHeight/2,(canvWidth > canvHeight ? canvHeight : canvWidth)/2);	//outer circle
 		
 		for (var i = 1; i < colourStops; i++) {
@@ -308,7 +313,139 @@ function shapes(){
 
 		canvasCtx.fillStyle = grad;
 		canvasCtx.fillRect(0,0,canvWidth, canvHeight);
+	}
+
+	function drawPattern(){
+
+		var img = new Image();
+		img.src = 'http://pngimg.com/uploads/palm_tree/palm_tree_PNG2494.png';
 		
+		var tileCount = 5;
+
+		img.onload = function(){
+
+			for (var i = 0; i < tileCount; i++) {
+				for (var j = 0; j < tileCount; j++){
+									
+					var imgWidth = canvWidth/tileCount;
+					var imgHeight = canvHeight/tileCount;
+
+					canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
+				}
+			}
+
+		}
+
+		//using pattern - no native scaling control with this approach
+		/*img.onload = function(){
+
+			var ptrn = canvasCtx.createPattern(img, 'repeat');
+			canvasCtx.fillStyle = ptrn;
+			canvasCtx.fillRect(0, 0, canvWidth, canvHeight);
+		}*/
+	}
+
+	function drawTransGrid(){
+
+		var cellCount = 5;
+
+		for (var i = 0; i < cellCount; i++) {
+			for (var j = 0; j < cellCount; j++) {
+				
+				canvasCtx.save();
+				canvasCtx.fillStyle = 'hsl(' + (360/cellCount)*((i+j)/2) + ', 70%, 70%)';
+				canvasCtx.translate((canvWidth/cellCount)*i, (canvHeight/cellCount)*j);
+				canvasCtx.fillRect(0,0,canvWidth/cellCount -30, canvHeight/cellCount -30);
+				canvasCtx.restore();
+			};
+		};
+	}
+
+	function drawSpiralMatrixTest(){
+
+		var sin = Math.sin(Math.PI/6);
+		var cos = Math.cos(Math.PI/6);
+		var sectionLength = (canvWidth > canvHeight ? canvHeight : canvWidth)/4;
+		var sectionWidth = sectionLength/5;
+
+		canvasCtx.translate(canvWidth/2, canvHeight/2);
+		var c = 0;
+		var count = 12;
+		for (var i = 0; i <= count; i++) {
+			c = Math.floor(255 /count *i);
+			canvasCtx.fillStyle = 'hsl('+ (360/count)*i + ', 70%, 70%)';
+			canvasCtx.fillRect(100,0, sectionLength, sectionWidth);
+			canvasCtx.transform(cos, sin, -sin, cos, 0, 0);
+		}
+	}
+
+	function animEarthExample(){
+		var sun = new Image();
+		var earth = new Image();
+		var moon = new Image();
+
+		function init(){
+			sun.src = 'https://mdn.mozillademos.org/files/1456/Canvas_sun.png';
+			earth.src = 'https://mdn.mozillademos.org/files/1429/Canvas_earth.png';
+			moon.src = 'https://mdn.mozillademos.org/files/1443/Canvas_moon.png';
+			window.requestAnimationFrame(draw);
+		}
+
+		function draw(){
+			canvasCtx.globalCompositeOperation = 'destination-over';
+			canvasCtx.clearRect(0,0,canvWidth, canvHeight);
+
+			canvasCtx.fillStyle = 'rgba(0, 0, 0, 0.4)'; //'rgba(0, 0, 0, 0.4)'
+			canvasCtx.strokeStyle = 'rgba(0,153,255,0.4)';
+			canvasCtx.save();
+			canvasCtx.translate(150,150);
+
+			//Earth
+			var time = new Date();
+			canvasCtx.rotate(((2 * Math.PI) / 60) * time.getSeconds() + ((2 * Math.PI) / 60000) * time.getMilliseconds());
+			canvasCtx.translate(105, 0);
+			canvasCtx.fillRect(0, -12, 50, 24);
+			canvasCtx.drawImage(earth, -12, -12);
+
+			//Moons
+			canvasCtx.save();
+			canvasCtx.rotate(((2 * Math.PI) / 6) * time.getSeconds() + ((2 * Math.PI) / 6000) * time.getMilliseconds());
+			canvasCtx.translate(0, 28.5);
+			canvasCtx.drawImage(moon, -3.5, -3.5);
+			canvasCtx.restore();
+
+			canvasCtx.restore();
+
+			canvasCtx.beginPath();
+			canvasCtx.arc(150, 150, 105, 0, Math.PI * 2, false);
+			canvasCtx.stroke();
+
+			canvasCtx.drawImage(sun, 0, 0, 300, 300);
+
+			window.requestAnimationFrame(draw);
+		}
+
+		init();
+	}
+
+	function animBallExample(){
+
+		var ball = {
+
+			x : 100,
+			y : 100,
+			radius : 25,
+			colour : 'blue',
+			draw : function(){
+				canvasCtx.beginPath();
+				canvasCtx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
+				canvasCtx.closePath();
+				canvasCtx.fillStyle = this.colour;
+				canvasCtx.fill();
+			}
+		};
+
+		ball.draw();
 	}
 
 	// drawRect();
@@ -318,7 +455,13 @@ function shapes(){
 	// drawGrid();
 	// drawCircles();
 	// drawLines();
-	drawGradient();
+	// drawGradient();
+	// drawPattern();
+	// drawTransGrid();
+	// drawRotateTest();
+	// drawSpiralMatrixTest();
+	// animEarthExample();
+
 
 }
 
