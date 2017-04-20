@@ -257,8 +257,6 @@ function shapes(dataArray, bufferLength){
 		
 	}
 
-	drawSmiley();
-
 	function drawPath(){
 
 		canvasCtx.fillStyle =  "black";	
@@ -324,22 +322,43 @@ function shapes(dataArray, bufferLength){
 
 	function drawGradient(){
 
+		drawVisual = requestAnimationFrame(drawGradient);
+		analyser.getByteFrequencyData(dataArray); //whats diff between getByteTimeDomainData and this?
 		var colourStops = 5;
 
-		//Linear
-		// var grad = canvasCtx.createLinearGradient(0,0, canvWidth, canvHeight);
+		var gradMode;
+		var grad;
 
-		//Radial
-		var grad = canvasCtx.createRadialGradient(canvWidth/2,canvHeight/2, 0, //inner circle - can move this later
-													canvWidth/2, canvHeight/2,(canvWidth > canvHeight ? canvHeight : canvWidth)/2);	//outer circle
+		if (gradMode == 'linear'){
+			//Linear
+			grad = canvasCtx.createLinearGradient(0,0, canvWidth, canvHeight);
+		}
+		else{
+			//Radial
+			grad = canvasCtx.createRadialGradient(
+				canvWidth/2,canvHeight/2, 0, //inner circle - can move this later
+				canvWidth/2, canvHeight/2,(canvWidth > canvHeight ? canvHeight : canvWidth)/2);	//outer circle
+		}
 		
-		for (var i = 1; i < colourStops; i++) {
-			grad.addColorStop(1/i,'hsl(' + Math.floor((360/colourStops)*i) + ',80%, 70%)');
-		};
+		// TODO: currently only works with FFT size of 256
+		// TODO: dataArray.length actually returns 'undefined' shouldn't be in the for loop
+		for(var i=0; i <bufferLength; i+=50){
+			if(dataArray[i] !== 0){
+				var h = Math.floor(360/dataArray.length * dataArray[i]);
+				grad.addColorStop(0.0,'hsl(' + Math.abs(h-180) + ',80%, 70%)');
+				grad.addColorStop(1.0,'hsl(' + h + ',80%, 70%)');
+			}
+
+			// console.log('dataArray: ' + dataArray[i]);
+			// console.log('dataArray Length: ' + dataArray[i].length);
+			// console.log('bufferLength: ' + bufferLength);
+		}
 
 		canvasCtx.fillStyle = grad;
 		canvasCtx.fillRect(0,0,canvWidth, canvHeight);
 	}
+
+	drawGradient();
 
 	function drawPattern(){
 
@@ -476,12 +495,12 @@ function shapes(dataArray, bufferLength){
 
 	// drawRect();
 	// drawTriangle();
-	
+	// drawSmiley();
 	// drawPath();	
 	// drawGrid();
 	// drawCircles();
 	// drawLines();
-	// drawGradient();
+	
 	// drawPattern();
 	// drawTransGrid();
 	// drawRotateTest();
