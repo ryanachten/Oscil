@@ -20,7 +20,7 @@ fftInput.onchange = function(){
 var smoothingRange = document.getElementById("smoothing-input");
 smoothingRange.onchange = function(){
 	console.log("val: " + smoothingRange.value);
-	analyser.smoothingTimeConstant = smoothingRange.value/10;
+	analyser.smoothingTimeConstant = smoothingRange.value/100;
 }
 
 var visualisationMode = document.querySelector('#visual-select');
@@ -342,7 +342,7 @@ function shapes(dataArray, bufferLength){
 		
 		// TODO: currently only works with FFT size of 256
 		// TODO: dataArray.length actually returns 'undefined' shouldn't be in the for loop
-		for(var i=0; i <bufferLength; i+=50){
+		for(var i=0; i <bufferLength; i++){
 			if(dataArray[i] !== 0){
 				var h = Math.floor(360/dataArray.length * dataArray[i]);
 				grad.addColorStop(0.0,'hsl(' + Math.abs(h-180) + ',80%, 70%)');
@@ -365,22 +365,34 @@ function shapes(dataArray, bufferLength){
 		var img = new Image();
 		img.src = 'http://pngimg.com/uploads/palm_tree/palm_tree_PNG2494.png';
 		
-		var tileCount = 5;
+		
 
 		img.onload = function(){
-
-			for (var i = 0; i < tileCount; i++) {
-				for (var j = 0; j < tileCount; j++){
-									
-					var imgWidth = canvWidth/tileCount;
-					var imgHeight = canvHeight/tileCount;
-
-					canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
-				}
-			}
-
+			draw();
 		}
 
+		function draw(){
+			drawVisual = requestAnimationFrame(draw);
+			analyser.getByteFrequencyData(dataArray);
+			
+			for(var i = 0; i < bufferLength; i+=50) {
+
+				var tileCount = 5;
+				var test = dataArray[i];
+				console.log(test);
+
+				for (var i = 0; i < tileCount; i++) {
+					for (var j = 0; j < tileCount; j++){
+										
+						var imgWidth = canvWidth/tileCount;
+						var imgHeight = canvHeight/tileCount;
+
+						canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
+					}
+				}
+
+			}
+		}
 		//using pattern - no native scaling control with this approach
 		/*img.onload = function(){
 
@@ -389,6 +401,7 @@ function shapes(dataArray, bufferLength){
 			canvasCtx.fillRect(0, 0, canvWidth, canvHeight);
 		}*/
 	}
+	// drawPattern();
 
 	function drawTransGrid(){
 
