@@ -211,15 +211,24 @@ function shapes(dataArray, bufferLength){
 	}
 
 	function drawSmiley(){
-		
-		canvasCtx.globalCompositeOperation = "source-over";
 
 		var originX = canvWidth/2; var originY = canvHeight/2;
 		var outerRadius = (canvWidth > canvHeight ? canvHeight : canvWidth)/3;
 		var mouthLength = outerRadius/2; var mouthHeight = outerRadius/4;
 		var eyeRadius = outerRadius/4;
 
-		canvasCtx.fillStyle =  "black";	
+		//Head
+		var colourStops = 5;
+
+		//Radial
+		var grad = canvasCtx.createRadialGradient(canvWidth/2,canvHeight/2, 0, //inner circle - can move this later
+													canvWidth/2, canvHeight/2,(canvWidth > canvHeight ? canvHeight : canvWidth)/2);	//outer circle
+
+		for (var i = 1; i < colourStops; i++) {
+			grad.addColorStop(1/i,'hsl(' + Math.floor((360/colourStops)*i) + ',80%, 70%)');
+		};
+
+		canvasCtx.fillStyle = grad;
 		canvasCtx.beginPath();
 		canvasCtx.arc(originX, originY, outerRadius, 0, Math.PI * 2, true); //outer circle
 		canvasCtx.closePath();
