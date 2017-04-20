@@ -12,17 +12,24 @@ var analyser = audioCtx.createAnalyser();
 // analyser.minDecibels = -90;
 // analyser.maxDecibels = -10;
 var fftInput = document.getElementById("fft-input");
-var smoothingRange = document.getElementById("smoothing-input");
-var visualisationMode = document.querySelector('#visual-select');
 fftInput.onchange = function(){
+	window.cancelAnimationFrame(drawVisual);
 	visualise(visualisationMode.value);
 }
 
-
+var smoothingRange = document.getElementById("smoothing-input");
 smoothingRange.onchange = function(){
 	console.log("val: " + smoothingRange.value);
 	analyser.smoothingTimeConstant = smoothingRange.value/10;
 }
+
+var visualisationMode = document.querySelector('#visual-select');
+visualisationMode.onchange = function(){
+	window.cancelAnimationFrame(drawVisual);
+	visualise(visualisationMode.value);
+}
+
+
 
 //Canvas Setup
 var bgColor = 'rgb(237, 230, 224)';
@@ -464,14 +471,6 @@ function shapes(){
 
 
 }
-
-visualisationMode.onchange = function(){
-	window.cancelAnimationFrame(drawVisual);
-	visualise(visualisationMode.value);
-}
-
-
-
 
 
 $(window).resize(function(){

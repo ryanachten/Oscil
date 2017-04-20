@@ -22,7 +22,10 @@ smoothingRange.onchange = function(){
 }
 
 var visualisationMode = document.querySelector('#visual-select');
-
+visualisationMode.onchange = function(){
+	window.cancelAnimationFrame(drawVisual);
+	visualise(visualisationMode.value);
+}
 
 //Canvas Setup
 var bgColor = 'rgb(237, 230, 224)';
@@ -121,10 +124,7 @@ function barGraph(dataArray, bufferLength){
 }
 
 
-visualisationMode.onchange = function(){
-	window.cancelAnimationFrame(drawVisual);
-	visualise(visualisationMode.value);
-}
+
 
 
 
