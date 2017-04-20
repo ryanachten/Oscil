@@ -30,7 +30,6 @@ visualisationMode.onchange = function(){
 }
 
 
-
 //Canvas Setup
 var bgColor = 'rgb(237, 230, 224)';
 var canvas = document.querySelector("#visualiser");
@@ -80,10 +79,6 @@ function getBuffer(fftSize){
 
 function visualise(visMode){
 
-	// canvasCtx.clearRect(0,0,canvWidth, canvHeight);
-	// canvasCtx.fillStyle = bgColor;
-	// canvasCtx.fillRect(0,0,canvWidth, canvHeight);
-
 	var dataBuffer = getBuffer(fftInput.value);
 	var bufferLength = dataBuffer.buffer;
 	var dataArray = dataBuffer.data;
@@ -96,7 +91,7 @@ function visualise(visMode){
 		waveForm(dataArray, bufferLength);
 	}
 	else if(visMode === 'Shapes'){
-		shapes();
+		shapes(dataArray, bufferLength);
 	}
 	else if(visMode === 'Off'){
 		visOff();
@@ -110,8 +105,6 @@ function visOff(){
 }
 
 function barGraph(dataArray, bufferLength){
-
-	// analyser.fftSize = 256;
 
 	canvasCtx.clearRect(0, 0, canvWidth, canvHeight);
 
@@ -131,10 +124,8 @@ function barGraph(dataArray, bufferLength){
 		barHeight = dataArray[i]*3; //heres where you increase the barheight size bitch
 
 		var y = canvHeight/2-barHeight/2;
-		// console.log('barHeight: ' + barHeight);
 
 		canvasCtx.fillStyle = 'hsl('+ barHeight +',50%,70%)';
-		// console.log('rgb(' + (barHeight+100) + ',' + (barHeight+100) + ',50)');
 		canvasCtx.fillRect(x,y,barWidth,barHeight);
 
 		x += barWidth;
@@ -144,8 +135,6 @@ function barGraph(dataArray, bufferLength){
 	draw();
 }
 
-
-//Waveform/oscilloscope
 function waveForm(dataArray, bufferLength){
 
 	//analyser.fftSize = 1024; //defines Fast Fourier Transform rate 
@@ -186,7 +175,7 @@ function waveForm(dataArray, bufferLength){
 }
 
 
-function shapes(){
+function shapes(dataArray, bufferLength){
 	canvasCtx.clearRect(0,0,canvWidth, canvHeight);
 	canvasCtx.fillStyle = bgColor;
 	canvasCtx.fillRect(0,0,canvWidth, canvHeight);
@@ -223,22 +212,43 @@ function shapes(){
 
 	function drawSmiley(){
 		
+		canvasCtx.globalCompositeOperation = "source-over";
+
 		var originX = canvWidth/2; var originY = canvHeight/2;
 		var outerRadius = (canvWidth > canvHeight ? canvHeight : canvWidth)/3;
 		var mouthLength = outerRadius/2; var mouthHeight = outerRadius/4;
 		var eyeRadius = outerRadius/4;
 
 		canvasCtx.fillStyle =  "black";	
+		canvasCtx.beginPath();
 		canvasCtx.arc(originX, originY, outerRadius, 0, Math.PI * 2, true); //outer circle
+		canvasCtx.closePath();
+		canvasCtx.fill();
+
+		//Mouth
+		canvasCtx.fillStyle = bgColor;
+		canvasCtx.beginPath();
 		canvasCtx.moveTo(originX-mouthLength, originY+mouthHeight); //left point of mouth
-		canvasCtx.arc(originX, originY+mouthHeight, mouthLength, 0, Math.PI, false); //right point of mouth
+		canvasCtx.arc(originX, originY+mouthHeight, mouthLength, 0, Math.PI, false); //right point of mouth		
+		canvasCtx.closePath();
+		canvasCtx.fill();
+
+		//Eyes
+		canvasCtx.beginPath();
 		canvasCtx.moveTo((originX+eyeRadius/2)-eyeRadius, originY-eyeRadius);
 		canvasCtx.arc((originX-eyeRadius/2)-eyeRadius, originY-eyeRadius, eyeRadius, 0, Math.PI * 2, true); //left eye
+		canvasCtx.closePath();
+		canvasCtx.fill();
+
+		canvasCtx.beginPath();
 		canvasCtx.moveTo((originX+eyeRadius/2)+eyeRadius*2, originY-eyeRadius);
 		canvasCtx.arc((originX-eyeRadius/2)+eyeRadius*2, originY-eyeRadius, eyeRadius, 0, Math.PI * 2, true); //left eye
-
-		canvasCtx.stroke();
+		canvasCtx.closePath();
+		canvasCtx.fill();		
+		
 	}
+
+	drawSmiley();
 
 	function drawPath(){
 
@@ -457,7 +467,7 @@ function shapes(){
 
 	// drawRect();
 	// drawTriangle();
-	// drawSmiley();
+	
 	// drawPath();	
 	// drawGrid();
 	// drawCircles();
