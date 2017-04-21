@@ -358,7 +358,7 @@ function shapes(dataArray, bufferLength){
 		canvasCtx.fillRect(0,0,canvWidth, canvHeight);
 	}
 
-	drawGradient();
+	// drawGradient();
 
 	function drawPattern(){
 
@@ -377,31 +377,42 @@ function shapes(dataArray, bufferLength){
 			
 			for(var i = 0; i < bufferLength; i+=50) {
 
-				var tileCount = 5;
-				var test = dataArray[i];
-				console.log(test);
-
+				var da = dataArray[i]; //temp max of 200
+				console.log(da);
+				var tileCount;
+				if (da !== 0){
+					if (da == 1){
+						da = 2;
+					}
+					if(da < 10){
+						tileCount = da;
+					}
+					else if (da > 30){
+						tileCount = da/10;
+					}
+				}
+				// if(tileCount < 4){
+				// 	tileCount = 4;
+				// }else if(tileCount > 30){
+				// 	tileCount = 30;
+				// }
+				canvasCtx.clearRect(0,0,canvWidth, canvHeight);
+				tileImg(tileCount);
+			}
+			function tileImg(tileCount){
 				for (var i = 0; i < tileCount; i++) {
 					for (var j = 0; j < tileCount; j++){
-										
+											
 						var imgWidth = canvWidth/tileCount;
 						var imgHeight = canvHeight/tileCount;
 
 						canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
 					}
 				}
-
 			}
 		}
-		//using pattern - no native scaling control with this approach
-		/*img.onload = function(){
-
-			var ptrn = canvasCtx.createPattern(img, 'repeat');
-			canvasCtx.fillStyle = ptrn;
-			canvasCtx.fillRect(0, 0, canvWidth, canvHeight);
-		}*/
 	}
-	// drawPattern();
+	drawPattern();
 
 	function drawTransGrid(){
 
