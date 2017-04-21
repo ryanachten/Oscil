@@ -90,6 +90,12 @@ function visualise(visMode){
 	else if(visMode === 'WaveForm'){
 		waveForm(dataArray, bufferLength);
 	}
+	else if(visMode === 'Refract'){
+		refract(dataArray, bufferLength);
+	}
+	else if(visMode === 'Gradient'){
+		gradient(dataArray, bufferLength);
+	}
 	else if(visMode === 'Shapes'){
 		shapes(dataArray, bufferLength);
 	}
@@ -174,6 +180,137 @@ function waveForm(dataArray, bufferLength){
 		draw();
 }
 
+function refract(dataArray, bufferLength){
+
+	canvasCtx.clearRect(0,0,canvWidth,canvHeight);
+	canvasCtx.fillStyle = 'bgColor';
+	canvasCtx.fillRect(0,0, canvWidth, canvHeight);
+
+	var img = new Image();
+	img.src = 'http://pngimg.com/uploads/palm_tree/palm_tree_PNG2494.png';
+
+	img.onload = function(){
+		draw();
+	}
+
+	function draw(){
+		drawVisual = requestAnimationFrame(draw);
+		analyser.getByteFrequencyData(dataArray);
+
+		//TODO: not so sure about the >30 cut off point think there
+				//might be a more elegant solution than this
+		//TODO: Also doesn't work with any other Fft than 256
+		//TODO: gradient->refract retains bg colour
+
+		for(var i = 0; i < bufferLength; i+=50) {
+			var da = dataArray[i];
+			// console.log(da);
+			var tileCount;
+			if (da !== 0){
+				if (da == 1){
+					da = 2;
+				}
+				if(da < 10){
+					tileCount = da;
+				}
+				else if (da > 30){
+					tileCount = da/10;
+				}
+			}
+			canvasCtx.clearRect(0,0,canvWidth, canvHeight);
+			tileImg(tileCount);
+		}
+		function tileImg(tileCount){
+			canvasCtx.fillStyle = 'bgColor';
+			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
+			canvasCtx.globalCompositeOperation = "source-over";
+			
+			for (var i = 0; i < tileCount; i++) {
+				for (var j = 0; j < tileCount; j++){
+
+					var imgWidth = canvWidth/tileCount;
+					var imgHeight = canvHeight/tileCount;
+
+					if (i % 2 == 0){
+						if (j % 2 == 0){
+								// console.log('even');
+								canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
+							}else{
+								canvasCtx.save();
+								// console.log('odd');
+								canvasCtx.scale(1,-1);
+								canvasCtx.translate(0, (canvHeight+imgHeight)*-1);
+								canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
+								canvasCtx.restore();
+							}
+						}else{
+							canvasCtx.save();
+							// console.log('odd');
+							canvasCtx.scale(-1,1);
+							canvasCtx.translate((canvWidth+imgWidth)*-1, 0);
+							if (j % 2 == 0){
+								// console.log('even');
+								canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
+							}else{
+								canvasCtx.save();
+								// console.log('odd');
+								canvasCtx.scale(1,-1);
+								canvasCtx.translate(0, (canvHeight+imgHeight)*-1);
+								canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
+								canvasCtx.restore();
+							}
+							canvasCtx.restore();
+						}
+					}
+				}
+			}
+		}
+	draw();
+}
+
+function gradient(dataArray, bufferLength){
+
+	canvasCtx.clearRect(0,0,canvWidth,canvHeight);
+	
+	function draw(){
+		drawVisual = requestAnimationFrame(draw);
+		analyser.getByteFrequencyData(dataArray); //whats diff between getByteTimeDomainData and this?
+		var colourStops = 5;
+
+		var gradMode;
+		var grad;
+
+		if (gradMode == 'linear'){
+			//Linear
+			grad = canvasCtx.createLinearGradient(0,0, canvWidth, canvHeight);
+		}
+		else{
+			//Radial
+			grad = canvasCtx.createRadialGradient(
+				canvWidth/2,canvHeight/2, 0, //inner circle - can move this later
+				canvWidth/2, canvHeight/2,(canvWidth > canvHeight ? canvHeight : canvWidth)/2);	//outer circle
+		}
+		
+		// TODO: currently only works with FFT size of 256
+		// TODO: dataArray.length actually returns 'undefined' shouldn't be in the for loop
+		for(var i=0; i <bufferLength; i++){
+			if(dataArray[i] !== 0){
+				var h = Math.floor(360/dataArray.length * dataArray[i]);
+				grad.addColorStop(0.0,'hsl(' + Math.abs(h-180) + ',80%, 70%)');
+				grad.addColorStop(1.0,'hsl(' + h + ',80%, 70%)');
+			}
+
+			// console.log('dataArray: ' + dataArray[i]);
+			// console.log('dataArray Length: ' + dataArray[i].length);
+			// console.log('bufferLength: ' + bufferLength);
+		}
+
+		canvasCtx.fillStyle = grad;
+		canvasCtx.fillRect(0,0,canvWidth, canvHeight);
+	}
+
+	draw();
+}
 
 function shapes(dataArray, bufferLength){
 	canvasCtx.clearRect(0,0,canvWidth, canvHeight);
@@ -320,126 +457,9 @@ function shapes(dataArray, bufferLength){
 		};
 	}
 
-	function drawGradient(){
+	
 
-		drawVisual = requestAnimationFrame(drawGradient);
-		analyser.getByteFrequencyData(dataArray); //whats diff between getByteTimeDomainData and this?
-		var colourStops = 5;
 
-		var gradMode;
-		var grad;
-
-		if (gradMode == 'linear'){
-			//Linear
-			grad = canvasCtx.createLinearGradient(0,0, canvWidth, canvHeight);
-		}
-		else{
-			//Radial
-			grad = canvasCtx.createRadialGradient(
-				canvWidth/2,canvHeight/2, 0, //inner circle - can move this later
-				canvWidth/2, canvHeight/2,(canvWidth > canvHeight ? canvHeight : canvWidth)/2);	//outer circle
-		}
-		
-		// TODO: currently only works with FFT size of 256
-		// TODO: dataArray.length actually returns 'undefined' shouldn't be in the for loop
-		for(var i=0; i <bufferLength; i++){
-			if(dataArray[i] !== 0){
-				var h = Math.floor(360/dataArray.length * dataArray[i]);
-				grad.addColorStop(0.0,'hsl(' + Math.abs(h-180) + ',80%, 70%)');
-				grad.addColorStop(1.0,'hsl(' + h + ',80%, 70%)');
-			}
-
-			// console.log('dataArray: ' + dataArray[i]);
-			// console.log('dataArray Length: ' + dataArray[i].length);
-			// console.log('bufferLength: ' + bufferLength);
-		}
-
-		canvasCtx.fillStyle = grad;
-		canvasCtx.fillRect(0,0,canvWidth, canvHeight);
-	}
-
-	// drawGradient();
-
-	function drawPattern(){
-
-		var img = new Image();
-		img.src = 'http://pngimg.com/uploads/palm_tree/palm_tree_PNG2494.png';
-
-		img.onload = function(){
-			draw();
-		}
-
-		function draw(){
-			drawVisual = requestAnimationFrame(draw);
-			analyser.getByteFrequencyData(dataArray);
-
-			//TODO: not so sure about the >30 cut off point think there
-					//might be a more elegant solution than this
-
-			for(var i = 0; i < bufferLength; i+=50) {
-				var da = dataArray[i];
-				console.log(da);
-				var tileCount;
-				if (da !== 0){
-					if (da == 1){
-						da = 2;
-					}
-					if(da < 10){
-						tileCount = da;
-					}
-					else if (da > 30){
-						tileCount = da/10;
-					}
-				}
-				canvasCtx.clearRect(0,0,canvWidth, canvHeight);
-				tileImg(tileCount);
-			}
-			function tileImg(tileCount){
-				canvasCtx.fillStyle = 'bgColor';
-				canvasCtx.globalCompositeOperation = "source-over";
-				canvasCtx.fillRect(0,0, canvWidth, canvHeight);
-				for (var i = 0; i < tileCount; i++) {
-					for (var j = 0; j < tileCount; j++){
-						
-						var imgWidth = canvWidth/tileCount;
-						var imgHeight = canvHeight/tileCount;
-
-						if (i % 2 == 0){
-							if (j % 2 == 0){
-								// console.log('even');
-								canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
-							}else{
-								canvasCtx.save();
-								// console.log('odd');
-								canvasCtx.scale(1,-1);
-								canvasCtx.translate(0, (canvHeight+imgHeight)*-1);
-								canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
-								canvasCtx.restore();
-							}
-						}else{
-							canvasCtx.save();
-							// console.log('odd');
-							canvasCtx.scale(-1,1);
-							canvasCtx.translate((canvWidth+imgWidth)*-1, 0);
-							if (j % 2 == 0){
-								// console.log('even');
-								canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
-							}else{
-								canvasCtx.save();
-								// console.log('odd');
-								canvasCtx.scale(1,-1);
-								canvasCtx.translate(0, (canvHeight+imgHeight)*-1);
-								canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
-								canvasCtx.restore();
-							}
-							canvasCtx.restore();
-						}
-					}
-				}
-			}
-		}
-	}
-	drawPattern();
 
 	function drawTransGrid(){
 
