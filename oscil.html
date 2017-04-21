@@ -26,15 +26,25 @@
 			</div>
 			<div class="ui-section">
 				<h2>Settings:</h2>
-				<label for="fft-input">Fft Size</label>
-				<select id="fft-input" class="input-field" name="fft">
-				 	<option value="256" selected>256</option>
-				 	<option value="1024">1024</option>
-					 <option value="2048">2048</option>
-					 <option value="4096">4096</option>
-				</select>
-				<label for="smoothing-input">Smoothing</label>
-				<input id="smoothing-input" class="input-field" type="number" min="0" max="100" value="80" >
+				<div>
+					<label for="fft-input">Fft Size</label>
+					<select id="fft-input" class="input-field" name="fft">
+					 	<option value="256" selected>256</option>
+					 	<option value="1024">1024</option>
+						 <option value="2048">2048</option>
+						 <option value="4096">4096</option>
+					</select>
+				</div>
+				<div>
+					<label for="smoothing-input">Smoothing</label>
+					<input id="smoothing-input" class="input-field" type="number" min="0" max="100" value="80" >
+				</div>
+				<div>
+					<label for="min-db-input">Min Db</label>
+					<input id="min-db-input" class="input-field" type="number" min="-150" max="-50" value="-100" >
+					<label for="max-db-input">Max Db</label>
+					<input id="max-db-input" class="input-field" type="number" min="-80" max="20" value="-30" >
+				</div>
 			</div>
 		</div>
 	</div>

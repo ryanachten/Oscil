@@ -9,13 +9,22 @@ var analyser = audioCtx.createAnalyser();
 
 
 //Smoothing / calibration settings - these should all be sliders
-// analyser.minDecibels = -90;
-// analyser.maxDecibels = -10;
+
 var fftInput = document.getElementById("fft-input");
 fftInput.onchange = function(){
 	window.cancelAnimationFrame(drawVisual);
 	visualise(visualisationMode.value);
 }
+
+var minDb = document.getElementById("min-db-input");
+minDb.onchange = function(){
+	analyser.minDecibels = minDb.value;
+}
+var maxDb = document.getElementById("max-db-input");
+maxDb.onchange = function(){
+	analyser.maxDecibels = maxDb.value;
+}
+
 
 var smoothingRange = document.getElementById("smoothing-input");
 smoothingRange.onchange = function(){
@@ -198,27 +207,31 @@ function refract(dataArray, bufferLength){
 		analyser.getByteFrequencyData(dataArray);
 
 		//TODO: not so sure about the >30 cut off point think there
-				//might be a more elegant solution than this
+				//might be a more elegant solution than this -> testing log approach
 		//TODO: Also doesn't work with any other Fft than 256
 		//TODO: gradient->refract retains bg colour
 
 		for(var i = 0; i < bufferLength; i+=50) {
 			var da = dataArray[i];
-			// console.log(da);
-			var tileCount;
+			console.log(da);
 			if (da !== 0){
-				if (da == 1){
-					da = 2;
-				}
-				if(da < 10){
-					tileCount = da;
-				}
-				else if (da > 30){
-					tileCount = da/10;
-				}
+				var tileCount = Math.log2(da);
+				console.log('log-da:' + Math.log2(da));
+				if (tileCount < 2) tileCount = 2;
+				// if (da !== 0){
+				// 	if (da == 1){
+				// 		da = 2;
+				// 	}
+				// 	if(da < 10){
+				// 		tileCount = da;
+				// 	}
+				// 	else if (da > 30){
+				// 		tileCount = da/10;
+				// 	}
+				// }
+				canvasCtx.clearRect(0,0,canvWidth, canvHeight);
+				tileImg(tileCount);
 			}
-			canvasCtx.clearRect(0,0,canvWidth, canvHeight);
-			tileImg(tileCount);
 		}
 		function tileImg(tileCount){
 			canvasCtx.fillStyle = 'bgColor';
@@ -391,7 +404,6 @@ function shapes(dataArray, bufferLength){
 		canvasCtx.arc((originX-eyeRadius/2)+eyeRadius*2, originY-eyeRadius, eyeRadius, 0, Math.PI * 2, true); //left eye
 		canvasCtx.closePath();
 		canvasCtx.fill();		
-		
 	}
 
 	function drawPath(){
@@ -456,10 +468,6 @@ function shapes(dataArray, bufferLength){
 			canvasCtx.stroke();
 		};
 	}
-
-	
-
-
 
 	function drawTransGrid(){
 
@@ -564,6 +572,50 @@ function shapes(dataArray, bufferLength){
 		ball.draw();
 	}
 
+	function drawRegPoly(){
+
+		function polygon(x, y, radius, sides, startAngle, anticlockwise){
+		
+			if (sides < 3) return;
+
+			var a = (Math.PI * 2) / sides;
+			a = anticlockwise ? -a : a;
+			
+			canvasCtx.save();
+			canvasCtx.translate(x,y);
+			canvasCtx.rotate(startAngle);
+			canvasCtx.moveTo(radius, 0);
+			
+			// for (var i = 0; i < sides; i++) {
+			// 	var point1 = radius*Math.cos(a*i);
+			// 	var point2 = radius*Math.sin(a*i);
+			// 	canvasCtx.lineTo(point1, point2);
+			// };
+
+			canvasCtx.beginPath();
+			for (var i = 0; i < sides; i++) {
+				var point1 = radius*Math.cos(a*i);
+				var point2 = radius*Math.sin(a*i);
+				console.log('point1: ' + point1 + ' point2: ' + point2);
+				canvasCtx.lineTo(0, 0);
+				canvasCtx.lineTo(point1, point2);
+				if (i % 2 !== 0){
+					console.log(i +' closepoint');
+					// canvasCtx.closePath();
+					canvasCtx.fillStyle = 'black';
+					canvasCtx.fill();
+					canvasCtx.beginPath();
+				}
+			};
+
+			// canvasCtx.closePath();
+			canvasCtx.restore();
+		}
+		polygon(canvWidth/2, canvHeight/2, 300, 8, 0, false);
+		// canvasCtx.strokeStyle = 'black';
+		// canvasCtx.stroke();
+	}
+
 	// drawRect();
 	// drawTriangle();
 	// drawSmiley();
@@ -577,6 +629,8 @@ function shapes(dataArray, bufferLength){
 	// drawRotateTest();
 	// drawSpiralMatrixTest();
 	// animEarthExample();
+
+	drawRegPoly();
 
 
 }
