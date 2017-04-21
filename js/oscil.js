@@ -364,8 +364,6 @@ function shapes(dataArray, bufferLength){
 
 		var img = new Image();
 		img.src = 'http://pngimg.com/uploads/palm_tree/palm_tree_PNG2494.png';
-		
-		
 
 		img.onload = function(){
 			draw();
@@ -374,10 +372,12 @@ function shapes(dataArray, bufferLength){
 		function draw(){
 			drawVisual = requestAnimationFrame(draw);
 			analyser.getByteFrequencyData(dataArray);
-			
-			for(var i = 0; i < bufferLength; i+=50) {
 
-				var da = dataArray[i]; //temp max of 200
+			//TODO: not so sure about the >30 cut off point think there
+					//might be a more elegant solution than this
+
+			for(var i = 0; i < bufferLength; i+=50) {
+				var da = dataArray[i];
 				console.log(da);
 				var tileCount;
 				if (da !== 0){
@@ -391,22 +391,49 @@ function shapes(dataArray, bufferLength){
 						tileCount = da/10;
 					}
 				}
-				// if(tileCount < 4){
-				// 	tileCount = 4;
-				// }else if(tileCount > 30){
-				// 	tileCount = 30;
-				// }
 				canvasCtx.clearRect(0,0,canvWidth, canvHeight);
 				tileImg(tileCount);
 			}
 			function tileImg(tileCount){
+				canvasCtx.fillStyle = 'bgColor';
+				canvasCtx.globalCompositeOperation = "source-over";
+				canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 				for (var i = 0; i < tileCount; i++) {
 					for (var j = 0; j < tileCount; j++){
-											
+						
 						var imgWidth = canvWidth/tileCount;
 						var imgHeight = canvHeight/tileCount;
 
-						canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
+						if (i % 2 == 0){
+							if (j % 2 == 0){
+								// console.log('even');
+								canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
+							}else{
+								canvasCtx.save();
+								// console.log('odd');
+								canvasCtx.scale(1,-1);
+								canvasCtx.translate(0, (canvHeight+imgHeight)*-1);
+								canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
+								canvasCtx.restore();
+							}
+						}else{
+							canvasCtx.save();
+							// console.log('odd');
+							canvasCtx.scale(-1,1);
+							canvasCtx.translate((canvWidth+imgWidth)*-1, 0);
+							if (j % 2 == 0){
+								// console.log('even');
+								canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
+							}else{
+								canvasCtx.save();
+								// console.log('odd');
+								canvasCtx.scale(1,-1);
+								canvasCtx.translate(0, (canvHeight+imgHeight)*-1);
+								canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
+								canvasCtx.restore();
+							}
+							canvasCtx.restore();
+						}
 					}
 				}
 			}
