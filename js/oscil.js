@@ -584,34 +584,45 @@ function shapes(dataArray, bufferLength){
 			canvasCtx.save();
 			canvasCtx.translate(x,y);
 			canvasCtx.rotate(startAngle);
-			canvasCtx.moveTo(radius, 0);
+			// canvasCtx.moveTo(radius, 0);
 			
 			// for (var i = 0; i < sides; i++) {
 			// 	var point1 = radius*Math.cos(a*i);
 			// 	var point2 = radius*Math.sin(a*i);
 			// 	canvasCtx.lineTo(point1, point2);
 			// };
-
-			canvasCtx.beginPath();
+			
+			var verticesCos = [];
+			var verticesSin = [];
 			for (var i = 0; i < sides; i++) {
 				var point1 = radius*Math.cos(a*i);
 				var point2 = radius*Math.sin(a*i);
-				console.log('point1: ' + point1 + ' point2: ' + point2);
-				canvasCtx.lineTo(0, 0);
-				canvasCtx.lineTo(point1, point2);
-				if (i % 2 !== 0){
-					console.log(i +' closepoint');
-					// canvasCtx.closePath();
-					canvasCtx.fillStyle = 'black';
-					canvasCtx.fill();
-					canvasCtx.beginPath();
-				}
+				verticesCos.push(point1);
+				verticesSin.push(point2);
 			};
+			for (var i = 0; i < verticesCos.length; i++) {
+				canvasCtx.beginPath();
+				// console.log('moveTo: ' + verticesCos[i] + ',' + verticesSin[i]);
+				canvasCtx.moveTo(verticesCos[i], verticesSin[i]);
+				if(i === (verticesCos.length-1)){
+					// console.log('lineTo: ' + verticesCos[0] + ',' + verticesSin[0]);
+					canvasCtx.lineTo(verticesCos[0], verticesSin[0]);
+				}else{
+					// console.log('lineTo: ' + verticesCos[i+1] + ',' + verticesSin[i+1]);
+					canvasCtx.lineTo(verticesCos[i+1], verticesSin[i+1]);
+				}
+				console.log(0,0);
+				canvasCtx.lineTo(0,0);
+				canvasCtx.closePath();
+				canvasCtx.fillStyle = 'hsl('+ 360/verticesCos.length *i +',50%,70%)';
+				canvasCtx.fill();
+			};
+
 
 			// canvasCtx.closePath();
 			canvasCtx.restore();
 		}
-		polygon(canvWidth/2, canvHeight/2, 300, 8, 0, false);
+		polygon(canvWidth/2, canvHeight/2, 300, 4, 0, false);
 		// canvasCtx.strokeStyle = 'black';
 		// canvasCtx.stroke();
 	}
