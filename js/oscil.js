@@ -554,10 +554,14 @@ function shapes(dataArray, bufferLength){
 
 	function animBallExample(){
 
-		var ball = {
+		var raf;
+		var running = false;
 
-			x : 100,
-			y : 100,
+		var ball = {
+			x : canvWidth/2,
+			y : canvHeight/2,
+			vx : 5,
+			vy : 2,
 			radius : 25,
 			colour : 'blue',
 			draw : function(){
@@ -569,12 +573,61 @@ function shapes(dataArray, bufferLength){
 			}
 		};
 
+		function clear(){
+			canvasCtx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
+		}
+
+		function draw(){
+			clear();
+			ball.draw();
+			ball.x += ball.vx;
+			ball.y += ball.vy;
+			//gravity
+			// ball.vy *= .99; 
+			// ball.vy += .25;
+
+			//Boundaries
+			if(ball.y + ball.vy > canvas.height || ball.y + ball.vy < 0){
+				ball.vy = -ball.vy;
+			}
+			if(ball.x + ball.vx > canvas.width || ball.x + ball.vx < 0){
+				ball.vx = -ball.vx;
+			}
+
+			raf = window.requestAnimationFrame(draw);
+		}
+
+		canvas.addEventListener('mousemove', function(e){
+			console.log('move');
+			if(!running){
+				clear();
+				ball.x = e.clientX;
+				ball.y = e.clientY;
+				ball.draw();
+			}
+		});
+
+		canvas.addEventListener('click', function(e){
+			console.log('click');
+			if(!running){
+				raf = window.requestAnimationFrame(draw);
+				running = true;
+			}
+		});
+
+		canvas.addEventListener('mouseout', function(e){
+			console.log('out');
+			window.cancelAnimationFrame(raf);
+			running = false;
+		});
+		
 		ball.draw();
 	}
 
 	function drawRegPoly(){
 
-		function polygon(x, y, radius, sides, startAngle, anticlockwise){
+		function polygon(x, y, radius, sides, startAngle, anticlockwise, image){
 		
 			if (sides < 3) return;
 
@@ -584,13 +637,6 @@ function shapes(dataArray, bufferLength){
 			canvasCtx.save();
 			canvasCtx.translate(x,y);
 			canvasCtx.rotate(startAngle);
-			// canvasCtx.moveTo(radius, 0);
-			
-			// for (var i = 0; i < sides; i++) {
-			// 	var point1 = radius*Math.cos(a*i);
-			// 	var point2 = radius*Math.sin(a*i);
-			// 	canvasCtx.lineTo(point1, point2);
-			// };
 			
 			var verticesCos = [];
 			var verticesSin = [];
@@ -599,32 +645,143 @@ function shapes(dataArray, bufferLength){
 				var point2 = radius*Math.sin(a*i);
 				verticesCos.push(point1);
 				verticesSin.push(point2);
-			};
+			}
 			for (var i = 0; i < verticesCos.length; i++) {
 				canvasCtx.beginPath();
-				// console.log('moveTo: ' + verticesCos[i] + ',' + verticesSin[i]);
 				canvasCtx.moveTo(verticesCos[i], verticesSin[i]);
 				if(i === (verticesCos.length-1)){
-					// console.log('lineTo: ' + verticesCos[0] + ',' + verticesSin[0]);
 					canvasCtx.lineTo(verticesCos[0], verticesSin[0]);
 				}else{
-					// console.log('lineTo: ' + verticesCos[i+1] + ',' + verticesSin[i+1]);
 					canvasCtx.lineTo(verticesCos[i+1], verticesSin[i+1]);
 				}
-				console.log(0,0);
 				canvasCtx.lineTo(0,0);
 				canvasCtx.closePath();
 				canvasCtx.fillStyle = 'hsl('+ 360/verticesCos.length *i +',50%,70%)';
 				canvasCtx.fill();
-			};
+				
+				//image placement
+				canvasCtx.beginPath();
 
+				//a (img axis)
+				var imgX = (verticesCos[i] + verticesCos[i+1]) /2;
+				var imgY = (verticesSin[i] + verticesSin[i+1]) /2;
+				var aDist = Math.sqrt(Math.pow(imgX,2)+Math.pow(imgY,2));
+				console.log('aDist: ' + aDist);
 
-			// canvasCtx.closePath();
+				// //c (hypotenuse)
+				var cDist = Math.sqrt(Math.pow(verticesCos[i],2)+Math.pow(verticesSin[i],2));
+				console.log('cDist: ' + cDist);
+
+				//theta
+				var theta = Math.acos(aDist/cDist);
+				console.log('theta: ' + theta);
+				console.log('thetaDeg: ' + (180/Math.PI) * theta);
+
+				canvasCtx.save();
+				
+				// canvasCtx.rotate(theta * (i+1));
+				console.log('theta * (i+1): ' + theta * (i+1));
+				canvasCtx.drawImage(img, imgX-150, imgY-150, 300, 300);
+				
+				console.log(' *** ');
+				canvasCtx.restore();
+
+			}
 			canvasCtx.restore();
 		}
-		polygon(canvWidth/2, canvHeight/2, 300, 4, 0, false);
-		// canvasCtx.strokeStyle = 'black';
-		// canvasCtx.stroke();
+
+		var img = new Image();
+		img.src = 'http://pngimg.com/uploads/palm_tree/palm_tree_PNG2494.png';
+		img.onload = function(){
+			polygon(canvWidth/2, canvHeight/2, 300, 6, 0, false, img);
+		}
+	}
+
+	function particleTest(){
+
+		var raf;
+		var running = false;
+		canvasCtx.globalCompositeOperation = 'source-over';
+
+		// var ball = {
+		// 	x : canvWidth/2,
+		// 	y : canvHeight/2,
+		// 	vx : 5,
+		// 	vy : 2,
+		// 	radius : 25,
+		// 	colour : 'blue',
+		// 	draw : function(){
+		// 		canvasCtx.beginPath();
+		// 		canvasCtx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
+		// 		canvasCtx.closePath();
+		// 		canvasCtx.fillStyle = this.colour;
+		// 		canvasCtx.fill();
+		// 	}
+		// };
+
+		var particleCount = 50;
+		var particles = [];
+		for (var i = 0; i < particleCount; i++) {
+			particles.push(new create_particle());
+		};
+
+		function create_particle(){
+
+			var partMaxSize = 40;
+			var partMinSize = 10;
+			this.radius = Math.random()*(partMaxSize-partMinSize);
+			var hue = 360/particleCount * (Math.random()*(particleCount-1));
+			console.log(hue);
+			this.colour = 'hsl(' + hue + ', 70%, 70%)';
+			this.x = Math.random()*canvWidth;
+			this.y = Math.random()*canvHeight;
+
+			this.vx = Math.random()*20-10; //change
+			this.vy = Math.random()*20-10; //change		
+		}
+
+		function clear(){
+			canvasCtx.fillStyle = 'rgba(237, 230, 224, 0.3)';
+			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
+		}
+
+		function draw(){
+			clear();	
+
+			for (var i = 0; i < particleCount; i++) {
+				
+				var p = particles[i];
+
+				canvasCtx.beginPath();
+				canvasCtx.arc(p.x, p.y, p.radius, 0, Math.PI*2, true);
+				canvasCtx.closePath();
+
+				var grad = canvasCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
+				grad.addColorStop(0, 'white');
+				grad.addColorStop(0.4, p.colour);
+				grad.addColorStop(0.4, 'white');
+				grad.addColorStop(1, p.colour);
+
+				canvasCtx.fillStyle = grad;
+				canvasCtx.fill();
+
+				//Velocity
+				p.x += p.vx;
+				p.y += p.vy;
+
+				//Boundaries
+				if(p.y + p.vy > canvas.height || p.y + p.vy < 0){
+					p.vy = -p.vy;
+				}
+				if(p.x + p.vx > canvas.width || p.x + p.vx < 0){
+					p.vx = -p.vx;
+				}
+			};
+
+			raf = window.requestAnimationFrame(draw);
+		}
+		
+		draw();
 	}
 
 	// drawRect();
@@ -640,8 +797,10 @@ function shapes(dataArray, bufferLength){
 	// drawRotateTest();
 	// drawSpiralMatrixTest();
 	// animEarthExample();
+	// animBallExample();
 
-	drawRegPoly();
+	particleTest();
+	// drawRegPoly();
 
 
 }
