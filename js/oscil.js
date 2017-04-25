@@ -105,6 +105,9 @@ function visualise(visMode){
 	else if(visMode === 'Gradient'){
 		gradient(dataArray, bufferLength);
 	}
+	else if(visMode === 'Particles'){
+		particles(dataArray, bufferLength);
+	}
 	else if(visMode === 'Shapes'){
 		shapes(dataArray, bufferLength);
 	}
@@ -324,6 +327,93 @@ function gradient(dataArray, bufferLength){
 
 	draw();
 }
+
+function particles(dataArray, bufferLength){
+
+		canvasCtx.globalCompositeOperation = 'source-over';
+
+		var particleCount = 30;
+		var particles = [];
+		var partCounter = 0;
+		for (var i = 0; i < particleCount; i++) {
+			particles.push(new create_particle());
+			partCounter++;
+			console.log('partCounter: ' + partCounter);
+		};
+
+		function create_particle(){
+
+			var partMaxSize = 50;
+			var partMinSize = 10;
+			this.radius = Math.random()*(partMaxSize-partMinSize);
+			this.hue = 360/particleCount * (Math.random()*(particleCount-1));
+			// console.log(hue);
+			this.colour = 'hsl(' + this.hue + ', 70%, 70%)';
+			this.x = Math.random()*canvWidth;
+			this.y = Math.random()*canvHeight;
+
+			this.vx = Math.random()*10-2; //change
+			this.vy = Math.random()*10-2; //change		
+		}
+
+
+		function clear(){
+			canvasCtx.fillStyle = 'rgba(237, 230, 224, 0.3)';
+			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
+		}
+
+		function draw(){
+			clear();	
+			
+			analyser.getByteFrequencyData(dataArray);
+
+			for(var i = 0; i < bufferLength; i+=20) {
+				var da = dataArray[i];
+
+				for (var j = 0; j < particleCount; j++) {
+				
+					var p = particles[j];
+
+					canvasCtx.beginPath();
+					canvasCtx.arc(p.x, p.y, p.radius, 0, Math.PI*2, true);
+					canvasCtx.closePath();
+
+					var grad = canvasCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
+					if (da !== 0){
+						p.hue = p.hue + 1;
+						p.colour = 'hsl(' + p.hue + ', 70%, 70%)';
+						p.x += p.vx;
+						p.y += p.vy;
+					}
+					else{
+
+					}
+					grad.addColorStop(0, 'white');
+					grad.addColorStop(0.4, p.colour);
+					grad.addColorStop(0.4, 'white');
+					grad.addColorStop(1, p.colour);
+
+					canvasCtx.fillStyle = grad;
+					canvasCtx.fill();
+
+					//Boundaries
+					if(p.y + p.vy > canvas.height || p.y + p.vy < 0){
+						p.vy = -p.vy;
+					}
+					if(p.x + p.vx > canvas.width || p.x + p.vx < 0){
+						p.vx = -p.vx;
+					}
+				// }
+				}
+			}
+
+
+			drawVisual = requestAnimationFrame(draw);
+		}
+		
+		draw();
+	}
+
 
 function shapes(dataArray, bufferLength){
 	canvasCtx.clearRect(0,0,canvWidth, canvHeight);
@@ -697,96 +787,7 @@ function shapes(dataArray, bufferLength){
 		}
 	}
 
-	function particleTest(){
-
-		// var raf;
-		// var running = false;
-		canvasCtx.globalCompositeOperation = 'source-over';
-
-		var particleCount = 30;
-		var particles = [];
-		var partCounter = 0;
-		for (var i = 0; i < particleCount; i++) {
-			particles.push(new create_particle());
-			partCounter++;
-			console.log('partCounter: ' + partCounter);
-		};
-
-		function create_particle(){
-
-			var partMaxSize = 50;
-			var partMinSize = 10;
-			this.radius = Math.random()*(partMaxSize-partMinSize);
-			this.hue = 360/particleCount * (Math.random()*(particleCount-1));
-			// console.log(hue);
-			this.colour = 'hsl(' + this.hue + ', 70%, 70%)';
-			this.x = Math.random()*canvWidth;
-			this.y = Math.random()*canvHeight;
-
-			this.vx = Math.random()*10-2; //change
-			this.vy = Math.random()*10-2; //change		
-		}
-
-
-		function clear(){
-			canvasCtx.fillStyle = 'rgba(237, 230, 224, 0.3)';
-			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
-		}
-
-		function draw(){
-			clear();	
-			
-			analyser.getByteFrequencyData(dataArray);
-
-			for(var i = 0; i < bufferLength; i+=20) {
-				var da = dataArray[i];
-
-				for (var j = 0; j < particleCount; j++) {
-				
-					var p = particles[j];
-
-					canvasCtx.beginPath();
-					canvasCtx.arc(p.x, p.y, p.radius, 0, Math.PI*2, true);
-					canvasCtx.closePath();
-
-					var grad = canvasCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
-					if (da !== 0){
-						p.hue = p.hue + 1;
-						p.colour = 'hsl(' + p.hue + ', 70%, 70%)';
-						p.x += p.vx;
-						p.y += p.vy;
-					}
-					else{
-
-					}
-					grad.addColorStop(0, 'white');
-					grad.addColorStop(0.4, p.colour);
-					grad.addColorStop(0.4, 'white');
-					grad.addColorStop(1, p.colour);
-
-					canvasCtx.fillStyle = grad;
-					canvasCtx.fill();
-
-					//Velocity
-					
-
-					//Boundaries
-					if(p.y + p.vy > canvas.height || p.y + p.vy < 0){
-						p.vy = -p.vy;
-					}
-					if(p.x + p.vx > canvas.width || p.x + p.vx < 0){
-						p.vx = -p.vx;
-					}
-				// }
-				}
-			}
-
-
-			drawVisual = requestAnimationFrame(draw);
-		}
-		
-		draw();
-	}
+	
 
 	// drawRect();
 	// drawTriangle();
@@ -795,7 +796,6 @@ function shapes(dataArray, bufferLength){
 	// drawGrid();
 	// drawCircles();
 	// drawLines();
-	
 	// drawPattern();
 	// drawTransGrid();
 	// drawRotateTest();
@@ -803,7 +803,6 @@ function shapes(dataArray, bufferLength){
 	// animEarthExample();
 	// animBallExample();
 
-	particleTest();
 	// drawRegPoly();
 
 
