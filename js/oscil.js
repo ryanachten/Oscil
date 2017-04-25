@@ -699,46 +699,34 @@ function shapes(dataArray, bufferLength){
 
 	function particleTest(){
 
-		var raf;
-		var running = false;
+		// var raf;
+		// var running = false;
 		canvasCtx.globalCompositeOperation = 'source-over';
 
-		// var ball = {
-		// 	x : canvWidth/2,
-		// 	y : canvHeight/2,
-		// 	vx : 5,
-		// 	vy : 2,
-		// 	radius : 25,
-		// 	colour : 'blue',
-		// 	draw : function(){
-		// 		canvasCtx.beginPath();
-		// 		canvasCtx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
-		// 		canvasCtx.closePath();
-		// 		canvasCtx.fillStyle = this.colour;
-		// 		canvasCtx.fill();
-		// 	}
-		// };
-
-		var particleCount = 50;
+		var particleCount = 30;
 		var particles = [];
+		var partCounter = 0;
 		for (var i = 0; i < particleCount; i++) {
 			particles.push(new create_particle());
+			partCounter++;
+			console.log('partCounter: ' + partCounter);
 		};
 
 		function create_particle(){
 
-			var partMaxSize = 40;
+			var partMaxSize = 50;
 			var partMinSize = 10;
 			this.radius = Math.random()*(partMaxSize-partMinSize);
-			var hue = 360/particleCount * (Math.random()*(particleCount-1));
-			console.log(hue);
-			this.colour = 'hsl(' + hue + ', 70%, 70%)';
+			this.hue = 360/particleCount * (Math.random()*(particleCount-1));
+			// console.log(hue);
+			this.colour = 'hsl(' + this.hue + ', 70%, 70%)';
 			this.x = Math.random()*canvWidth;
 			this.y = Math.random()*canvHeight;
 
-			this.vx = Math.random()*20-10; //change
-			this.vy = Math.random()*20-10; //change		
+			this.vx = Math.random()*10-2; //change
+			this.vy = Math.random()*10-2; //change		
 		}
+
 
 		function clear(){
 			canvasCtx.fillStyle = 'rgba(237, 230, 224, 0.3)';
@@ -747,38 +735,54 @@ function shapes(dataArray, bufferLength){
 
 		function draw(){
 			clear();	
+			
+			analyser.getByteFrequencyData(dataArray);
 
-			for (var i = 0; i < particleCount; i++) {
+			for(var i = 0; i < bufferLength; i+=20) {
+				var da = dataArray[i];
+
+				for (var j = 0; j < particleCount; j++) {
 				
-				var p = particles[i];
+					var p = particles[j];
 
-				canvasCtx.beginPath();
-				canvasCtx.arc(p.x, p.y, p.radius, 0, Math.PI*2, true);
-				canvasCtx.closePath();
+					canvasCtx.beginPath();
+					canvasCtx.arc(p.x, p.y, p.radius, 0, Math.PI*2, true);
+					canvasCtx.closePath();
 
-				var grad = canvasCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
-				grad.addColorStop(0, 'white');
-				grad.addColorStop(0.4, p.colour);
-				grad.addColorStop(0.4, 'white');
-				grad.addColorStop(1, p.colour);
+					var grad = canvasCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
+					if (da !== 0){
+						p.hue = p.hue + 1;
+						p.colour = 'hsl(' + p.hue + ', 70%, 70%)';
+						p.x += p.vx;
+						p.y += p.vy;
+					}
+					else{
 
-				canvasCtx.fillStyle = grad;
-				canvasCtx.fill();
+					}
+					grad.addColorStop(0, 'white');
+					grad.addColorStop(0.4, p.colour);
+					grad.addColorStop(0.4, 'white');
+					grad.addColorStop(1, p.colour);
 
-				//Velocity
-				p.x += p.vx;
-				p.y += p.vy;
+					canvasCtx.fillStyle = grad;
+					canvasCtx.fill();
 
-				//Boundaries
-				if(p.y + p.vy > canvas.height || p.y + p.vy < 0){
-					p.vy = -p.vy;
+					//Velocity
+					
+
+					//Boundaries
+					if(p.y + p.vy > canvas.height || p.y + p.vy < 0){
+						p.vy = -p.vy;
+					}
+					if(p.x + p.vx > canvas.width || p.x + p.vx < 0){
+						p.vx = -p.vx;
+					}
+				// }
 				}
-				if(p.x + p.vx > canvas.width || p.x + p.vx < 0){
-					p.vx = -p.vx;
-				}
-			};
+			}
 
-			raf = window.requestAnimationFrame(draw);
+
+			drawVisual = requestAnimationFrame(draw);
 		}
 		
 		draw();
