@@ -919,29 +919,29 @@ function shapes(dataArray, bufferLength){
 
 				analyser.getByteFrequencyData(dataArray);
 				var da = dataArray[i];
-				console.log('da:' + da);
+				// console.log('da:' + da);
 				var da2 = dataArray[i+10];
-				console.log('da2:' + da2);
+				// console.log('da2:' + da2);
 				var da3 = dataArray[i+20];
-				console.log('da3:' + da3);
+				// console.log('da3:' + da3);
 				var logda, logda2, logda3;
 
 
 				//TODO: these should go in the data for-loop
 				if (da !== 0){
 					logda = Math.log2(da);
-					console.log('log-da:' + logda);
+					// console.log('log-da:' + logda);
 				}
 				if (da2 !== 0){
 					logda2 = Math.log2(da2);
-					console.log('log-da2:' + logda2);
+					// console.log('log-da2:' + logda2);
 				}
 				if (da3 !== 0){
 					logda3 = Math.log2(da3);
-					console.log('log-da3:' + logda3);
+					// console.log('log-da3:' + logda3);
 				}
 
-				var invertRecol = function(){
+				function adjustBrightness(){
 					for (var i = 0; i < data.length; i+=4) {
 						if (da !== 0)
 							data[i+1] = (data[i+1]*0.5) + (logda*logda); // 
@@ -950,12 +950,11 @@ function shapes(dataArray, bufferLength){
 						if (da3 !== 0)
 							data[i+2] = (data[i+2]*0.5) + (logda3*logda3); //
 					};
-					canvasCtx.putImageData(imgdata, 0,0);
 				};
-				// invertRecol();
+				// adjustBrightness();	
 			}
 
-			var monoRecol = function(){
+			function monoRecol(){
 				for (var i = 0; i < data.length; i+=4) {
 					var avg = ((data[i] + data[i+1] + data[i+3]) /3);
 
@@ -963,16 +962,17 @@ function shapes(dataArray, bufferLength){
 					data[i+1] = avg + (logda2*10);
 					data[i+2] = avg + (logda3*10);
 				};
-				canvasCtx.putImageData(imgdata, 0,0);
 			};
 			// monoRecol();	
 
 
+
+			canvasCtx.putImageData(imgdata, 0,0);
 			drawVisual = requestAnimationFrame(draw);
 		}
 	}
 
-	function imgRgbToHsl(){
+	function imgChannelSwap(){
 		//Invert and Greyscale
 		var img = new Image();
 		img.src = 'https://upload.wikimedia.org/wikipedia/commons/4/44/Jelly_cc11.jpg' + '?' + new Date().getTime();
@@ -983,75 +983,31 @@ function shapes(dataArray, bufferLength){
 
 		function draw(img){
 			canvasCtx.drawImage(img, 0,0 , canvWidth, canvWidth);
+			img.style.display = 'none'
 			var imgdata = canvasCtx.getImageData(0,0, canvWidth, canvHeight);
 			var data = imgdata.data;
 
-			// var invert = function(){
-			// 	for (var i = 0; i < data.length; i+=4) {
-			// 		data[i] = 255 - data[i]; //r
-			// 		data[i+1] = 255 - data[i+1]; //g
-			// 		data[i+2] = 255 - data[i+2]; //b
-			// 	};
+			var invert = function(){
+				for (var i = 0; i < data.length; i+=4) {
+					data[i] = (data[i+1] + data[i+2]) /2; //r
+					data[i+1] = (data[i] + data[i+2]) /2; //g
+					data[i+2] = (data[i+1] + data[i]) /2; //b
+				};
 				canvasCtx.putImageData(imgdata, 0,0);
+			};
+			invert();
+
+			// var grayscale = function(){
+			// 	for (var i = 0; i < data.length; i+=4) {
+			// 		var avg = (data[i] + data[i+1] + data[i+3]) /3;
+
+			// 		data[i] = avg;
+			// 		data[i+1] = avg;
+			// 		data[i+2] = avg;
+			// 	};
+			// 	canvasCtx.putImageData(imgdata, 0,0);
 			// };
-
-			function convertToHsl(r,g,b){
-
-				r /= 255, g /= 255, b /= 255;
-				var max = Math.max(r,g,b);
-				var min = Math.min(r,g,b);
-
-				var h,s,l = (max + min) /2;
-
-				if(max == min){
-					h = s = 0;
-				}else{
-					var d = max - min;
-					s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-					switch(max){
-						case r: h = (g - b) / (g < b ? 6 : 0); break;
-						case g: h = (b - r)  / d + 2; break;
-						case b: h = (r - g)  / d + 4; break;
-					}
-					h /= 6;
-				}
-				return [h,s,l];
-			}
-			
-			var hslTest = convertToHsl(data[0], data[1], data[2]);
-			console.log('hslTest: ' + ' R:' + data[0] + ' G:' + data[1] + ' B:' + data[2]);
-			console.log('hslTest: ' + ' H:' + (hslTest[0]*360) + ' S:' + (hslTest[1]*100) + ' L:' + (hslTest[2]*100));
-
-
-			function convertToRgb(h,s,l){
-				 var r, g, b;
-
-				if(s == 0){
-					r = g = b = l; // achromatic
-				}else{
-					var hue2rgb = function hue2rgb(p, q, t){
-						if(t < 0) t += 1;
-						if(t > 1) t -= 1;
-						if(t < 1/6) return p + (q - p) * 6 * t;
-						if(t < 1/2) return q;
-						if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
-						return p;
-					}
-
-					var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-					var p = 2 * l - q;
-					r = hue2rgb(p, q, h + 1/3);
-					g = hue2rgb(p, q, h);
-					b = hue2rgb(p, q, h - 1/3);
-				}
-
-				return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
-			}
-
-			var rgbTest = convertToRgb(hslTest[0], hslTest[1], hslTest[2]);
-			console.log('rgbTest: ' + ' R:' + rgbTest[0] + ' G:' + rgbTest[1] + ' B:' + rgbTest[2]);
-
-			
+			// grayscale();
 		}
 	}
 
@@ -1071,10 +1027,10 @@ function shapes(dataArray, bufferLength){
 	// imgColorPick();
 	// imgGreyInvert();
 	// imgZoomAlias();
-	imgRgbToHsl();
+	// imgChannelSwap();
 
 
-	// imgRecolourTest();
+	imgRecolourTest();
 
 	// drawRegPoly();
 
