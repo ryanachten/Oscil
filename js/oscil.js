@@ -955,16 +955,16 @@ function shapes(dataArray, bufferLength){
 				invertRecol();
 			}
 
-			// var monoRecol = function(){
-			// 	for (var i = 0; i < data.length; i+=4) {
-			// 		var avg = ((data[i] + data[i+1] + data[i+3]) /3);
+			var monoRecol = function(){
+				for (var i = 0; i < data.length; i+=4) {
+					var avg = ((data[i] + data[i+1] + data[i+3]) /3);
 
-			// 		data[i] = avg + 50;
-			// 		data[i+1] = avg + 10;
-			// 		data[i+2] = avg + 30;
-			// 	};
-			// 	canvasCtx.putImageData(imgdata, 0,0);
-			// };
+					data[i] = 	avg + (logda *10);
+					data[i+1] = avg + (logda2*10);
+					data[i+2] = avg + (logda3*10);
+				};
+				canvasCtx.putImageData(imgdata, 0,0);
+			};
 			// monoRecol();		
 
 			drawVisual = requestAnimationFrame(draw);
