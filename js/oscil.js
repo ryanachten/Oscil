@@ -715,6 +715,113 @@ function shapes(dataArray, bufferLength){
 		ball.draw();
 	}
 
+	function imgColorPick(){
+
+		//Color Picker
+		var img = new Image();
+		img.src = 'https://upload.wikimedia.org/wikipedia/commons/4/44/Jelly_cc11.jpg' + '?' + new Date().getTime();
+		img.setAttribute('crossOrigin', '');
+
+		img.onload = function(){
+			canvasCtx.drawImage(img, 0,0);
+			img.style.display = 'none';
+		};
+
+		function pick(event){
+			var x = event.layerX;
+			var y = event.layerY;
+			var pixel = canvasCtx.getImageData(x,y,1,1);
+			var data = pixel.data;
+			var rgba = 'rgba('+ data[0] + data[1] + data[2] + data[3] + ')';
+			console.log(rgba);
+		}
+		canvas.addEventListener('mousemove', pick);
+	}
+
+	function imgGreyInvert(){
+		//Invert and Greyscale
+		var img = new Image();
+		img.src = 'https://upload.wikimedia.org/wikipedia/commons/4/44/Jelly_cc11.jpg' + '?' + new Date().getTime();
+		img.setAttribute('crossOrigin', '');
+		img.onload = function(){
+			draw(this);
+		};
+
+		function draw(img){
+			canvasCtx.drawImage(img, 0,0 , canvWidth, canvWidth);
+			img.style.display = 'none'
+			var imgdata = canvasCtx.getImageData(0,0, canvWidth, canvHeight);
+			var data = imgdata.data;
+
+			var invert = function(){
+				for (var i = 0; i < data.length; i+=4) {
+					data[i] = 255 - data[i]; //r
+					data[i+1] = 255 - data[i+1]; //g
+					data[i+2] = 255 - data[i+2]; //b
+				};
+				canvasCtx.putImageData(imgdata, 0,0);
+			};
+			invert();
+
+			var grayscale = function(){
+				for (var i = 0; i < data.length; i+=4) {
+					var avg = (data[i] + data[i+1] + data[i+3]) /3;
+
+					data[i] = avg;
+					data[i+1] = avg;
+					data[i+2] = avg;
+				};
+				canvasCtx.putImageData(imgdata, 0,0);
+			};
+			grayscale();
+		}
+	}
+
+	function imgZoomAlias(){
+
+		var zoomCanvas = document.createElement('canvas');
+		document.getElementById('container').appendChild(zoomCanvas);
+		zoomCanvas.id = 'zoomCanvas'
+		zoomCanvas.width = 200;
+		zoomCanvas.height = 200;
+		zoomCanvas.style.position = 'absolute';
+    	zoomCanvas.style.zIndex = 8;
+    	zoomCanvas.style.right = '100px';
+    	zoomCanvas.style.top = '100px';
+
+		var zoomctx = zoomCanvas.getContext('2d');
+		// zoomctx.fillStyle = 'black';
+		// zoomctx.fillRect(0,0, zoomCanvas.width,zoomCanvas.height);
+
+		var img = new Image();
+		img.src = 'https://upload.wikimedia.org/wikipedia/commons/4/44/Jelly_cc11.jpg' + '?' + new Date().getTime();
+		img.setAttribute('crossOrigin', '');
+		img.onload = function(){
+			draw(this);
+		};
+
+		function draw(){
+			canvasCtx.drawImage(img, 0,0,canvWidth, canvHeight);
+			img.style.display = 'none';
+
+			function disableSmoothing(){
+				zoomctx.imageSmoothingEnabled = false;
+				zoomctx.mozImageSmoothingEnabled = false;
+				zoomctx.webkitImageSmoothingEnabled = false;
+				zoomctx.msImageSmoothingEnabled = false;
+			}
+			// disableSmoothing();
+
+			var zoom = function(event){
+				var x = event.layerX;
+				var y = event.layerY;
+				zoomctx.drawImage(canvas, Math.abs(x-5), Math.abs(y-5),
+									10,10, 0,0, 200,200);
+			};
+			canvas.addEventListener('mousemove', zoom);
+		}
+	}
+
 	function drawRegPoly(){
 
 		function polygon(x, y, radius, sides, startAngle, anticlockwise, image){
@@ -787,7 +894,82 @@ function shapes(dataArray, bufferLength){
 		}
 	}
 
-	
+	function imgRecolourTest(){		
+
+		var img = new Image();
+		img.src = 'https://upload.wikimedia.org/wikipedia/commons/4/44/Jelly_cc11.jpg' + '?' + new Date().getTime();
+		img.setAttribute('crossOrigin', '');
+		img.onload = function(){
+			draw();
+		};
+
+		function draw(){
+
+			var fillScreen = true;
+			if (fillScreen){
+				canvasCtx.drawImage(img, 0,0 , canvWidth, canvHeight);
+			}else{
+				//TODO: build aspect ration functionality
+				//can use img.width etc
+			}
+			var imgdata = canvasCtx.getImageData(0,0, canvWidth, canvHeight);
+			var data = imgdata.data;
+
+			for(var i = 0; i < bufferLength; i+=50) {
+
+				analyser.getByteFrequencyData(dataArray);
+				var da = dataArray[i];
+				console.log('da:' + da);
+				var da2 = dataArray[i+10];
+				console.log('da2:' + da2);
+				var da3 = dataArray[i+20];
+				console.log('da3:' + da3);
+				var logda, logda2, logda3;
+
+
+				//TODO: these should go in the data for-loop
+				if (da !== 0){
+					logda = Math.log2(da);
+					console.log('log-da:' + logda);
+				}
+				if (da2 !== 0){
+					logda2 = Math.log2(da2);
+					console.log('log-da2:' + logda2);
+				}
+				if (da3 !== 0){
+					logda3 = Math.log2(da3);
+					console.log('log-da3:' + logda3);
+				}
+
+				var invertRecol = function(){
+					for (var i = 0; i < data.length; i+=4) {
+						if (da !== 0)
+							data[i+1] = (data[i+1]*0.5) + (logda*logda); // 
+						if (da2 !== 0)
+							data[i+1] = (data[i+1]*0.5) + (logda2*logda2); // 
+						if (da3 !== 0)
+							data[i+2] = (data[i+2]*0.5) + (logda3*logda3); //
+					};
+					canvasCtx.putImageData(imgdata, 0,0);
+				};
+				invertRecol();
+			}
+
+			// var monoRecol = function(){
+			// 	for (var i = 0; i < data.length; i+=4) {
+			// 		var avg = ((data[i] + data[i+1] + data[i+3]) /3);
+
+			// 		data[i] = avg + 50;
+			// 		data[i+1] = avg + 10;
+			// 		data[i+2] = avg + 30;
+			// 	};
+			// 	canvasCtx.putImageData(imgdata, 0,0);
+			// };
+			// monoRecol();		
+
+			drawVisual = requestAnimationFrame(draw);
+		}
+	}
 
 	// drawRect();
 	// drawTriangle();
@@ -802,6 +984,11 @@ function shapes(dataArray, bufferLength){
 	// drawSpiralMatrixTest();
 	// animEarthExample();
 	// animBallExample();
+	// imgColorPick();
+	// imgGreyInvert();
+	// imgZoomAlias();
+
+	imgRecolourTest();
 
 	// drawRegPoly();
 
