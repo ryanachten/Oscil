@@ -785,9 +785,9 @@ function shapes(dataArray, bufferLength){
 		zoomCanvas.width = 200;
 		zoomCanvas.height = 200;
 		zoomCanvas.style.position = 'absolute';
-    	zoomCanvas.style.zIndex = 8;
-    	zoomCanvas.style.right = '100px';
-    	zoomCanvas.style.top = '100px';
+		zoomCanvas.style.zIndex = 8;
+		zoomCanvas.style.right = '100px';
+		zoomCanvas.style.top = '100px';
 
 		var zoomctx = zoomCanvas.getContext('2d');
 		// zoomctx.fillStyle = 'black';
@@ -952,7 +952,7 @@ function shapes(dataArray, bufferLength){
 					};
 					canvasCtx.putImageData(imgdata, 0,0);
 				};
-				invertRecol();
+				// invertRecol();
 			}
 
 			var monoRecol = function(){
@@ -965,9 +965,93 @@ function shapes(dataArray, bufferLength){
 				};
 				canvasCtx.putImageData(imgdata, 0,0);
 			};
-			// monoRecol();		
+			// monoRecol();	
+
 
 			drawVisual = requestAnimationFrame(draw);
+		}
+	}
+
+	function imgRgbToHsl(){
+		//Invert and Greyscale
+		var img = new Image();
+		img.src = 'https://upload.wikimedia.org/wikipedia/commons/4/44/Jelly_cc11.jpg' + '?' + new Date().getTime();
+		img.setAttribute('crossOrigin', '');
+		img.onload = function(){
+			draw(this);
+		};
+
+		function draw(img){
+			canvasCtx.drawImage(img, 0,0 , canvWidth, canvWidth);
+			var imgdata = canvasCtx.getImageData(0,0, canvWidth, canvHeight);
+			var data = imgdata.data;
+
+			// var invert = function(){
+			// 	for (var i = 0; i < data.length; i+=4) {
+			// 		data[i] = 255 - data[i]; //r
+			// 		data[i+1] = 255 - data[i+1]; //g
+			// 		data[i+2] = 255 - data[i+2]; //b
+			// 	};
+				canvasCtx.putImageData(imgdata, 0,0);
+			// };
+
+			function convertToHsl(r,g,b){
+
+				r /= 255, g /= 255, b /= 255;
+				var max = Math.max(r,g,b);
+				var min = Math.min(r,g,b);
+
+				var h,s,l = (max + min) /2;
+
+				if(max == min){
+					h = s = 0;
+				}else{
+					var d = max - min;
+					s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+					switch(max){
+						case r: h = (g - b) / (g < b ? 6 : 0); break;
+						case g: h = (b - r)  / d + 2; break;
+						case b: h = (r - g)  / d + 4; break;
+					}
+					h /= 6;
+				}
+				return [h,s,l];
+			}
+			
+			var hslTest = convertToHsl(data[0], data[1], data[2]);
+			console.log('hslTest: ' + ' R:' + data[0] + ' G:' + data[1] + ' B:' + data[2]);
+			console.log('hslTest: ' + ' H:' + (hslTest[0]*360) + ' S:' + (hslTest[1]*100) + ' L:' + (hslTest[2]*100));
+
+
+			function convertToRgb(h,s,l){
+				 var r, g, b;
+
+				if(s == 0){
+					r = g = b = l; // achromatic
+				}else{
+					var hue2rgb = function hue2rgb(p, q, t){
+						if(t < 0) t += 1;
+						if(t > 1) t -= 1;
+						if(t < 1/6) return p + (q - p) * 6 * t;
+						if(t < 1/2) return q;
+						if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+						return p;
+					}
+
+					var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+					var p = 2 * l - q;
+					r = hue2rgb(p, q, h + 1/3);
+					g = hue2rgb(p, q, h);
+					b = hue2rgb(p, q, h - 1/3);
+				}
+
+				return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+			}
+
+			var rgbTest = convertToRgb(hslTest[0], hslTest[1], hslTest[2]);
+			console.log('rgbTest: ' + ' R:' + rgbTest[0] + ' G:' + rgbTest[1] + ' B:' + rgbTest[2]);
+
+			
 		}
 	}
 
@@ -987,8 +1071,10 @@ function shapes(dataArray, bufferLength){
 	// imgColorPick();
 	// imgGreyInvert();
 	// imgZoomAlias();
+	imgRgbToHsl();
 
-	imgRecolourTest();
+
+	// imgRecolourTest();
 
 	// drawRegPoly();
 
