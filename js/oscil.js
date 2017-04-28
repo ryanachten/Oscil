@@ -218,8 +218,8 @@ function refract(dataArray, bufferLength){
 			var da = dataArray[i];
 			console.log(da);
 			if (da !== 0){
-				var tileCount = Math.log2(da);
-				console.log('log-da:' + Math.log2(da));
+				var tileCount = Math.floor(Math.log(da)/Math.log(1.5));
+				console.log('log-da:' + tileCount);
 				if (tileCount < 2) tileCount = 2;
 				// if (da !== 0){
 				// 	if (da == 1){
