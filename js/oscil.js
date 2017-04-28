@@ -926,46 +926,55 @@ function shapes(dataArray, bufferLength){
 				// console.log('da3:' + da3);
 				var logda, logda2, logda3;
 
-
-				//TODO: these should go in the data for-loop
 				if (da !== 0){
-					logda = Math.log2(da);
-					// console.log('log-da:' + logda);
+					logda = Math.floor(Math.log(da) / Math.log(1.5));
+					console.log('log-da:' + logda);
 				}
 				if (da2 !== 0){
-					logda2 = Math.log2(da2);
-					// console.log('log-da2:' + logda2);
+					logda2 = Math.floor(Math.log(da2) / Math.log(1.5));
+					console.log('log-da2:' + logda2);
 				}
 				if (da3 !== 0){
-					logda3 = Math.log2(da3);
-					// console.log('log-da3:' + logda3);
+					logda3 = Math.floor(Math.log(da3) / Math.log(1.5));
+					console.log('log-da3:' + logda3);
 				}
+			
 
-				function adjustBrightness(){
+				// function adjustBrightness(){
+				// 	for (var i = 0; i < data.length; i+=4) {
+				// 		if (da !== 0)
+				// 			data[i] = (data[i]		*0.75) + logda; // 
+				// 		if (da2 !== 0)
+				// 			data[i+1] = (data[i+1]	*0.75) + logda2; // 
+				// 		if (da3 !== 0)
+				// 			data[i+2] = (data[i+2]	*0.75) + logda3; //
+				// 	}
+				// }
+				// adjustBrightness();
+
+
+				function monoRecol(){
 					for (var i = 0; i < data.length; i+=4) {
-						if (da !== 0)
-							data[i+1] = (data[i+1]*0.5) + (logda*logda); // 
-						if (da2 !== 0)
-							data[i+1] = (data[i+1]*0.5) + (logda2*logda2); // 
-						if (da3 !== 0)
-							data[i+2] = (data[i+2]*0.5) + (logda3*logda3); //
-					};
-				};
-				// adjustBrightness();	
+						var avg = ((data[i] + data[i+1] + data[i+3]) /3);
+
+						data[i] = 	avg*0.55 + (logda *3);  
+						data[i+1] = avg*0.55 + (logda2*3); 
+						data[i+2] = avg*0.55 + (logda3*3); 
+					}
+				}
+				monoRecol();
+
+
+			// 	function channelSwap(){
+			// 		for (var i = 0; i < data.length; i+=4) {
+					
+			// 			data[i]   = (data[i+1]*(logda2/10)) + (logda2*logda2);
+			// 			data[i+1] = (data[i+2]*(logda3/10)) + (logda3*logda3);
+			// 			data[i+2] = (data[i  ]*(logda/10)) + (logda*logda);
+			// 		}
+			// 	}
+			// 	channelSwap();		
 			}
-
-			function monoRecol(){
-				for (var i = 0; i < data.length; i+=4) {
-					var avg = ((data[i] + data[i+1] + data[i+3]) /3);
-
-					data[i] = 	avg + (logda *10);
-					data[i+1] = avg + (logda2*10);
-					data[i+2] = avg + (logda3*10);
-				};
-			};
-			// monoRecol();	
-
-
 
 			canvasCtx.putImageData(imgdata, 0,0);
 			drawVisual = requestAnimationFrame(draw);
