@@ -915,7 +915,7 @@ function shapes(dataArray, bufferLength){
 			var imgdata = canvasCtx.getImageData(0,0, canvWidth, canvHeight);
 			var data = imgdata.data;
 
-			for(var i = 0; i < bufferLength; i+=50) {
+			for(var i = 0; i < bufferLength; i+=70) {
 
 				analyser.getByteFrequencyData(dataArray);
 				var da = dataArray[i];
@@ -928,15 +928,15 @@ function shapes(dataArray, bufferLength){
 
 				if (da !== 0){
 					logda = Math.floor(Math.log(da) / Math.log(1.5));
-					console.log('log-da:' + logda);
+					// console.log('log-da:' + logda);
 				}
 				if (da2 !== 0){
 					logda2 = Math.floor(Math.log(da2) / Math.log(1.5));
-					console.log('log-da2:' + logda2);
+					// console.log('log-da2:' + logda2);
 				}
 				if (da3 !== 0){
 					logda3 = Math.floor(Math.log(da3) / Math.log(1.5));
-					console.log('log-da3:' + logda3);
+					// console.log('log-da3:' + logda3);
 				}
 			
 
@@ -953,27 +953,46 @@ function shapes(dataArray, bufferLength){
 				// adjustBrightness();
 
 
-				function monoRecol(){
-					for (var i = 0; i < data.length; i+=4) {
-						var avg = ((data[i] + data[i+1] + data[i+3]) /3);
+				// function monoRecol(){
+				// 	for (var i = 0; i < data.length; i+=4) {
+				// 		var avg = ((data[i] + data[i+1] + data[i+3]) /3);
 
-						data[i] = 	avg*0.55 + (logda *3);  
-						data[i+1] = avg*0.55 + (logda2*3); 
-						data[i+2] = avg*0.55 + (logda3*3); 
+				// 		data[i] = 	avg*0.55 + (logda *3);  
+				// 		data[i+1] = avg*0.55 + (logda2*3); 
+				// 		data[i+2] = avg*0.55 + (logda3*3); 
+				// 	}
+				// }
+				// monoRecol();
+
+
+				function channelNoise(){
+
+					var sampleCount = 256;
+
+					for (var i = 0; i < data.length; i+=sampleCount) {
+
+						var r = data[i]; var g = data[i+1]; var b = data[i+2];
+
+						r = Math.random() * (Math.max(g, b) - Math.min(g, b)) + Math.min(g, b) * Math.sin(da);			// ;
+						g = Math.random() * (Math.max(r, b) - Math.min(r, b)) + Math.min(r, b) * Math.cos(da);			//  );
+						b = Math.random() * (Math.max(r, g) - Math.min(r, g)) + Math.min(r, g) * Math.sin(da);		//  );
+
+						for (var j = 0; j < sampleCount/4; j++) {
+							data[i+(j*4)] = r; data[i+(j*4+1)] = g; data[i+(j*4+2)] = b;
+						}
+
+						// data[i] = r; data[i+1] = g; data[i+2] = b; //4
+						// data[i+4] = r; data[i+5] = g; data[i+6] = b; //8
+						// data[i+8] = r; data[i+9] = g; data[i+10] = b; //12
+						// data[i+12] = r; data[i+13] = g; data[i+14] = b; //16
+						// data[i+16] = r; data[i+17] = g; data[i+18] = b; //20
+						// data[i+20] = r; data[i+21] = g; data[i+22] = b;//20
+						// data[i+24] = r;	data[i+25] = g; data[i+26] = b;
+						// data[i+28] = r;	data[i+29] = g; data[i+30] = b;
+						// ;
 					}
 				}
-				monoRecol();
-
-
-			// 	function channelSwap(){
-			// 		for (var i = 0; i < data.length; i+=4) {
-					
-			// 			data[i]   = (data[i+1]*(logda2/10)) + (logda2*logda2);
-			// 			data[i+1] = (data[i+2]*(logda3/10)) + (logda3*logda3);
-			// 			data[i+2] = (data[i  ]*(logda/10)) + (logda*logda);
-			// 		}
-			// 	}
-			// 	channelSwap();		
+				channelNoise();		
 			}
 
 			canvasCtx.putImageData(imgdata, 0,0);
