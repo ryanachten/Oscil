@@ -108,6 +108,9 @@ function visualise(visMode){
 	else if(visMode === 'Particles'){
 		particles(dataArray, bufferLength);
 	}
+	else if(visMode === 'Macroblocks'){
+		macroblocks(dataArray, bufferLength);
+	}
 	else if(visMode === 'Shapes'){
 		shapes(dataArray, bufferLength);
 	}
@@ -414,6 +417,70 @@ function particles(dataArray, bufferLength){
 		draw();
 	}
 
+
+function macroblocks(dataArray, bufferLength){		
+
+		var img = new Image();
+		img.src = 'https://upload.wikimedia.org/wikipedia/commons/4/44/Jelly_cc11.jpg' + '?' + new Date().getTime();
+		img.setAttribute('crossOrigin', '');
+		img.onload = function(){
+			draw();
+		};
+
+		function draw(){
+
+			var fillScreen = true;
+			if (fillScreen){
+				canvasCtx.drawImage(img, 0,0 , canvWidth, canvHeight);
+			}else{
+				//TODO: build aspect ration functionality
+				//can use img.width etc
+			}
+			var imgdata = canvasCtx.getImageData(0,0, canvWidth, canvHeight);
+			var data = imgdata.data;
+
+			for(var i = 0; i < bufferLength; i+=70) {
+
+				analyser.getByteFrequencyData(dataArray);
+				var da = dataArray[i];
+				var da2 = dataArray[i+10];
+				var da3 = dataArray[i+20];
+				var logda, logda2, logda3;
+
+				if (da !== 0){
+					logda = Math.floor(Math.log(da) / Math.log(1.5));
+				}
+				if (da2 !== 0){
+					logda2 = Math.floor(Math.log(da2) / Math.log(1.5));
+				}
+				if (da3 !== 0){
+					logda3 = Math.floor(Math.log(da3) / Math.log(1.5));
+				}
+
+				function channelNoise(){
+
+					var sampleCount = 256;
+
+					for (var i = 0; i < data.length; i+=sampleCount) {
+
+						var r = data[i]; var g = data[i+1]; var b = data[i+2];
+
+						r = Math.random() * (Math.max(g, b) - Math.min(g, b)) + Math.min(g, b) * Math.sin(da);			// ;
+						g = Math.random() * (Math.max(r, b) - Math.min(r, b)) + Math.min(r, b) * Math.cos(da);			//  );
+						b = Math.random() * (Math.max(r, g) - Math.min(r, g)) + Math.min(r, g) * Math.sin(da);		//  );
+
+						for (var j = 0; j < sampleCount/4; j++) {
+							data[i+(j*4)] = r; data[i+(j*4+1)] = g; data[i+(j*4+2)] = b;
+						}
+					}
+				}
+				channelNoise();		
+			}
+
+			canvasCtx.putImageData(imgdata, 0,0);
+			drawVisual = requestAnimationFrame(draw);
+		}
+	}
 
 function shapes(dataArray, bufferLength){
 	canvasCtx.clearRect(0,0,canvWidth, canvHeight);
@@ -940,17 +1007,17 @@ function shapes(dataArray, bufferLength){
 				}
 			
 
-				// function adjustBrightness(){
-				// 	for (var i = 0; i < data.length; i+=4) {
-				// 		if (da !== 0)
-				// 			data[i] = (data[i]		*0.75) + logda; // 
-				// 		if (da2 !== 0)
-				// 			data[i+1] = (data[i+1]	*0.75) + logda2; // 
-				// 		if (da3 !== 0)
-				// 			data[i+2] = (data[i+2]	*0.75) + logda3; //
-				// 	}
-				// }
-				// adjustBrightness();
+				function adjustBrightness(){
+					for (var i = 0; i < data.length; i+=4) {
+						if (da !== 0)
+							data[i] = (data[i]		*0.75) + logda; // 
+						if (da2 !== 0)
+							data[i+1] = (data[i+1]	*0.75) + logda2; // 
+						if (da3 !== 0)
+							data[i+2] = (data[i+2]	*0.75) + logda3; //
+					}
+				}
+				adjustBrightness();
 
 
 				// function monoRecol(){
@@ -963,36 +1030,6 @@ function shapes(dataArray, bufferLength){
 				// 	}
 				// }
 				// monoRecol();
-
-
-				function channelNoise(){
-
-					var sampleCount = 256;
-
-					for (var i = 0; i < data.length; i+=sampleCount) {
-
-						var r = data[i]; var g = data[i+1]; var b = data[i+2];
-
-						r = Math.random() * (Math.max(g, b) - Math.min(g, b)) + Math.min(g, b) * Math.sin(da);			// ;
-						g = Math.random() * (Math.max(r, b) - Math.min(r, b)) + Math.min(r, b) * Math.cos(da);			//  );
-						b = Math.random() * (Math.max(r, g) - Math.min(r, g)) + Math.min(r, g) * Math.sin(da);		//  );
-
-						for (var j = 0; j < sampleCount/4; j++) {
-							data[i+(j*4)] = r; data[i+(j*4+1)] = g; data[i+(j*4+2)] = b;
-						}
-
-						// data[i] = r; data[i+1] = g; data[i+2] = b; //4
-						// data[i+4] = r; data[i+5] = g; data[i+6] = b; //8
-						// data[i+8] = r; data[i+9] = g; data[i+10] = b; //12
-						// data[i+12] = r; data[i+13] = g; data[i+14] = b; //16
-						// data[i+16] = r; data[i+17] = g; data[i+18] = b; //20
-						// data[i+20] = r; data[i+21] = g; data[i+22] = b;//20
-						// data[i+24] = r;	data[i+25] = g; data[i+26] = b;
-						// data[i+28] = r;	data[i+29] = g; data[i+30] = b;
-						// ;
-					}
-				}
-				channelNoise();		
 			}
 
 			canvasCtx.putImageData(imgdata, 0,0);
