@@ -111,6 +111,9 @@ function visualise(visMode){
 	else if(visMode === 'Macroblocks'){
 		macroblocks(dataArray, bufferLength);
 	}
+	else if(visMode === 'RepeatPix'){
+		repeatPix(dataArray, bufferLength);
+	}
 	else if(visMode === 'Shapes'){
 		shapes(dataArray, bufferLength);
 	}
@@ -415,8 +418,7 @@ function particles(dataArray, bufferLength){
 		}
 		
 		draw();
-	}
-
+}
 
 function macroblocks(dataArray, bufferLength){		
 
@@ -478,6 +480,77 @@ function macroblocks(dataArray, bufferLength){
 			}
 
 			canvasCtx.putImageData(imgdata, 0,0);
+			drawVisual = requestAnimationFrame(draw);
+		}
+}
+
+function repeatPix(dataArray, bufferLength){		
+
+		var img = new Image();
+		img.src = 'https://upload.wikimedia.org/wikipedia/commons/4/44/Jelly_cc11.jpg' + '?' + new Date().getTime();
+		img.setAttribute('crossOrigin', '');
+		img.onload = function(){
+			draw();
+		};
+
+		function draw(){
+
+			var fillScreen = true;
+			canvasCtx.drawImage(img, 0,0 , canvWidth, canvHeight);
+
+			var imgdata = canvasCtx.getImageData(0,0, canvWidth, canvHeight);
+			var data = imgdata.data;
+
+			for(var i = 0; i < bufferLength; i+=70) {
+
+				analyser.getByteFrequencyData(dataArray);
+				var da = dataArray[i];
+				// console.log('da:' + da);
+				var da2 = dataArray[i+10];
+				// console.log('da2:' + da2);
+				var da3 = dataArray[i+20];
+				// console.log('da3:' + da3);
+				var logda, logda2, logda3;
+
+				if (da !== 0){
+					logda = Math.floor(Math.log(da) / Math.log(1.05));
+					// console.log('log-da:' + logda);
+				}
+				if (da2 !== 0){
+					logda2 = Math.floor(Math.log(da2) / Math.log(1.1));
+					// console.log('log-da2:' + logda2);
+				}
+				if (da3 !== 0){
+					logda3 = Math.floor(Math.log(da3) / Math.log(1.5));
+					// console.log('log-da3:' + logda3);
+				}
+
+				function imgData(){
+					var sampleY;
+						if(isNaN(logda) || logda == 0){
+							sampleY = canvHeight/2;
+						}else{
+							sampleY = Math.ceil(canvHeight/2 + logda);
+						}
+
+					// console.log('canvHeight: ' + canvHeight + 'sampleY: ' + sampleY);
+					var sampleHeight;
+						if(isNaN(logda2) || logda2 == 0){
+							sampleHeight = 1;
+						}else{
+							sampleHeight = Math.abs(logda2);
+						}
+						 
+					var frstRow = canvasCtx.getImageData(0,sampleY, canvWidth, sampleHeight);
+					canvasCtx.clearRect(0,0, canvWidth, canvHeight);
+
+					for (var i = 0; i < (canvHeight/sampleHeight); i++) {
+						canvasCtx.putImageData(frstRow, 0,(i*sampleHeight));
+					}
+				}
+
+				imgData();
+			}
 			drawVisual = requestAnimationFrame(draw);
 		}
 	}
@@ -961,7 +1034,7 @@ function shapes(dataArray, bufferLength){
 		}
 	}
 
-	function imgRecolourTest(){		
+	function imgTests(){		
 
 		var img = new Image();
 		img.src = 'https://upload.wikimedia.org/wikipedia/commons/4/44/Jelly_cc11.jpg' + '?' + new Date().getTime();
@@ -973,12 +1046,12 @@ function shapes(dataArray, bufferLength){
 		function draw(){
 
 			var fillScreen = true;
-			if (fillScreen){
+			// if (fillScreen){
 				canvasCtx.drawImage(img, 0,0 , canvWidth, canvHeight);
-			}else{
-				//TODO: build aspect ration functionality
-				//can use img.width etc
-			}
+			// }else{
+			// 	//TODO: build aspect ration functionality
+			// 	//can use img.width etc
+			// }
 			var imgdata = canvasCtx.getImageData(0,0, canvWidth, canvHeight);
 			var data = imgdata.data;
 
@@ -994,87 +1067,50 @@ function shapes(dataArray, bufferLength){
 				var logda, logda2, logda3;
 
 				if (da !== 0){
-					logda = Math.floor(Math.log(da) / Math.log(1.5));
+					logda = Math.floor(Math.log(da) / Math.log(1.05));
 					// console.log('log-da:' + logda);
 				}
 				if (da2 !== 0){
-					logda2 = Math.floor(Math.log(da2) / Math.log(1.5));
+					logda2 = Math.floor(Math.log(da2) / Math.log(1.1));
 					// console.log('log-da2:' + logda2);
 				}
 				if (da3 !== 0){
 					logda3 = Math.floor(Math.log(da3) / Math.log(1.5));
 					// console.log('log-da3:' + logda3);
 				}
-			
 
 				function adjustBrightness(){
-					for (var i = 0; i < data.length; i+=4) {
-						if (da !== 0)
-							data[i] = (data[i]		*0.75) + logda; // 
-						if (da2 !== 0)
-							data[i+1] = (data[i+1]	*0.75) + logda2; // 
-						if (da3 !== 0)
-							data[i+2] = (data[i+2]	*0.75) + logda3; //
+					var sampleY;
+						if(isNaN(logda) || logda == 0){
+							sampleY = canvHeight/2;
+						}else{
+							sampleY = Math.ceil(canvHeight/2 + logda);
+						}
+
+					console.log('canvHeight: ' + canvHeight + 'sampleY: ' + sampleY);
+					var sampleHeight;
+						if(isNaN(logda2) || logda2 == 0){
+							sampleHeight = 1;
+						}else{
+							sampleHeight = Math.abs(logda2);
+						}
+						 
+					var frstRow = canvasCtx.getImageData(0,sampleY, canvWidth, sampleHeight);
+					canvasCtx.clearRect(0,0, canvWidth, canvHeight);
+
+					for (var i = 0; i < (canvHeight/sampleHeight); i++) {
+						canvasCtx.putImageData(frstRow, 0,(i*sampleHeight));
 					}
 				}
+
 				adjustBrightness();
-
-
-				// function monoRecol(){
-				// 	for (var i = 0; i < data.length; i+=4) {
-				// 		var avg = ((data[i] + data[i+1] + data[i+3]) /3);
-
-				// 		data[i] = 	avg*0.55 + (logda *3);  
-				// 		data[i+1] = avg*0.55 + (logda2*3); 
-				// 		data[i+2] = avg*0.55 + (logda3*3); 
-				// 	}
-				// }
-				// monoRecol();
 			}
 
-			canvasCtx.putImageData(imgdata, 0,0);
+			// canvasCtx.putImageData(imgdata, 0,0);
 			drawVisual = requestAnimationFrame(draw);
 		}
 	}
 
-	function imgChannelSwap(){
-		//Invert and Greyscale
-		var img = new Image();
-		img.src = 'https://upload.wikimedia.org/wikipedia/commons/4/44/Jelly_cc11.jpg' + '?' + new Date().getTime();
-		img.setAttribute('crossOrigin', '');
-		img.onload = function(){
-			draw(this);
-		};
-
-		function draw(img){
-			canvasCtx.drawImage(img, 0,0 , canvWidth, canvWidth);
-			img.style.display = 'none'
-			var imgdata = canvasCtx.getImageData(0,0, canvWidth, canvHeight);
-			var data = imgdata.data;
-
-			var invert = function(){
-				for (var i = 0; i < data.length; i+=4) {
-					data[i] = (data[i+1] + data[i+2]) /2; //r
-					data[i+1] = (data[i] + data[i+2]) /2; //g
-					data[i+2] = (data[i+1] + data[i]) /2; //b
-				};
-				canvasCtx.putImageData(imgdata, 0,0);
-			};
-			invert();
-
-			// var grayscale = function(){
-			// 	for (var i = 0; i < data.length; i+=4) {
-			// 		var avg = (data[i] + data[i+1] + data[i+3]) /3;
-
-			// 		data[i] = avg;
-			// 		data[i+1] = avg;
-			// 		data[i+2] = avg;
-			// 	};
-			// 	canvasCtx.putImageData(imgdata, 0,0);
-			// };
-			// grayscale();
-		}
-	}
 
 	// drawRect();
 	// drawTriangle();
@@ -1092,10 +1128,8 @@ function shapes(dataArray, bufferLength){
 	// imgColorPick();
 	// imgGreyInvert();
 	// imgZoomAlias();
-	// imgChannelSwap();
 
-
-	imgRecolourTest();
+	imgTests();
 
 	// drawRegPoly();
 
