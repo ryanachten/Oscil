@@ -493,49 +493,60 @@ function repeatPix(dataArray, bufferLength){
 			draw();
 		};
 
+		//TODO: add ModHeight checkbox in GUI
+		//TODO: add offsetSampleRate slider in GUI
+		var modHeight = false;
+		var offsetSampleRate = 1000;
+
+
+		var offsetY;
+		var offsetX;
+		var offsetInterval = window.setInterval(offsetRand, offsetSampleRate);
+
+		function offsetRand(){
+			offsetY = Math.floor((Math.random() * canvHeight) +1);
+		}
+
 		function draw(){
 
-			var fillScreen = true;
 			canvasCtx.drawImage(img, 0,0 , canvWidth, canvHeight);
 
 			var imgdata = canvasCtx.getImageData(0,0, canvWidth, canvHeight);
 			var data = imgdata.data;
 
-			for(var i = 0; i < bufferLength; i+=70) {
+			for(var i = 0; i < bufferLength; i+=50) {
 
 				analyser.getByteFrequencyData(dataArray);
 				var da = dataArray[i];
-				// console.log('da:' + da);
 				var da2 = dataArray[i+10];
-				// console.log('da2:' + da2);
 				var da3 = dataArray[i+20];
-				// console.log('da3:' + da3);
 				var logda, logda2, logda3;
 
 				if (da !== 0){
 					logda = Math.floor(Math.log(da) / Math.log(1.05));
-					// console.log('log-da:' + logda);
 				}
 				if (da2 !== 0){
 					logda2 = Math.floor(Math.log(da2) / Math.log(1.1));
-					// console.log('log-da2:' + logda2);
 				}
 				if (da3 !== 0){
 					logda3 = Math.floor(Math.log(da3) / Math.log(1.5));
-					// console.log('log-da3:' + logda3);
 				}
 
-				function imgData(){
+				function repeatY(){
+
 					var sampleY;
-						if(isNaN(logda) || logda == 0){
+						if(isNaN(logda) || logda == 0 || !isFinite(offsetY)){
 							sampleY = canvHeight/2;
 						}else{
-							sampleY = Math.ceil(canvHeight/2 + logda);
+							if ((Math.ceil(offsetY + logda)) > canvHeight){
+								sampleY = Math.ceil(offsetY - logda + 10);
+							}else{
+								sampleY = Math.floor(offsetY + logda - 10);
+							}
 						}
 
-					// console.log('canvHeight: ' + canvHeight + 'sampleY: ' + sampleY);
 					var sampleHeight;
-						if(isNaN(logda2) || logda2 == 0){
+						if(isNaN(logda2) || logda2 == 0 || !modHeight){
 							sampleHeight = 1;
 						}else{
 							sampleHeight = Math.abs(logda2);
@@ -549,7 +560,7 @@ function repeatPix(dataArray, bufferLength){
 					}
 				}
 
-				imgData();
+				repeatY();
 			}
 			drawVisual = requestAnimationFrame(draw);
 		}
