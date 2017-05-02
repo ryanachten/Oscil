@@ -495,8 +495,8 @@ function repeatPix(dataArray, bufferLength){
 
 		//TODO: add ModHeight checkbox in GUI
 		//TODO: add offsetSampleRate slider in GUI
-		var modHeight = false;
-		var offsetSampleRate = 1000;
+		var modWidth = false;
+		var offsetSampleRate = 2000;
 
 
 		var offsetY;
@@ -505,6 +505,7 @@ function repeatPix(dataArray, bufferLength){
 
 		function offsetRand(){
 			offsetY = Math.floor((Math.random() * canvHeight) +1);
+			offsetX = Math.floor((Math.random() * canvWidth) +1);
 		}
 
 		function draw(){
@@ -533,7 +534,6 @@ function repeatPix(dataArray, bufferLength){
 				}
 
 				function repeatY(){
-
 					var sampleY;
 						if(isNaN(logda) || logda == 0 || !isFinite(offsetY)){
 							sampleY = canvHeight/2;
@@ -546,7 +546,7 @@ function repeatPix(dataArray, bufferLength){
 						}
 
 					var sampleHeight;
-						if(isNaN(logda2) || logda2 == 0 || !modHeight){
+						if(isNaN(logda2) || logda2 == 0 || !modWidth){
 							sampleHeight = 1;
 						}else{
 							sampleHeight = Math.abs(logda2);
@@ -559,8 +559,35 @@ function repeatPix(dataArray, bufferLength){
 						canvasCtx.putImageData(frstRow, 0,(i*sampleHeight));
 					}
 				}
+				// repeatY();
 
-				repeatY();
+				function repeatX(){
+					var sampleX;
+						if(isNaN(logda) || logda == 0 || !isFinite(offsetX)){
+							sampleX = canvWidth/2;
+						}else{
+							if ((Math.ceil(offsetX + logda)) > canvWidth){
+								sampleX = Math.ceil(offsetX - logda + 10);
+							}else{
+								sampleX = Math.floor(offsetX + logda - 10);
+							}
+						}
+
+					var sampleWidth;
+						if(isNaN(logda2) || logda2 == 0 || !modWidth){
+							sampleWidth = 1;
+						}else{
+							sampleWidth = Math.abs(logda2);
+						}
+						 
+					var frstCol = canvasCtx.getImageData(sampleX,0, sampleWidth, canvHeight);
+					canvasCtx.clearRect(0,0, canvWidth, canvHeight);
+
+					for (var i = 0; i < (canvWidth/sampleWidth); i++) {
+						canvasCtx.putImageData(frstCol, (i*sampleWidth), 0);
+					}
+				}
+				repeatX();
 			}
 			drawVisual = requestAnimationFrame(draw);
 		}
