@@ -496,7 +496,7 @@ function repeatPix(dataArray, bufferLength){
 		//TODO: add ModHeight checkbox in GUI
 		//TODO: add offsetSampleRate slider in GUI
 		var modWidth = false;
-		var offsetSampleRate = 2000;
+		var offsetSampleRate = 1000;
 
 
 		var offsetY;
@@ -559,7 +559,7 @@ function repeatPix(dataArray, bufferLength){
 						canvasCtx.putImageData(frstRow, 0,(i*sampleHeight));
 					}
 				}
-				// repeatY();
+				repeatY();
 
 				function repeatX(){
 					var sampleX;
@@ -587,7 +587,7 @@ function repeatPix(dataArray, bufferLength){
 						canvasCtx.putImageData(frstCol, (i*sampleWidth), 0);
 					}
 				}
-				repeatX();
+				// repeatX();
 			}
 			drawVisual = requestAnimationFrame(draw);
 		}
@@ -1072,82 +1072,120 @@ function shapes(dataArray, bufferLength){
 		}
 	}
 
-	function imgTests(){		
+	function imgChannelMix(){
 
-		var img = new Image();
-		img.src = 'https://upload.wikimedia.org/wikipedia/commons/4/44/Jelly_cc11.jpg' + '?' + new Date().getTime();
-		img.setAttribute('crossOrigin', '');
-		img.onload = function(){
-			draw();
+		canvasCtx.clearRect(0,0 , canvWidth, canvHeight);	
+
+		var imgA = new Image();
+		imgA.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Jelly_cc11.jpg/800px-Jelly_cc11.jpg' + '?' + new Date().getTime();
+		imgA.setAttribute('crossOrigin', '');
+
+		var imgB = new Image();
+		imgB.src = 'https://upload.wikimedia.org/wikipedia/commons/2/2d/Olindias_formosa1.jpg' + '?' + new Date().getTime();
+		imgB.setAttribute('crossOrigin', '');
+
+		imgA.onload = function(){
+			imgB.onload = function(){
+				draw();
+			};
 		};
+
 
 		function draw(){
 
-			var fillScreen = true;
-			// if (fillScreen){
-				canvasCtx.drawImage(img, 0,0 , canvWidth, canvHeight);
-			// }else{
-			// 	//TODO: build aspect ration functionality
-			// 	//can use img.width etc
-			// }
-			var imgdata = canvasCtx.getImageData(0,0, canvWidth, canvHeight);
-			var data = imgdata.data;
+			canvasCtx.drawImage(imgA, 0,0 , canvWidth, canvHeight);
+			var imgAdata = canvasCtx.getImageData(0,0, canvWidth, canvHeight);
+			var dataA = imgAdata.data;
+			
+			// canvasCtx.clearRect(0,0 , canvWidth, canvHeight);
+			
+			canvasCtx.drawImage(imgB, 0,0 , canvWidth, canvHeight);
+			var imgBdata = canvasCtx.getImageData(0,0, canvWidth, canvHeight);
+			var dataB = imgBdata.data;
 
 			for(var i = 0; i < bufferLength; i+=70) {
 
 				analyser.getByteFrequencyData(dataArray);
+	
 				var da = dataArray[i];
-				// console.log('da:' + da);
-				var da2 = dataArray[i+10];
-				// console.log('da2:' + da2);
-				var da3 = dataArray[i+20];
-				// console.log('da3:' + da3);
-				var logda, logda2, logda3;
-
+				var logda;
 				if (da !== 0){
-					logda = Math.floor(Math.log(da) / Math.log(1.05));
-					// console.log('log-da:' + logda);
+					logda = Math.floor(Math.log(da) / Math.log(1.5));
 				}
-				if (da2 !== 0){
-					logda2 = Math.floor(Math.log(da2) / Math.log(1.1));
-					// console.log('log-da2:' + logda2);
-				}
-				if (da3 !== 0){
-					logda3 = Math.floor(Math.log(da3) / Math.log(1.5));
-					// console.log('log-da3:' + logda3);
+				else{
+					logda = 1;
 				}
 
-				function adjustBrightness(){
-					var sampleY;
-						if(isNaN(logda) || logda == 0){
-							sampleY = canvHeight/2;
-						}else{
-							sampleY = Math.ceil(canvHeight/2 + logda);
+				// function mixData(){
+					for (var j = 0; j < dataA.length; j+=4) {
+
+						if(logda%2 !== 0){
+							// console.log('Bdata');
+							dataB[j] = dataA[j];
+							dataB[j+1] = dataB[j+1];
+							dataB[j+2] = dataA[j+2];
 						}
-
-					console.log('canvHeight: ' + canvHeight + 'sampleY: ' + sampleY);
-					var sampleHeight;
-						if(isNaN(logda2) || logda2 == 0){
-							sampleHeight = 1;
-						}else{
-							sampleHeight = Math.abs(logda2);
+						else{
+							// console.log('Adata');
+							dataB[j] = dataB[j];
+							dataB[j+1] = dataA[j+1];
+							dataB[j+2] = dataA[j+2];
 						}
-						 
-					var frstRow = canvasCtx.getImageData(0,sampleY, canvWidth, sampleHeight);
-					canvasCtx.clearRect(0,0, canvWidth, canvHeight);
-
-					for (var i = 0; i < (canvHeight/sampleHeight); i++) {
-						canvasCtx.putImageData(frstRow, 0,(i*sampleHeight));
+									
 					}
-				}
-
-				adjustBrightness();
+					
+				// }
+				// mixData();
+				canvasCtx.putImageData(imgBdata, 0,0);
 			}
 
-			// canvasCtx.putImageData(imgdata, 0,0);
+			
 			drawVisual = requestAnimationFrame(draw);
 		}
 	}
+
+	//Generative tests
+
+	function helloShape(){
+
+		canvasCtx.translate(canvWidth/2, canvHeight/2);
+
+		function draw(){
+			var circleResolution = (Math.random() * 80) +2;
+			var radius = (Math.random() * canvWidth/4) +2;
+			var angle = Math.PI*2/circleResolution;
+			
+			canvasCtx.lineWidth = (Math.random() * 15) +4;
+			canvasCtx.strokeStyle = 'hsl('+ ((Math.random() * 360) +1)
+											+ ', 70%, 70%)';
+
+			canvasCtx.translate(-canvWidth/2, -canvHeight/2);
+
+			canvasCtx.fillStyle = 'rgba(237, 230, 224, 0.2)';
+			canvasCtx.fillRect(0,0, canvWidth,canvHeight);
+
+			canvasCtx.translate(canvWidth/2, canvHeight/2);
+
+			canvasCtx.beginPath();
+			for (var i = 0; i <= circleResolution; i++) {
+				var x = Math.cos(angle*i) * radius;
+				var y = Math.sin(angle*i) * radius;
+				console.log('x: ' + x);
+				console.log('y: ' + y);
+
+				canvasCtx.lineTo(x, y);
+			}
+			canvasCtx.closePath();
+			canvasCtx.stroke();
+			
+			
+
+
+			drawVisual = requestAnimationFrame(draw);
+		}
+		draw();
+	}
+	helloShape();
 
 
 	// drawRect();
@@ -1166,8 +1204,9 @@ function shapes(dataArray, bufferLength){
 	// imgColorPick();
 	// imgGreyInvert();
 	// imgZoomAlias();
-
-	imgTests();
+	// imgChannelMix();
+	
+	
 
 	// drawRegPoly();
 
