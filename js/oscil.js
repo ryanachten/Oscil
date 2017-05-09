@@ -1078,16 +1078,15 @@ function shapes(dataArray, bufferLength){
 
 		var imgA = new Image();
 		imgA.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Jelly_cc11.jpg/800px-Jelly_cc11.jpg' + '?' + new Date().getTime();
-		imgA.setAttribute('crossOrigin', '');
-		
+		imgA.setAttribute('crossOrigin', '');	
 
 		var imgB = new Image();
 		imgB.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Olindias_formosa1.jpg/800px-Olindias_formosa1.jpg' + '?' + new Date().getTime();
 		imgB.setAttribute('crossOrigin', '');
 
-
 		var imgAdata, imgBdata, mixData;
-		var dataA, dataB;
+		var dataA, dataB; 
+		var counter = 0;
 
 		imgA.onload = function(){
 			imgB.onload = function(){
@@ -1098,8 +1097,6 @@ function shapes(dataArray, bufferLength){
 				canvasCtx.drawImage(imgA, 0,0 , canvWidth, canvHeight);
 				imgAdata = canvasCtx.getImageData(0,0, canvWidth, canvHeight);
 				dataA = imgAdata.data;
-			
-				// canvasCtx.clearRect(0,0 , canvWidth, canvHeight);
 				
 				canvasCtx.drawImage(imgB, 0,0 , canvWidth, canvHeight);
 				imgBdata = canvasCtx.getImageData(0,0, canvWidth, canvHeight);
@@ -1109,33 +1106,43 @@ function shapes(dataArray, bufferLength){
 			};
 		};
 
-
-
 		function draw(){
 
-			var counter = 0;
-			// function mixData(){
-			for (var j = 0; j < dataA.length; j+=4) {
+			var dataMix = dataB;
 
-				if(counter%2 == 0){
-					// console.log('Bdata');
-					dataB[j] = dataB[j];
-					dataB[j+1] = dataB[j+1];
-					dataB[j+2] = dataB[j+2];
+			function mixImgData(){
+				for (var j = 0; j < dataA.length; j+=4) {
+					var rand = Math.floor((Math.random()*2)+1);
+					// console.log('rand: ' + rand);
+
+					if( counter%2 == 0){
+						// console.log('Bdata');
+						dataMix[j] = dataB[j];
+						dataMix[j+1] = dataB[j+1];
+						dataMix[j+2] = dataB[j+2];
+					}
+					else{
+						// console.log('Adata');
+						dataMix[j] = 	dataA[j];
+						dataMix[j+1] = dataA[j+1];
+						dataMix[j+2] = dataA[j+2];
+					}
+					// dataMix[j+3] = 1.0;
+					
+					counter++;	
 				}
-				else{
-					// console.log('Adata');
-					dataB[j] = 	dataA[j];
-					dataB[j+1] = dataA[j+1];
-					dataB[j+2] = dataA[j+2];
-				}
-				counter++;
-							
 			}
-			mixData = new ImageData(dataB, canvWidth, canvHeight);			
 
+			mixImgData();
+
+			mixData = new ImageData(dataMix, canvWidth, canvHeight);			
 			canvasCtx.putImageData(mixData, 0,0);
-			}
+
+			
+			
+
+			drawVisual = setInterval(draw, 6000);
+		}
 	}
 
 	// drawRect();
