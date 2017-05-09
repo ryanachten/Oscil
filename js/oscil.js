@@ -559,7 +559,7 @@ function repeatPix(dataArray, bufferLength){
 						canvasCtx.putImageData(frstRow, 0,(i*sampleHeight));
 					}
 				}
-				repeatY();
+				// repeatY();
 
 				function repeatX(){
 					var sampleX;
@@ -587,7 +587,7 @@ function repeatPix(dataArray, bufferLength){
 						canvasCtx.putImageData(frstCol, (i*sampleWidth), 0);
 					}
 				}
-				// repeatX();
+				repeatX();
 			}
 			drawVisual = requestAnimationFrame(draw);
 		}
@@ -1072,77 +1072,92 @@ function shapes(dataArray, bufferLength){
 		}
 	}
 
-	function imgChannelMix(){
+	function imgMix(){
 
 		canvasCtx.clearRect(0,0 , canvWidth, canvHeight);	
 
 		var imgA = new Image();
 		imgA.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Jelly_cc11.jpg/800px-Jelly_cc11.jpg' + '?' + new Date().getTime();
 		imgA.setAttribute('crossOrigin', '');
+		
 
 		var imgB = new Image();
-		imgB.src = 'https://upload.wikimedia.org/wikipedia/commons/2/2d/Olindias_formosa1.jpg' + '?' + new Date().getTime();
+		imgB.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Olindias_formosa1.jpg/800px-Olindias_formosa1.jpg' + '?' + new Date().getTime();
 		imgB.setAttribute('crossOrigin', '');
+
+
+		var imgAdata, imgBdata, mixData;
+		var dataA, dataB;
 
 		imgA.onload = function(){
 			imgB.onload = function(){
+				
+				console.log('imgA: ' + 'width: ' + imgA.width + ' height: ' + imgA.height);
+				console.log('imgB: ' + 'width: ' + imgB.width + ' height: ' + imgB.height);
+				
+				canvasCtx.drawImage(imgA, 0,0 , canvWidth, canvHeight);
+				imgAdata = canvasCtx.getImageData(0,0, canvWidth, canvHeight);
+				dataA = imgAdata.data;
+			
+				// canvasCtx.clearRect(0,0 , canvWidth, canvHeight);
+				
+				canvasCtx.drawImage(imgB, 0,0 , canvWidth, canvHeight);
+				imgBdata = canvasCtx.getImageData(0,0, canvWidth, canvHeight);
+				dataB = imgBdata.data;
+
 				draw();
 			};
 		};
 
 
+
 		function draw(){
 
-			canvasCtx.drawImage(imgA, 0,0 , canvWidth, canvHeight);
-			var imgAdata = canvasCtx.getImageData(0,0, canvWidth, canvHeight);
-			var dataA = imgAdata.data;
-			
-			// canvasCtx.clearRect(0,0 , canvWidth, canvHeight);
-			
-			canvasCtx.drawImage(imgB, 0,0 , canvWidth, canvHeight);
-			var imgBdata = canvasCtx.getImageData(0,0, canvWidth, canvHeight);
-			var dataB = imgBdata.data;
+			var counter = 0;
+			// function mixData(){
+			for (var j = 0; j < dataA.length; j+=4) {
 
-			for(var i = 0; i < bufferLength; i+=70) {
-
-				analyser.getByteFrequencyData(dataArray);
-	
-				var da = dataArray[i];
-				var logda;
-				if (da !== 0){
-					logda = Math.floor(Math.log(da) / Math.log(1.5));
+				if(counter%2 == 0){
+					// console.log('Bdata');
+					dataB[j] = dataB[j];
+					dataB[j+1] = dataB[j+1];
+					dataB[j+2] = dataB[j+2];
 				}
 				else{
-					logda = 1;
+					// console.log('Adata');
+					dataB[j] = 	dataA[j];
+					dataB[j+1] = dataA[j+1];
+					dataB[j+2] = dataA[j+2];
 				}
-
-				// function mixData(){
-					for (var j = 0; j < dataA.length; j+=4) {
-
-						if(logda%2 !== 0){
-							// console.log('Bdata');
-							dataB[j] = dataA[j];
-							dataB[j+1] = dataB[j+1];
-							dataB[j+2] = dataA[j+2];
-						}
-						else{
-							// console.log('Adata');
-							dataB[j] = dataB[j];
-							dataB[j+1] = dataA[j+1];
-							dataB[j+2] = dataA[j+2];
-						}
-									
-					}
-					
-				// }
-				// mixData();
-				canvasCtx.putImageData(imgBdata, 0,0);
+				counter++;
+							
 			}
+			mixData = new ImageData(dataB, canvWidth, canvHeight);			
 
-			
-			drawVisual = requestAnimationFrame(draw);
-		}
+			canvasCtx.putImageData(mixData, 0,0);
+			}
 	}
+
+	// drawRect();
+	// drawTriangle();
+	// drawSmiley();
+	// drawPath();	
+	// drawGrid();
+	// drawCircles();
+	// drawLines();
+	// drawPattern();
+	// drawTransGrid();
+	// drawRotateTest();
+	// drawSpiralMatrixTest();
+	// animEarthExample();
+	// animBallExample();
+	// imgColorPick();
+	// imgGreyInvert();
+	// imgZoomAlias();
+	imgMix();
+	// drawRegPoly();
+
+
 
 	//Generative tests
 
@@ -1185,31 +1200,70 @@ function shapes(dataArray, bufferLength){
 		}
 		draw();
 	}
-	helloShape();
+	// helloShape();
+
+	function tileAlign(){
+
+		var tileCount = 20;
+		var tileWidth = canvWidth/tileCount;
+		var tileHeight = canvHeight/tileCount;
+
+		var shapeSize = 50;
+		var newShapeSize = shapeSize;
+		var shapeAngle = 0;
+
+		var centerX = canvWidth/2;
+		var centerY = canvHeight/2;
+
+		var maxDist = Math.sqrt(Math.pow(canvWidth, 2) + Math.pow(canvHeight, 2));
 
 
-	// drawRect();
-	// drawTriangle();
-	// drawSmiley();
-	// drawPath();	
-	// drawGrid();
-	// drawCircles();
-	// drawLines();
-	// drawPattern();
-	// drawTransGrid();
-	// drawRotateTest();
-	// drawSpiralMatrixTest();
-	// animEarthExample();
-	// animBallExample();
-	// imgColorPick();
-	// imgGreyInvert();
-	// imgZoomAlias();
-	// imgChannelMix();
+		function draw(){
+			for (var gridY = 0; gridY < tileCount; gridY++) {
+				for (var gridX = 0; gridX < tileCount; gridX++) {
+									
+					var posX = canvWidth/tileCount*gridX + tileWidth/2;
+					var posY = canvHeight/tileCount*gridY + tileWidth/2;
+					var angle = Math.atan2(centerY-posY, centerX-posX) + shapeAngle;
+					newShapeSize = shapeSize;
+
+					canvasCtx.save();
+					
+					canvasCtx.translate(posX, posY);
+					canvasCtx.rotate(angle);
+
+					canvasCtx.moveTo(0,0);
+					canvasCtx.arc(0,0, 20, 0, Math.PI*2);
+					canvasCtx.fillStyle = 'black';
+					canvasCtx.fill();
+					
+					/*
+						NEEED DIS:
+						if (fillMode == 3) {
+				        currentShape.disableStyle();
+				        float a = map(dist(mouseX,mouseY,posX,posY), 0,maxDist, 0,255);
+				        fill(shapeColor, a);      
+				      }
+					
+					*/
+
+
+					canvasCtx.restore();
+
+				}
+			}
+			drawVisual = requestAnimationFrame(draw); 
+		}
+		draw();
+	}
+	// tileAlign();
 	
-	
-
-	// drawRegPoly();
-
+	canvas.addEventListener('mousemove', function(e) {
+		centerX = e.clientX;
+		centerY = e.clientY;
+		// console.log('centerX: ' + centerX);
+		// console.log('centerY: ' + centerY);
+	});
 
 }
 
