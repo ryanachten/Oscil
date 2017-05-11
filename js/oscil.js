@@ -48,7 +48,7 @@ if(canvas.getContext){
 	canvas.height = $(window).height();
 	var canvWidth = canvas.width;
 	var canvHeight = canvas.height;
-	var canvasCtx = canvas.getContext('2d'); //wonder what this does?
+	var canvasCtx = canvas.getContext('2d');
 	canvasCtx.fillStyle = bgColor;
 	canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
@@ -1074,11 +1074,27 @@ function shapes(dataArray, bufferLength){
 
 	function imgMix(){
 
-		canvasCtx.clearRect(0,0 , canvWidth, canvHeight);	
+		canvasCtx.clearRect(0,0 , canvWidth, canvHeight);
+
+		var canvas2 = document.createElement('canvas');
+			canvas2.width = $(window).width(); canvas2.height = $(window).height();
+			var canv2Width = canvas2.width; var canv2Height = canvas2.height;
+			var canvas2Ctx = canvas2.getContext('2d');
+			document.getElementById('container').appendChild(canvas2);
+			canvas2.style.display = 'none';
+
+		var canvas3 = document.createElement('canvas');
+			canvas3.width = $(window).width(); canvas3.height = $(window).height();
+			var canv3Width = canvas3.width; var canv3Height = canvas3.height;
+			var canvas3Ctx = canvas3.getContext('2d');
+			document.getElementById('container').appendChild(canvas3);
+			canvas3.style.display = 'none';
+
 
 		var imgA = new Image();
 		imgA.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Jelly_cc11.jpg/800px-Jelly_cc11.jpg' + '?' + new Date().getTime();
-		imgA.setAttribute('crossOrigin', '');	
+		imgA.setAttribute('crossOrigin', '');
+			
 
 		var imgB = new Image();
 		imgB.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Olindias_formosa1.jpg/800px-Olindias_formosa1.jpg' + '?' + new Date().getTime();
@@ -1088,61 +1104,47 @@ function shapes(dataArray, bufferLength){
 		var dataA, dataB; 
 		var counter = 0;
 
-		imgA.onload = function(){
-			imgB.onload = function(){
-				
-				console.log('imgA: ' + 'width: ' + imgA.width + ' height: ' + imgA.height);
-				console.log('imgB: ' + 'width: ' + imgB.width + ' height: ' + imgB.height);
-				
-				canvasCtx.drawImage(imgA, 0,0 , canvWidth, canvHeight);
-				imgAdata = canvasCtx.getImageData(0,0, canvWidth, canvHeight);
-				dataA = imgAdata.data;
-				
-				canvasCtx.drawImage(imgB, 0,0 , canvWidth, canvHeight);
-				imgBdata = canvasCtx.getImageData(0,0, canvWidth, canvHeight);
-				dataB = imgBdata.data;
 
-				draw();
-			};
+
+		imgA.onload = imgB.onload = function(){
+
+			canvas2Ctx.drawImage(imgA, 0,0, canv2Width,canv2Height);				
+			imgAdata = canvas2Ctx.getImageData(0,0, canv2Width,canv2Height);
+
+			canvas3Ctx.drawImage(imgB, 0,0, canv3Width,canv3Height);				
+			imgBdata = canvas3Ctx.getImageData(0,0, canv3Width,canv3Height);
+
+			draw();
 		};
 
 		function draw(){
 
-			var dataMix = dataB;
+			var sampleSize = 20;
+			var tileWidth = canvWidth/sampleSize;
+			var tileHeight = canvHeight/sampleSize;
 
-			function mixImgData(){
-				for (var j = 0; j < dataA.length; j+=4) {
-					var rand = Math.floor((Math.random()*2)+1);
-					// console.log('rand: ' + rand);
-
-					if( counter%2 == 0){
-						// console.log('Bdata');
-						dataMix[j] = dataB[j];
-						dataMix[j+1] = dataB[j+1];
-						dataMix[j+2] = dataB[j+2];
-					}
-					else{
-						// console.log('Adata');
-						dataMix[j] = 	dataA[j];
-						dataMix[j+1] = dataA[j+1];
-						dataMix[j+2] = dataA[j+2];
-					}
-					// dataMix[j+3] = 1.0;
+			for (var i = 0; i < sampleSize; i++) { //i=width
+				for (var j = 0; j < sampleSize; j++) {
 					
-					counter++;	
+					var rand = Math.floor((Math.random()*2)+1);
+					var sampleRand = Math.floor((Math.random()*sampleSize)+0);
+					// console.log('sampleRand ' + sampleRand);
+					
+					if (rand%2 == 0) {
+						// console.log('even');
+						canvasCtx.putImageData(imgAdata, 0, 0, i*tileWidth, j*tileHeight, tileWidth, tileHeight);
+					}else{
+						// console.log('odd');
+						canvasCtx.putImageData(imgBdata, 0, 0, i*tileWidth, j*tileHeight, tileWidth, tileHeight);
+					}
 				}
 			}
-
-			mixImgData();
-
-			mixData = new ImageData(dataMix, canvWidth, canvHeight);			
-			canvasCtx.putImageData(mixData, 0,0);
-
-			
-			
-
-			drawVisual = setInterval(draw, 6000);
+			// drawVisual = requestAnimationFrame(draw);
+			// drawVisual = setInterval(draw, 1000);
 		}
+
+		// canvasCtx.putImageData(imgBdata, 0, 0);
+		
 	}
 
 	// drawRect();
