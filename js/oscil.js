@@ -114,6 +114,9 @@ function visualise(visMode){
 	else if(visMode === 'RepeatPix'){
 		repeatPix(dataArray, bufferLength);
 	}
+	else if(visMode === 'PixMix'){
+		pixMix(dataArray, bufferLength);
+	}
 	else if(visMode === 'Shapes'){
 		shapes(dataArray, bufferLength);
 	}
@@ -590,6 +593,115 @@ function repeatPix(dataArray, bufferLength){
 				repeatX();
 			}
 			drawVisual = requestAnimationFrame(draw);
+		}
+	}
+
+function pixMix(dataArray, bufferLength){
+
+		canvasCtx.clearRect(0,0 , canvWidth, canvHeight);
+
+		var canvas2 = document.createElement('canvas');
+			canvas2.width = $(window).width(); canvas2.height = $(window).height();
+			var canv2Width = canvas2.width; var canv2Height = canvas2.height;
+			var canvas2Ctx = canvas2.getContext('2d');
+			document.getElementById('container').appendChild(canvas2);
+			canvas2.style.display = 'none';
+
+		var canvas3 = document.createElement('canvas');
+			canvas3.width = $(window).width(); canvas3.height = $(window).height();
+			var canv3Width = canvas3.width; var canv3Height = canvas3.height;
+			var canvas3Ctx = canvas3.getContext('2d');
+			document.getElementById('container').appendChild(canvas3);
+			canvas3.style.display = 'none';
+
+
+		var imgA = new Image();
+		imgA.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Jelly_cc11.jpg/800px-Jelly_cc11.jpg' + '?' + new Date().getTime();
+		imgA.setAttribute('crossOrigin', '');
+			
+
+		var imgB = new Image();
+		imgB.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Olindias_formosa1.jpg/800px-Olindias_formosa1.jpg' + '?' + new Date().getTime();
+		imgB.setAttribute('crossOrigin', '');
+
+		var imgAdata, imgBdata, mixData;
+		var dataA, dataB; 
+		var counter = 0;
+
+		imgA.onload = imgB.onload = function(){
+
+			canvas2Ctx.drawImage(imgA, 0,0, canv2Width,canv2Height);				
+			imgAdata = canvas2Ctx.getImageData(0,0, canv2Width,canv2Height);
+
+			canvas3Ctx.drawImage(imgB, 0,0, canv3Width,canv3Height);				
+			imgBdata = canvas3Ctx.getImageData(0,0, canv3Width,canv3Height);
+
+			startAnimating(5);
+		};
+
+		function draw(){
+
+			for(var k = 0; k < bufferLength; k+=50) {
+
+				analyser.getByteFrequencyData(dataArray);
+				var da = dataArray[k];
+				var logda = 10;
+				if (da !== 0){
+					logda = Math.floor(Math.log(da) / Math.log(1.1));
+				}
+
+				var sampleSize = logda;
+				var tileWidth = canvWidth/sampleSize;
+				var tileHeight = canvHeight/sampleSize;
+
+				for (var i = 0; i < sampleSize; i++) { //i=width
+					for (var j = 0; j < sampleSize; j++) {
+						
+						var rand = Math.floor((Math.random()*2)+1);
+						var sampleRandMode = false; //TODO: add into UI at runtime
+						var sampleRand = Math.floor((Math.random()*sampleSize)+0);
+						
+						if (rand%2 == 0) {
+							canvasCtx.putImageData(imgAdata, 0, 0, (sampleRandMode ? sampleRand : i)*tileWidth, 
+													j*tileHeight, tileWidth, tileHeight);
+						}else{
+							canvasCtx.putImageData(imgBdata, 0, 0, i*tileWidth,
+													(sampleRandMode ? sampleRand : j)*tileHeight, tileWidth, tileHeight);
+						}
+					}
+				}
+			}
+		}
+
+		//for controlling FPS
+		var stop = false;
+		var frameCount = 0;
+		var fps, fpsInterval, startTime, now, then, elapsed;
+
+		function startAnimating(fps){
+			fpsInterval = 1000/fps;
+			then = Date.now();
+			startTime = then;
+			animate();
+		}
+
+
+		function animate(){
+
+			if(stop){
+				return;
+			}
+
+			requestAnimationFrame(animate);
+
+			now = Date.now();
+			elapsed = now - then;
+
+			if(elapsed > fpsInterval){
+				then = now - (elapsed % fpsInterval);
+
+				draw();
+			}
 		}
 	}
 
@@ -1072,112 +1184,7 @@ function shapes(dataArray, bufferLength){
 		}
 	}
 
-	function imgMix(){
-
-		canvasCtx.clearRect(0,0 , canvWidth, canvHeight);
-
-		var canvas2 = document.createElement('canvas');
-			canvas2.width = $(window).width(); canvas2.height = $(window).height();
-			var canv2Width = canvas2.width; var canv2Height = canvas2.height;
-			var canvas2Ctx = canvas2.getContext('2d');
-			document.getElementById('container').appendChild(canvas2);
-			canvas2.style.display = 'none';
-
-		var canvas3 = document.createElement('canvas');
-			canvas3.width = $(window).width(); canvas3.height = $(window).height();
-			var canv3Width = canvas3.width; var canv3Height = canvas3.height;
-			var canvas3Ctx = canvas3.getContext('2d');
-			document.getElementById('container').appendChild(canvas3);
-			canvas3.style.display = 'none';
-
-
-		var imgA = new Image();
-		imgA.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Jelly_cc11.jpg/800px-Jelly_cc11.jpg' + '?' + new Date().getTime();
-		imgA.setAttribute('crossOrigin', '');
-			
-
-		var imgB = new Image();
-		imgB.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Olindias_formosa1.jpg/800px-Olindias_formosa1.jpg' + '?' + new Date().getTime();
-		imgB.setAttribute('crossOrigin', '');
-
-		var imgAdata, imgBdata, mixData;
-		var dataA, dataB; 
-		var counter = 0;
-
-		imgA.onload = imgB.onload = function(){
-
-			canvas2Ctx.drawImage(imgA, 0,0, canv2Width,canv2Height);				
-			imgAdata = canvas2Ctx.getImageData(0,0, canv2Width,canv2Height);
-
-			canvas3Ctx.drawImage(imgB, 0,0, canv3Width,canv3Height);				
-			imgBdata = canvas3Ctx.getImageData(0,0, canv3Width,canv3Height);
-
-			startAnimating(5);
-		};
-
-		function draw(){
-
-			for(var k = 0; k < bufferLength; k+=50) {
-
-				analyser.getByteFrequencyData(dataArray);
-				var da = dataArray[k];
-				var logda = 10;
-				if (da !== 0){
-					logda = Math.floor(Math.log(da) / Math.log(1.1));
-					// console.log('logda: ' + logda);
-				}
-
-				var sampleSize = logda;
-				var tileWidth = canvWidth/sampleSize;
-				var tileHeight = canvHeight/sampleSize;
-
-				for (var i = 0; i < sampleSize; i++) { //i=width
-					for (var j = 0; j < sampleSize; j++) {
-						
-						var rand = Math.floor((Math.random()*2)+1);
-						var sampleRand = Math.floor((Math.random()*sampleSize)+0);
-						
-						if (rand%2 == 0) {
-							canvasCtx.putImageData(imgAdata, 0, 0, sampleRand*tileWidth, j*tileHeight, tileWidth, tileHeight);
-						}else{
-							canvasCtx.putImageData(imgBdata, 0, 0, i*tileWidth, sampleRand*tileHeight, tileWidth, tileHeight);
-						}
-					}
-				}
-			}
-		}
-
-		//for controlling FPS
-		var stop = false;
-		var frameCount = 0;
-		var fps, fpsInterval, startTime, now, then, elapsed;
-
-		function startAnimating(fps){
-			fpsInterval = 1000/fps;
-			then = Date.now();
-			startTime = then;
-			animate();
-		}
-
-
-		function animate(){
-
-			if(stop){
-				return;
-			}
-
-			requestAnimationFrame(animate);
-
-			now = Date.now();
-			elapsed = now - then;
-
-			if(elapsed > fpsInterval){
-				then = now - (elapsed % fpsInterval);
-
-				draw();
-			}
-		}
-	}
+	
 
 	// drawRect();
 	// drawTriangle();
@@ -1195,7 +1202,6 @@ function shapes(dataArray, bufferLength){
 	// imgColorPick();
 	// imgGreyInvert();
 	// imgZoomAlias();
-	imgMix();
 	// drawRegPoly();
 
 
