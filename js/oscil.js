@@ -1105,7 +1105,6 @@ function shapes(dataArray, bufferLength){
 		var counter = 0;
 
 
-
 		imgA.onload = imgB.onload = function(){
 
 			canvas2Ctx.drawImage(imgA, 0,0, canv2Width,canv2Height);				
@@ -1119,7 +1118,7 @@ function shapes(dataArray, bufferLength){
 
 		function draw(){
 
-			var sampleSize = 20;
+			var sampleSize = 50;
 			var tileWidth = canvWidth/sampleSize;
 			var tileHeight = canvHeight/sampleSize;
 
@@ -1143,8 +1142,39 @@ function shapes(dataArray, bufferLength){
 			// drawVisual = setInterval(draw, 1000);
 		}
 
-		// canvasCtx.putImageData(imgBdata, 0, 0);
-		
+		//for controlling FPS
+		var stop = false;
+		var frameCount = 0;
+		var fps, fpsInterval, startTime, now, then, elapsed;
+
+		startAnimating(5);
+
+		function startAnimating(fps){
+			fpsInterval = 1000/fps;
+			then = Date.now();
+			startTime = then;
+			console.log(startTime);
+			animate();
+		}
+
+
+		function animate(){
+
+			if(stop){
+				return;
+			}
+
+			requestAnimationFrame(animate);
+
+			now = Date.now();
+			elapsed = now - then;
+
+			if(elapsed > fpsInterval){
+				then = now - (elapsed % fpsInterval);
+
+				draw();
+			}
+		}
 	}
 
 	// drawRect();
