@@ -118,6 +118,9 @@ function visualise(visMode){
 	else if(visMode === 'PixMix'){
 		pixMix(dataArray, bufferLength);
 	}
+	else if(visMode === 'PixShuffle'){
+		pixShuffle(dataArray, bufferLength);
+	}
 	else if(visMode === 'Test'){
 		tests(dataArray, bufferLength);
 	}
