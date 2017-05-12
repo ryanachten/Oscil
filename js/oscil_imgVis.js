@@ -12,39 +12,25 @@ function refract(dataArray, bufferLength){
 	}
 
 	function draw(){
-		drawVisual = requestAnimationFrame(draw);
-		analyser.getByteFrequencyData(dataArray);
+		
+		canvasCtx.fillStyle = 'bgColor';
+			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
-		//TODO: not so sure about the >30 cut off point think there
-				//might be a more elegant solution than this -> testing log approach
+		analyser.getByteFrequencyData(dataArray);
 		//TODO: Also doesn't work with any other Fft than 256
-		//TODO: gradient->refract retains bg colour
 
 		for(var i = 0; i < bufferLength; i+=50) {
 			var da = dataArray[i];
-			console.log(da);
 			if (da !== 0){
 				var tileCount = Math.floor(Math.log(da)/Math.log(1.5));
-				console.log('log-da:' + tileCount);
 				if (tileCount < 2) tileCount = 2;
-				// if (da !== 0){
-				// 	if (da == 1){
-				// 		da = 2;
-				// 	}
-				// 	if(da < 10){
-				// 		tileCount = da;
-				// 	}
-				// 	else if (da > 30){
-				// 		tileCount = da/10;
-				// 	}
-				// }
+
 				canvasCtx.clearRect(0,0,canvWidth, canvHeight);
 				tileImg(tileCount);
 			}
 		}
 		function tileImg(tileCount){
-			canvasCtx.fillStyle = 'bgColor';
-			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
+			
 			canvasCtx.globalCompositeOperation = "source-over";
 			
 			for (var i = 0; i < tileCount; i++) {
@@ -55,11 +41,9 @@ function refract(dataArray, bufferLength){
 
 					if (i % 2 == 0){
 						if (j % 2 == 0){
-								// console.log('even');
 								canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
 							}else{
 								canvasCtx.save();
-								// console.log('odd');
 								canvasCtx.scale(1,-1);
 								canvasCtx.translate(0, (canvHeight+imgHeight)*-1);
 								canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
@@ -67,15 +51,12 @@ function refract(dataArray, bufferLength){
 							}
 						}else{
 							canvasCtx.save();
-							// console.log('odd');
 							canvasCtx.scale(-1,1);
 							canvasCtx.translate((canvWidth+imgWidth)*-1, 0);
 							if (j % 2 == 0){
-								// console.log('even');
 								canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
 							}else{
 								canvasCtx.save();
-								// console.log('odd');
 								canvasCtx.scale(1,-1);
 								canvasCtx.translate(0, (canvHeight+imgHeight)*-1);
 								canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
@@ -86,8 +67,8 @@ function refract(dataArray, bufferLength){
 					}
 				}
 			}
-		}
-	draw();
+		drawVisual = requestAnimationFrame(draw);
+	}
 }
 
 function macroblocks(dataArray, bufferLength){		
