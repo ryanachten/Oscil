@@ -35,6 +35,7 @@ smoothingRange.onchange = function(){
 var visualisationMode = document.querySelector('#visual-select');
 visualisationMode.onchange = function(){
 	window.cancelAnimationFrame(drawVisual);
+	drawVisual = undefined;
 	visualise(visualisationMode.value);
 }
 

@@ -308,6 +308,8 @@ function pixMix(dataArray, bufferLength){
 
 		function draw(){
 
+			canvasCtx.clearRect(0,0, canvWidth, canvHeight);
+
 			for(var k = 0; k < bufferLength; k+=50) {
 
 				analyser.getByteFrequencyData(dataArray);
@@ -338,6 +340,7 @@ function pixMix(dataArray, bufferLength){
 					}
 				}
 			}
+
 		}
 
 		//for controlling FPS
@@ -358,16 +361,22 @@ function pixMix(dataArray, bufferLength){
 			if(stop){
 				return;
 			}
+			if(document.getElementById('visual-select').value == 'PixMix'){
+				drawVisual = requestAnimationFrame(animate);
 
-			requestAnimationFrame(animate);
+				now = Date.now();
+				elapsed = now - then;
 
-			now = Date.now();
-			elapsed = now - then;
+				if(elapsed > fpsInterval){
+					then = now - (elapsed % fpsInterval);
 
-			if(elapsed > fpsInterval){
-				then = now - (elapsed % fpsInterval);
-
-				draw();
+					draw();
+				}
+			}
+			else{
+				window.cancelAnimationFrame(drawVisual);
+				document.getElementById('container').removeChild(canvas2);
+				document.getElementById('container').removeChild(canvas3);
 			}
 		}
 	}
