@@ -559,72 +559,82 @@ function tests(dataArray, bufferLength){
 		var west = 6;
 		var northwest = 7;
 
-		var stepSize = 10;
-		var diameter = 5;
 		var posX = canvWidth/2;
 		var posY = canvHeight/2;
+
+		var logda = 3;
 
 		startAnimating(5);
 
 		function draw(){
 
-			// canvasCtx.fillStyle = 'rgba(237, 230, 224, 0.5)';
-			// canvasCtx.fillRect(0,0,canvWidth,canvHeight);
+			canvasCtx.fillStyle = 'rgba(237, 230, 224, 0.2)';
+			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
-			var rand = Math.floor((Math.random()*8)+0);
-			
-			switch(rand){
-				case north:
-					canvasCtx.strokeStyle = 'hsl(180, 70%, 70%)';
-					posY -= stepSize;
-					break;
-				case northeast:
-					canvasCtx.strokeStyle = 'hsl(220, 70%, 70%)';
-					posX += stepSize;
-					posY -= stepSize;
-					break;
-				case east:
-					posX += stepSize;
-					break;
-				case southeast:
-					canvasCtx.strokeStyle = 'hsl(260, 70%, 70%)';
-					posX += stepSize;
-					posY += stepSize;
-					break;
-				case south:
-					canvasCtx.strokeStyle = 'hsl(300, 70%, 70%)';
-					posY += stepSize;
-					break;
-				case southwest:
-					canvasCtx.strokeStyle = 'hsl(340, 70%, 70%)';
-					posX -= stepSize;
-					posY += stepSize;
-					break;
-				case west:
-					canvasCtx.strokeStyle = 'hsl(20, 70%, 70%)';
-					posX -= stepSize;
-					break;
-				case northwest:
-					canvasCtx.strokeStyle = 'hsl(60, 70%, 70%)';
-					posX -= stepSize;
-					posY -= stepSize;
-					break;
-				default:
-					break;
+			for(var i = 0; i < bufferLength; i+=20) {
+
+				analyser.getByteFrequencyData(dataArray);
+				var da = dataArray[i];
+
+				if (da !== 0){
+					logda = Math.floor(Math.log(da) / Math.log(1.1));
+					// console.log(logda);
+				}
+				var diameter = logda;
+				var stepSize = diameter*2;
+
+				var rand = Math.floor((Math.random()*8)+0);
+				
+				switch(rand){
+					case north:
+						canvasCtx.strokeStyle = 'hsl(140, 70%, 70%)';
+						posY -= stepSize;
+						break;
+					case northeast:
+						canvasCtx.strokeStyle = 'hsl(180, 70%, 70%)';
+						posX += stepSize;
+						posY -= stepSize;
+						break;
+					case east:
+						posX += stepSize;
+						break;
+					case southeast:
+						canvasCtx.strokeStyle = 'hsl(220, 70%, 70%)';
+						posX += stepSize;
+						posY += stepSize;
+						break;
+					case south:
+						canvasCtx.strokeStyle = 'hsl(260, 70%, 70%)';
+						posY += stepSize;
+						break;
+					case southwest:
+						canvasCtx.strokeStyle = 'hsl(300, 70%, 70%)';
+						posX -= stepSize;
+						posY += stepSize;
+						break;
+					case west:
+						canvasCtx.strokeStyle = 'hsl(340, 70%, 70%)';
+						posX -= stepSize;
+						break;
+					case northwest:
+						canvasCtx.strokeStyle = 'hsl(20, 70%, 70%)';
+						posX -= stepSize;
+						posY -= stepSize;
+						break;
+					default:
+						break;
+				}
+
+				if(posX > canvWidth) posX = 0;
+				if(posX < 0) posX = canvWidth;
+				if(posY > canvHeight) posY = 0;
+				if(posY < 0) posY = canvHeight;
+
+				canvasCtx.beginPath();
+				canvasCtx.arc(posX+stepSize/2, posY+stepSize/2, diameter, 0, 2*Math.PI);
+				canvasCtx.stroke();
 			}
-
-			if(posX > canvWidth) posX = 0;
-			if(posX < 0) posX = canvWidth;
-			if(posY > canvHeight) posY = 0;
-			if(posY < 0) posY = canvHeight;
-
-			canvasCtx.beginPath();
-			canvasCtx.arc(posX+stepSize/2, posY+stepSize/2, diameter, 0, 2*Math.PI);
-			canvasCtx.stroke();
-
-			// setInterval(draw, 1000);
 		}
-		// draw();
 
 		var stop = false;
 		var frameCount = 0;
