@@ -121,8 +121,11 @@ function visualise(visMode){
 	else if(visMode === 'PixShuffle'){
 		pixShuffle(dataArray, bufferLength);
 	}
+	else if(visMode === 'DumbAgents'){
+		dumbAgents(dataArray, bufferLength);
+	}
 	else if(visMode === 'Test'){
-		tests(dataArray, bufferLength);
+		tests(dataArray, bufferLength); //
 	}
 	else if(visMode === 'Off'){
 		visOff();
