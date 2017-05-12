@@ -548,67 +548,117 @@ function tests(dataArray, bufferLength){
 	}
 	// helloShape();
 
-	function tileAlign(){
+	function dumbAgents(){
 
-		var tileCount = 20;
-		var tileWidth = canvWidth/tileCount;
-		var tileHeight = canvHeight/tileCount;
+		var north = 0;
+		var northeast = 1;
+		var east = 2;
+		var southeast = 3;
+		var south = 4;
+		var southwest = 5;
+		var west = 6;
+		var northwest = 7;
 
-		var shapeSize = 50;
-		var newShapeSize = shapeSize;
-		var shapeAngle = 0;
+		var stepSize = 10;
+		var diameter = 5;
+		var posX = canvWidth/2;
+		var posY = canvHeight/2;
 
-		var centerX = canvWidth/2;
-		var centerY = canvHeight/2;
-
-		var maxDist = Math.sqrt(Math.pow(canvWidth, 2) + Math.pow(canvHeight, 2));
-
+		startAnimating(5);
 
 		function draw(){
-			for (var gridY = 0; gridY < tileCount; gridY++) {
-				for (var gridX = 0; gridX < tileCount; gridX++) {
-									
-					var posX = canvWidth/tileCount*gridX + tileWidth/2;
-					var posY = canvHeight/tileCount*gridY + tileWidth/2;
-					var angle = Math.atan2(centerY-posY, centerX-posX) + shapeAngle;
-					newShapeSize = shapeSize;
 
-					canvasCtx.save();
-					
-					canvasCtx.translate(posX, posY);
-					canvasCtx.rotate(angle);
+			// canvasCtx.fillStyle = 'rgba(237, 230, 224, 0.5)';
+			// canvasCtx.fillRect(0,0,canvWidth,canvHeight);
 
-					canvasCtx.moveTo(0,0);
-					canvasCtx.arc(0,0, 20, 0, Math.PI*2);
-					canvasCtx.fillStyle = 'black';
-					canvasCtx.fill();
-					
-					/*
-						NEEED DIS:
-						if (fillMode == 3) {
-				        currentShape.disableStyle();
-				        float a = map(dist(mouseX,mouseY,posX,posY), 0,maxDist, 0,255);
-				        fill(shapeColor, a);      
-				      }
-					
-					*/
-
-
-					canvasCtx.restore();
-
-				}
+			var rand = Math.floor((Math.random()*8)+0);
+			
+			switch(rand){
+				case north:
+					canvasCtx.strokeStyle = 'hsl(180, 70%, 70%)';
+					posY -= stepSize;
+					break;
+				case northeast:
+					canvasCtx.strokeStyle = 'hsl(220, 70%, 70%)';
+					posX += stepSize;
+					posY -= stepSize;
+					break;
+				case east:
+					posX += stepSize;
+					break;
+				case southeast:
+					canvasCtx.strokeStyle = 'hsl(260, 70%, 70%)';
+					posX += stepSize;
+					posY += stepSize;
+					break;
+				case south:
+					canvasCtx.strokeStyle = 'hsl(300, 70%, 70%)';
+					posY += stepSize;
+					break;
+				case southwest:
+					canvasCtx.strokeStyle = 'hsl(340, 70%, 70%)';
+					posX -= stepSize;
+					posY += stepSize;
+					break;
+				case west:
+					canvasCtx.strokeStyle = 'hsl(20, 70%, 70%)';
+					posX -= stepSize;
+					break;
+				case northwest:
+					canvasCtx.strokeStyle = 'hsl(60, 70%, 70%)';
+					posX -= stepSize;
+					posY -= stepSize;
+					break;
+				default:
+					break;
 			}
-			drawVisual = requestAnimationFrame(draw); 
-		}
-		draw();
-	}
-	// tileAlign();
-	
-	canvas.addEventListener('mousemove', function(e) {
-		centerX = e.clientX;
-		centerY = e.clientY;
-		// console.log('centerX: ' + centerX);
-		// console.log('centerY: ' + centerY);
-	});
 
+			if(posX > canvWidth) posX = 0;
+			if(posX < 0) posX = canvWidth;
+			if(posY > canvHeight) posY = 0;
+			if(posY < 0) posY = canvHeight;
+
+			canvasCtx.beginPath();
+			canvasCtx.arc(posX+stepSize/2, posY+stepSize/2, diameter, 0, 2*Math.PI);
+			canvasCtx.stroke();
+
+			// setInterval(draw, 1000);
+		}
+		// draw();
+
+		var stop = false;
+		var frameCount = 0;
+		var fps, fpsInterval, startTime, now, then, elapsed;
+
+		function startAnimating(fps){
+			fpsInterval = 1000/fps;
+			then = Date.now();
+			startTime = then;
+			animate();
+		}
+
+
+		function animate(){
+
+			if(stop){
+				return;
+			}
+			// if(document.getElementById('visual-select').value == 'PixShuffle'){
+				drawVisual = requestAnimationFrame(animate);
+
+				now = Date.now();
+				elapsed = now - then;
+
+				if(elapsed > fpsInterval){
+					then = now - (elapsed % fpsInterval);
+
+					draw();
+				}
+			// }
+			// else{
+			// 	window.cancelAnimationFrame(drawVisual);
+			// }
+		}
+	}
+	dumbAgents();
 }
