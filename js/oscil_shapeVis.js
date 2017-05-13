@@ -221,7 +221,7 @@ function dumbAgents(dataArray, bufferLength){
 			canvasCtx.fillStyle = 'rgba(237, 230, 224, 0.2)';
 			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
-			for(var i = 0; i < bufferLength; i+=20) {
+			for(var i = 0; i < bufferLength; i+=30) {
 
 				analyser.getByteFrequencyData(dataArray);
 				var da = dataArray[i];

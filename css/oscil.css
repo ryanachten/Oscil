@@ -16,6 +16,15 @@ h2{
 	margin-bottom: 5px;
     margin-top: 20px;
 }
+h3{
+	font-family: 'Roboto', sans-serif;
+	text-transform: uppercase;
+	font-weight: bold;
+	letter-spacing: 2px;
+	font-size: 0.8em;
+	margin-bottom: 5px;
+    margin-top: 20px;
+}
 #container{
 	position: relative;
 }
@@ -27,6 +36,9 @@ h2{
 	text-align: center;
 	background-color: rgba(255,255,255,0.5);
 	padding: 15px;
+}
+#vis-settings{
+	display: none;
 }
 
 .input-field{

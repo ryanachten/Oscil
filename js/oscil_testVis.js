@@ -546,6 +546,6 @@ function tests(dataArray, bufferLength){
 		}
 		draw();
 	}
-	// helloShape();
+	helloShape();
 
 }

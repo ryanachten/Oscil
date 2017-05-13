@@ -135,7 +135,54 @@ function macroblocks(dataArray, bufferLength){
 		}
 }
 
-function repeatPix(dataArray, bufferLength){		
+function repeatPix(dataArray, bufferLength){
+
+		//Runtime UI stuff
+		var visSettings	= document.getElementById('vis-settings');
+			visSettings.style.display = 'block';
+
+		var modSampleWidthMode = document.createElement('input');
+			modSampleWidthMode.id = 'modSampleWidthMode';
+			modSampleWidthMode.type = 'checkbox';
+		var modSampleLabel = document.createElement('label');
+			modSampleLabel.htmlFor = 'modSampleWidthMode';
+			modSampleLabel.innerHTML = 'Sample Width Mode';
+
+		var repeatDiv = document.createElement('form');
+		var repeatXmode = document.createElement('input');
+			repeatXmode.id = 'repeatXmode';
+			repeatXmode.type = 'radio';
+			repeatXmode.name = 'repeatMode';
+		var repeatXmodeLabel = document.createElement('label');
+			repeatXmodeLabel.htmlFor = 'repeatXmode';
+			repeatXmodeLabel.innerHTML = 'Repeat X';
+		var repeatYmode = document.createElement('input');
+			repeatYmode.id = 'repeatYmode';
+			repeatYmode.type = 'radio';
+			repeatYmode.name = 'repeatMode';
+			repeatYmode.checked = 'true';
+		var repeatYmodeLabel = document.createElement('label');
+			repeatYmodeLabel.htmlFor = 'repeatYmode';
+			repeatYmodeLabel.innerHTML = 'Repeat Y';
+		var repeatBothmode = document.createElement('input');
+			repeatBothmode.id = 'repeatBothmode';
+			repeatBothmode.type = 'radio';
+			repeatBothmode.name = 'repeatMode';
+		var repeatBothmodeLabel = document.createElement('label');
+			repeatBothmodeLabel.htmlFor = 'repeatBothmode';
+			repeatBothmodeLabel.innerHTML = 'Both';
+
+
+		visSettings.appendChild(modSampleLabel);
+		visSettings.appendChild(modSampleWidthMode);
+		repeatDiv.appendChild(repeatXmodeLabel);
+		repeatDiv.appendChild(repeatXmode);
+		repeatDiv.appendChild(repeatYmodeLabel);
+		repeatDiv.appendChild(repeatYmode);
+		repeatDiv.appendChild(repeatBothmodeLabel);
+		repeatDiv.appendChild(repeatBothmode);
+		visSettings.appendChild(repeatDiv);
+
 
 		var img = new Image();
 		img.src = 'https://upload.wikimedia.org/wikipedia/commons/4/44/Jelly_cc11.jpg' + '?' + new Date().getTime();
@@ -146,7 +193,7 @@ function repeatPix(dataArray, bufferLength){
 
 		//TODO: add ModHeight checkbox in GUI
 		//TODO: add offsetSampleRate slider in GUI
-		var modWidth = false;
+		
 		var offsetSampleRate = 1000;
 
 
@@ -165,6 +212,7 @@ function repeatPix(dataArray, bufferLength){
 
 			var imgdata = canvasCtx.getImageData(0,0, canvWidth, canvHeight);
 			var data = imgdata.data;
+			var modWidth = modSampleWidthMode.checked;
 
 			for(var i = 0; i < bufferLength; i+=50) {
 
@@ -210,7 +258,6 @@ function repeatPix(dataArray, bufferLength){
 						canvasCtx.putImageData(frstRow, 0,(i*sampleHeight));
 					}
 				}
-				// repeatY();
 
 				function repeatX(){
 					var sampleX;
@@ -238,7 +285,12 @@ function repeatPix(dataArray, bufferLength){
 						canvasCtx.putImageData(frstCol, (i*sampleWidth), 0);
 					}
 				}
-				repeatX();
+				if(repeatYmode.checked || repeatBothmode.checked){
+					repeatY();	
+				}
+				if(repeatXmode.checked || repeatBothmode.checked){
+					repeatX();	
+				}
 			}
 			drawVisual = requestAnimationFrame(draw);
 		}
@@ -246,7 +298,23 @@ function repeatPix(dataArray, bufferLength){
 
 function pixMix(dataArray, bufferLength){
 
-		canvasCtx.clearRect(0,0 , canvWidth, canvHeight);
+		//Runtime UI stuff
+		var visSettings	= document.getElementById('vis-settings');
+		visSettings.style.display = 'block';
+		var randMode = document.createElement('input');
+		randMode.id = 'randMode';
+		randMode.type = 'checkbox';
+		randMode.addEventListener("change", function(){
+			console.log('randMode: ' + randMode.checked);
+		});
+		var randLabel = document.createElement('label');
+		randLabel.htmlFor = 'randMode';
+		randLabel.innerHTML = 'Random Mode';
+		visSettings.appendChild(randLabel);
+		visSettings.appendChild(randMode);
+
+
+		// canvasCtx.clearRect(0,0 , canvWidth, canvHeight);
 
 		var canvas2 = document.createElement('canvas');
 			canvas2.width = $(window).width(); canvas2.height = $(window).height();
@@ -308,7 +376,7 @@ function pixMix(dataArray, bufferLength){
 					for (var j = 0; j < sampleSize; j++) {
 						
 						var rand = Math.floor((Math.random()*2)+1);
-						var sampleRandMode = false; //TODO: add into UI at runtime
+						var sampleRandMode = randMode.checked; //TODO: add into UI at runtime
 						var sampleRand = Math.floor((Math.random()*sampleSize)+0);
 						
 						if (rand%2 == 0) {
@@ -364,118 +432,120 @@ function pixMix(dataArray, bufferLength){
 
 function pixShuffle(dataArray, bufferLength){
 
-		canvasCtx.clearRect(0,0 , canvWidth, canvHeight);
 
-		var canvas2 = document.createElement('canvas');
-			canvas2.width = $(window).width(); canvas2.height = $(window).height();
-			var canv2Width = canvas2.width; var canv2Height = canvas2.height;
-			var canvas2Ctx = canvas2.getContext('2d');
-			document.getElementById('container').appendChild(canvas2);
-			canvas2.style.display = 'none';
+	canvasCtx.clearRect(0,0 , canvWidth, canvHeight);
 
-		var canvas3 = document.createElement('canvas');
-			canvas3.width = $(window).width(); canvas3.height = $(window).height();
-			var canv3Width = canvas3.width; var canv3Height = canvas3.height;
-			var canvas3Ctx = canvas3.getContext('2d');
-			document.getElementById('container').appendChild(canvas3);
-			canvas3.style.display = 'none';
+	var canvas2 = document.createElement('canvas');
+		canvas2.width = $(window).width(); canvas2.height = $(window).height();
+		var canv2Width = canvas2.width; var canv2Height = canvas2.height;
+		var canvas2Ctx = canvas2.getContext('2d');
+		document.getElementById('container').appendChild(canvas2);
+		canvas2.style.display = 'none';
+
+	var canvas3 = document.createElement('canvas');
+		canvas3.width = $(window).width(); canvas3.height = $(window).height();
+		var canv3Width = canvas3.width; var canv3Height = canvas3.height;
+		var canvas3Ctx = canvas3.getContext('2d');
+		document.getElementById('container').appendChild(canvas3);
+		canvas3.style.display = 'none';
 
 
-		var imgA = new Image();
-		imgA.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Jelly_cc11.jpg/800px-Jelly_cc11.jpg' + '?' + new Date().getTime();
-		imgA.setAttribute('crossOrigin', '');
-			
+	var imgA = new Image();
+	imgA.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Jelly_cc11.jpg/800px-Jelly_cc11.jpg' + '?' + new Date().getTime();
+	imgA.setAttribute('crossOrigin', '');
+		
 
-		var imgB = new Image();
-		imgB.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Olindias_formosa1.jpg/800px-Olindias_formosa1.jpg' + '?' + new Date().getTime();
-		imgB.setAttribute('crossOrigin', '');
+	var imgB = new Image();
+	imgB.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Olindias_formosa1.jpg/800px-Olindias_formosa1.jpg' + '?' + new Date().getTime();
+	imgB.setAttribute('crossOrigin', '');
 
-		var imgAdata, imgBdata, mixData;
-		var dataA, dataB; 
-		var counter = 0;
+	var imgAdata, imgBdata, mixData;
+	var dataA, dataB; 
+	var counter = 0;
 
-		imgA.onload = imgB.onload = function(){
+	imgA.onload = imgB.onload = function(){
 
-			canvas2Ctx.drawImage(imgA, 0,0, canv2Width,canv2Height);				
-			imgAdata = canvas2Ctx.getImageData(0,0, canv2Width,canv2Height);
+		canvas2Ctx.drawImage(imgA, 0,0, canv2Width,canv2Height);				
+		imgAdata = canvas2Ctx.getImageData(0,0, canv2Width,canv2Height);
 
-			canvas3Ctx.drawImage(imgB, 0,0, canv3Width,canv3Height);				
-			imgBdata = canvas3Ctx.getImageData(0,0, canv3Width,canv3Height);
+		canvas3Ctx.drawImage(imgB, 0,0, canv3Width,canv3Height);				
+		imgBdata = canvas3Ctx.getImageData(0,0, canv3Width,canv3Height);
 
-			startAnimating(5);
-		};
+		startAnimating(5);
+	};
 
-		function draw(){
+	function draw(){
 
-			// canvasCtx.clearRect(0,0, canvWidth, canvHeight);
+		// canvasCtx.clearRect(0,0, canvWidth, canvHeight);
 
-			for(var k = 0; k < bufferLength; k+=50) {
+		for(var k = 0; k < bufferLength; k+=50) {
 
-				analyser.getByteFrequencyData(dataArray);
-				var da = dataArray[k];
-				var logda = 10;
-				if (da !== 0){
-					logda = Math.floor(Math.log(da) / Math.log(1.15));
-				}
+			analyser.getByteFrequencyData(dataArray);
+			var da = dataArray[k];
+			var logda = 10;
+			if (da !== 0){
+				logda = Math.floor(Math.log(da) / Math.log(1.15));
+			}
 
-				var sampleSize = logda;
-				var tileWidth = canvWidth/sampleSize;
-				var tileHeight = canvHeight/sampleSize;
+			var sampleSize = logda;
+			var tileWidth = canvWidth/sampleSize;
+			var tileHeight = canvHeight/sampleSize;
 
-				for (var i = 0; i < sampleSize; i++) { //i=width
-					for (var j = 0; j < sampleSize; j++) {
-						
-						var rand = Math.floor((Math.random()*4)+-2);
-						var sampleRandMode = true; //TODO: add into UI at runtime
-						var sampleRand = Math.floor((Math.random()*sampleSize)+0);
-						
-						if (rand%2 == 0) {
-							canvasCtx.putImageData(imgAdata, rand*tileWidth, rand*tileHeight, i*tileWidth, 
-													j*tileHeight, tileWidth, tileHeight);
-						}else{
-							canvasCtx.putImageData(imgBdata, rand*tileWidth, rand*tileHeight, i*tileWidth, 
-													j*tileHeight, tileWidth, tileHeight);
-						}
+			for (var i = 0; i < sampleSize; i++) { //i=width
+				for (var j = 0; j < sampleSize; j++) {
+					
+					var rand = Math.floor((Math.random()*4)+-2);
+					// var sampleRandMode = ; //TODO: add into UI at runtime
+
+					var sampleRand = Math.floor((Math.random()*sampleSize)+0);
+					
+					if (rand%2 == 0) {
+						canvasCtx.putImageData(imgAdata, rand*tileWidth, rand*tileHeight, i*tileWidth, 
+												j*tileHeight, tileWidth, tileHeight);
+					}else{
+						canvasCtx.putImageData(imgBdata, rand*tileWidth, rand*tileHeight, i*tileWidth, 
+												j*tileHeight, tileWidth, tileHeight);
 					}
 				}
 			}
-
 		}
 
-		//for controlling FPS
-		var stop = false;
-		var frameCount = 0;
-		var fps, fpsInterval, startTime, now, then, elapsed;
+	}
 
-		function startAnimating(fps){
-			fpsInterval = 1000/fps;
-			then = Date.now();
-			startTime = then;
-			animate();
+	//for controlling FPS
+	var stop = false;
+	var frameCount = 0;
+	var fps, fpsInterval, startTime, now, then, elapsed;
+
+	function startAnimating(fps){
+		fpsInterval = 1000/fps;
+		then = Date.now();
+		startTime = then;
+		animate();
+	}
+
+
+	function animate(){
+
+		if(stop){
+			return;
 		}
+		if(document.getElementById('visual-select').value == 'PixShuffle'){
+			drawVisual = requestAnimationFrame(animate);
 
+			now = Date.now();
+			elapsed = now - then;
 
-		function animate(){
+			if(elapsed > fpsInterval){
+				then = now - (elapsed % fpsInterval);
 
-			if(stop){
-				return;
-			}
-			if(document.getElementById('visual-select').value == 'PixShuffle'){
-				drawVisual = requestAnimationFrame(animate);
-
-				now = Date.now();
-				elapsed = now - then;
-
-				if(elapsed > fpsInterval){
-					then = now - (elapsed % fpsInterval);
-
-					draw();
-				}
-			}
-			else{
-				window.cancelAnimationFrame(drawVisual);
-				document.getElementById('container').removeChild(canvas2);
-				document.getElementById('container').removeChild(canvas3);
+				draw();
 			}
 		}
+		else{
+			window.cancelAnimationFrame(drawVisual);
+			document.getElementById('container').removeChild(canvas2);
+			document.getElementById('container').removeChild(canvas3);
+		}
+	}
 }
