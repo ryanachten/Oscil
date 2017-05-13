@@ -32,10 +32,35 @@ smoothingRange.onchange = function(){
 	analyser.smoothingTimeConstant = smoothingRange.value/100;
 }
 
+function removeVisualSettings(){
+
+	var visSettings	= document.getElementById('vis-settings').children;
+	if(visSettings.length == 0){
+		return;
+	}
+
+	for (var i = 0; i <= visSettings.length; i++) {		
+		if(visSettings[i].id !== 'vissettings-header'){
+			console.log('delete: ' + visSettings[i].nodeName);
+			if(visSettings[i].children.length > 0){
+				console.log('delete node w/ children');
+				for(var j = 0; j <= visSettings[i].children.length; j++){
+					console.log('delete: ' + visSettings[i].children[i].nodeName);
+					visSettings[i].removeChild(visSettings[i].children[i]);
+				}
+			}
+			visSettings[i].parentElement.removeChild(visSettings[i]);
+		}
+	}
+}
+
 var visualisationMode = document.querySelector('#visual-select');
 visualisationMode.onchange = function(){
 	window.cancelAnimationFrame(drawVisual);
 	drawVisual = undefined;
+	
+	removeVisualSettings();
+	
 	visualise(visualisationMode.value);
 }
 
