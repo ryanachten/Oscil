@@ -158,8 +158,8 @@ function particles(dataArray, bufferLength){
 			particleCountInput.value = 30;
 			particleCountInput.addEventListener("change", function(){
 				particleCount = parseInt(particleCountInput.value);
-				console.log('particleCount: ' + particleCount);
-				clear();
+				// console.log('particleCount: ' + particleCount);
+				clear();	
 				init();
 			});
 
@@ -261,123 +261,142 @@ function particles(dataArray, bufferLength){
 
 function dumbAgents(dataArray, bufferLength){
 
-		var north = 0;
-		var northeast = 1;
-		var east = 2;
-		var southeast = 3;
-		var south = 4;
-		var southwest = 5;
-		var west = 6;
-		var northwest = 7;
+	//Runtime UI stuff
+	var visSettings	= document.getElementById('vis-settings');
+		visSettings.style.display = 'block';
 
-		var posX = canvWidth/2;
-		var posY = canvHeight/2;
+	var alpha = 0.2;
+	var alphaInput = document.createElement('input');
+		alphaInput.id = 'alphaInput';
+		alphaInput.type = 'number';
+		alphaInput.className = 'vis-setting';
+		alphaInput.min = 0;
+		alphaInput.max = 100;
+		alphaInput.value = 20;
+		alphaInput.addEventListener("change", function(){
+			alpha = parseInt(alphaInput.value)/100;
+		});
 
-		var logda = 3;
+	var alphaLabel = document.createElement('label');
+		alphaLabel.htmlFor = 'alphaInput';
+		alphaLabel.innerHTML = 'Bg Alpha';
+		alphaLabel.className = 'vis-setting';
 
-		startAnimating(5);
+	visSettings.appendChild(alphaLabel);
+	visSettings.appendChild(alphaInput);
 
-		function draw(){
+	var north = 0;
+	var northeast = 1;
+	var east = 2;
+	var southeast = 3;
+	var south = 4;
+	var southwest = 5;
+	var west = 6;
+	var northwest = 7;
 
-			canvasCtx.fillStyle = 'rgba(237, 230, 224, 0.2)';
-			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
+	var posX = canvWidth/2;
+	var posY = canvHeight/2;
 
-			for(var i = 0; i < bufferLength; i+=30) {
+	var logda = 3;
 
-				analyser.getByteFrequencyData(dataArray);
-				var da = dataArray[i];
+	startAnimating(5);
 
-				if (da !== 0){
-					logda = Math.floor(Math.log(da) / Math.log(1.1));
-					// console.log(logda);
-				}
-				var diameter = logda;
-				var stepSize = diameter*2;
+	function draw(){
 
-				var rand = Math.floor((Math.random()*8)+0);
-				
-				switch(rand){
-					case north:
-						canvasCtx.strokeStyle = 'hsl(140, 70%, 70%)';
-						posY -= stepSize;
-						break;
-					case northeast:
-						canvasCtx.strokeStyle = 'hsl(180, 70%, 70%)';
-						posX += stepSize;
-						posY -= stepSize;
-						break;
-					case east:
-						posX += stepSize;
-						break;
-					case southeast:
-						canvasCtx.strokeStyle = 'hsl(220, 70%, 70%)';
-						posX += stepSize;
-						posY += stepSize;
-						break;
-					case south:
-						canvasCtx.strokeStyle = 'hsl(260, 70%, 70%)';
-						posY += stepSize;
-						break;
-					case southwest:
-						canvasCtx.strokeStyle = 'hsl(300, 70%, 70%)';
-						posX -= stepSize;
-						posY += stepSize;
-						break;
-					case west:
-						canvasCtx.strokeStyle = 'hsl(340, 70%, 70%)';
-						posX -= stepSize;
-						break;
-					case northwest:
-						canvasCtx.strokeStyle = 'hsl(20, 70%, 70%)';
-						posX -= stepSize;
-						posY -= stepSize;
-						break;
-					default:
-						break;
-				}
+		canvasCtx.fillStyle = 'rgba(237, 230, 224, ' + alpha +')';
+		canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
-				if(posX > canvWidth) posX = 0;
-				if(posX < 0) posX = canvWidth;
-				if(posY > canvHeight) posY = 0;
-				if(posY < 0) posY = canvHeight;
+		for(var i = 0; i < bufferLength; i+=30) {
 
-				canvasCtx.beginPath();
-				canvasCtx.arc(posX+stepSize/2, posY+stepSize/2, diameter, 0, 2*Math.PI);
-				canvasCtx.stroke();
+			analyser.getByteFrequencyData(dataArray);
+			var da = dataArray[i];
+
+			if (da !== 0){
+				logda = Math.floor(Math.log(da) / Math.log(1.1));
+				// console.log(logda);
 			}
-		}
+			var diameter = logda;
+			var stepSize = diameter*2;
 
-		var stop = false;
-		var frameCount = 0;
-		var fps, fpsInterval, startTime, now, then, elapsed;
-
-		function startAnimating(fps){
-			fpsInterval = 1000/fps;
-			then = Date.now();
-			startTime = then;
-			animate();
-		}
-
-
-		function animate(){
-
-			if(stop){
-				return;
+			var rand = Math.floor((Math.random()*8)+0);
+			
+			switch(rand){
+				case north:
+					canvasCtx.strokeStyle = 'hsl(140, 70%, 70%)';
+					posY -= stepSize;
+					break;
+				case northeast:
+					canvasCtx.strokeStyle = 'hsl(180, 70%, 70%)';
+					posX += stepSize;
+					posY -= stepSize;
+					break;
+				case east:
+					posX += stepSize;
+					break;
+				case southeast:
+					canvasCtx.strokeStyle = 'hsl(220, 70%, 70%)';
+					posX += stepSize;
+					posY += stepSize;
+					break;
+				case south:
+					canvasCtx.strokeStyle = 'hsl(260, 70%, 70%)';
+					posY += stepSize;
+					break;
+				case southwest:
+					canvasCtx.strokeStyle = 'hsl(300, 70%, 70%)';
+					posX -= stepSize;
+					posY += stepSize;
+					break;
+				case west:
+					canvasCtx.strokeStyle = 'hsl(340, 70%, 70%)';
+					posX -= stepSize;
+					break;
+				case northwest:
+					canvasCtx.strokeStyle = 'hsl(20, 70%, 70%)';
+					posX -= stepSize;
+					posY -= stepSize;
+					break;
+				default:
+					break;
 			}
-			// if(document.getElementById('visual-select').value == 'PixShuffle'){
-				drawVisual = requestAnimationFrame(animate);
 
-				now = Date.now();
-				elapsed = now - then;
+			if(posX > canvWidth) posX = 0;
+			if(posX < 0) posX = canvWidth;
+			if(posY > canvHeight) posY = 0;
+			if(posY < 0) posY = canvHeight;
 
-				if(elapsed > fpsInterval){
-					then = now - (elapsed % fpsInterval);
-
-					draw();
-				}
-			// }
-			// else{
-			// 	window.cancelAnimationFrame(drawVisual);
-			// }
+			canvasCtx.beginPath();
+			canvasCtx.arc(posX+stepSize/2, posY+stepSize/2, diameter, 0, 2*Math.PI);
+			canvasCtx.stroke();
 		}
 	}
+
+	var stop = false;
+	var frameCount = 0;
+	var fps, fpsInterval, startTime, now, then, elapsed;
+
+	function startAnimating(fps){
+		fpsInterval = 1000/fps;
+		then = Date.now();
+		startTime = then;
+		animate();
+	}
+
+
+	function animate(){
+
+		if(stop){
+			return;
+		}
+		drawVisual = requestAnimationFrame(animate);
+
+		now = Date.now();
+		elapsed = now - then;
+
+		if(elapsed > fpsInterval){
+			then = now - (elapsed % fpsInterval);
+
+			draw();
+		}
+	}
+}
