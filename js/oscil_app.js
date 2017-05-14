@@ -33,25 +33,12 @@ smoothingRange.onchange = function(){
 }
 
 function removeVisualSettings(){
-
-	var visSettings	= document.getElementById('vis-settings').children;
+	var visSettings	= document.getElementsByClassName('vis-setting');
 	if(visSettings.length == 0){
 		return;
 	}
 
-	for (var i = 0; i <= visSettings.length; i++) {		
-		if(visSettings[i].id !== 'vissettings-header'){
-			console.log('delete: ' + visSettings[i].nodeName);
-			if(visSettings[i].children.length > 0){
-				console.log('delete node w/ children');
-				for(var j = 0; j <= visSettings[i].children.length; j++){
-					console.log('delete: ' + visSettings[i].children[i].nodeName);
-					visSettings[i].removeChild(visSettings[i].children[i]);
-				}
-			}
-			visSettings[i].parentElement.removeChild(visSettings[i]);
-		}
-	}
+	$('.vis-setting').remove();
 }
 
 var visualisationMode = document.querySelector('#visual-select');

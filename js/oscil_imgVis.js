@@ -144,33 +144,43 @@ function repeatPix(dataArray, bufferLength){
 		var modSampleWidthMode = document.createElement('input');
 			modSampleWidthMode.id = 'modSampleWidthMode';
 			modSampleWidthMode.type = 'checkbox';
+			modSampleWidthMode.className = 'vis-setting';
+
 		var modSampleLabel = document.createElement('label');
 			modSampleLabel.htmlFor = 'modSampleWidthMode';
 			modSampleLabel.innerHTML = 'Sample Width Mode';
+			modSampleLabel.className = 'vis-setting';
 
 		var repeatDiv = document.createElement('form');
+			repeatDiv.className = 'vis-setting';
 		var repeatXmode = document.createElement('input');
 			repeatXmode.id = 'repeatXmode';
 			repeatXmode.type = 'radio';
 			repeatXmode.name = 'repeatMode';
+			repeatXmode.className = 'vis-setting';
 		var repeatXmodeLabel = document.createElement('label');
 			repeatXmodeLabel.htmlFor = 'repeatXmode';
 			repeatXmodeLabel.innerHTML = 'Repeat X';
+			repeatXmodeLabel.className = 'vis-setting';
 		var repeatYmode = document.createElement('input');
 			repeatYmode.id = 'repeatYmode';
 			repeatYmode.type = 'radio';
 			repeatYmode.name = 'repeatMode';
 			repeatYmode.checked = 'true';
+			repeatYmode.className = 'vis-setting';
 		var repeatYmodeLabel = document.createElement('label');
 			repeatYmodeLabel.htmlFor = 'repeatYmode';
 			repeatYmodeLabel.innerHTML = 'Repeat Y';
+			repeatYmodeLabel.className = 'vis-setting';
 		var repeatBothmode = document.createElement('input');
 			repeatBothmode.id = 'repeatBothmode';
 			repeatBothmode.type = 'radio';
 			repeatBothmode.name = 'repeatMode';
+			repeatBothmode.className = 'vis-setting';
 		var repeatBothmodeLabel = document.createElement('label');
 			repeatBothmodeLabel.htmlFor = 'repeatBothmode';
 			repeatBothmodeLabel.innerHTML = 'Both';
+			repeatBothmodeLabel.className = 'vis-setting';
 
 
 		visSettings.appendChild(modSampleLabel);
@@ -304,12 +314,15 @@ function pixMix(dataArray, bufferLength){
 		var randMode = document.createElement('input');
 		randMode.id = 'randMode';
 		randMode.type = 'checkbox';
+		randMode.className = 'vis-setting';
 		randMode.addEventListener("change", function(){
 			console.log('randMode: ' + randMode.checked);
 		});
 		var randLabel = document.createElement('label');
 		randLabel.htmlFor = 'randMode';
 		randLabel.innerHTML = 'Random Mode';
+		randLabel.className = 'vis-setting';
+
 		visSettings.appendChild(randLabel);
 		visSettings.appendChild(randMode);
 
