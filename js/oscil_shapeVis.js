@@ -70,17 +70,50 @@ function waveForm(dataArray, bufferLength){
 
 function gradient(dataArray, bufferLength){
 
+	//Runtime UI stuff
+	var visSettings	= document.getElementById('vis-settings');
+		visSettings.style.display = 'block';
+
+	var gradModeDiv = document.createElement('form');
+			gradModeDiv.className = 'vis-setting';
+		var linearMode = document.createElement('input');
+			linearMode.id = 'linearMode';
+			linearMode.type = 'radio';
+			linearMode.name = 'gradMode';
+			linearMode.className = 'vis-setting';
+		var linearModeLabel = document.createElement('label');
+			linearModeLabel.htmlFor = 'linearMode';
+			linearModeLabel.innerHTML = 'Linear';
+			linearModeLabel.className = 'vis-setting';
+		var radialMode = document.createElement('input');
+			radialMode.id = 'radialMode';
+			radialMode.type = 'radio';
+			radialMode.name = 'gradMode';
+			radialMode.className = 'vis-setting';
+			radialMode.checked = 'true';
+		var radialModeLabel = document.createElement('label');
+			radialModeLabel.htmlFor = 'radialMode';
+			radialModeLabel.innerHTML = 'Radial';
+			radialModeLabel.className = 'vis-setting';
+
+		gradModeDiv.appendChild(linearModeLabel);
+		gradModeDiv.appendChild(linearMode);
+		gradModeDiv.appendChild(radialModeLabel);
+		gradModeDiv.appendChild(radialMode);
+		visSettings.appendChild(gradModeDiv);
+
+
 	canvasCtx.clearRect(0,0,canvWidth,canvHeight);
 	
 	function draw(){
 		drawVisual = requestAnimationFrame(draw);
-		analyser.getByteFrequencyData(dataArray); //whats diff between getByteTimeDomainData and this?
+		analyser.getByteFrequencyData(dataArray);
 		var colourStops = 5;
 
 		var gradMode;
 		var grad;
 
-		if (gradMode == 'linear'){
+		if (linearMode.checked){
 			//Linear
 			grad = canvasCtx.createLinearGradient(0,0, canvWidth, canvHeight);
 		}
@@ -99,10 +132,6 @@ function gradient(dataArray, bufferLength){
 				grad.addColorStop(0.0,'hsl(' + Math.abs(h-180) + ',80%, 70%)');
 				grad.addColorStop(1.0,'hsl(' + h + ',80%, 70%)');
 			}
-
-			// console.log('dataArray: ' + dataArray[i]);
-			// console.log('dataArray Length: ' + dataArray[i].length);
-			// console.log('bufferLength: ' + bufferLength);
 		}
 
 		canvasCtx.fillStyle = grad;
