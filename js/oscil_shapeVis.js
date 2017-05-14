@@ -143,16 +143,48 @@ function gradient(dataArray, bufferLength){
 
 function particles(dataArray, bufferLength){
 
+		//Runtime UI stuff
+		var visSettings	= document.getElementById('vis-settings');
+			visSettings.style.display = 'block';
+
+		// var particleCount = 256;
+		var particleCount = 30;
+		var particleCountInput = document.createElement('input');
+			particleCountInput.id = 'particleCountInput';
+			particleCountInput.type = 'number';
+			particleCountInput.className = 'vis-setting';
+			particleCountInput.min = 5;
+			particleCountInput.max = 50;
+			particleCountInput.value = 30;
+			particleCountInput.addEventListener("change", function(){
+				particleCount = parseInt(particleCountInput.value);
+				console.log('particleCount: ' + particleCount);
+				clear();
+				init();
+			});
+
+		var particleCountLabel = document.createElement('label');
+			particleCountLabel.htmlFor = 'particleCountInput';
+			particleCountLabel.innerHTML = 'Particle Count';
+			particleCountLabel.className = 'vis-setting';
+
+		visSettings.appendChild(particleCountLabel);
+		visSettings.appendChild(particleCountInput);
+
+
 		canvasCtx.globalCompositeOperation = 'source-over';
 
-		var particleCount = 30;
-		var particles = [];
-		var partCounter = 0;
-		for (var i = 0; i < particleCount; i++) {
-			particles.push(new create_particle());
-			partCounter++;
-			console.log('partCounter: ' + partCounter);
-		};
+		var particles, partCounter;
+		function init(){
+			particles = [];
+			partCounter = 0;
+			for (var i = 0; i < particleCount; i++) {
+				particles.push(new create_particle());
+				partCounter++;
+				console.log('partCounter: ' + partCounter);
+			}
+		}
+		init();
 
 		function create_particle(){
 
