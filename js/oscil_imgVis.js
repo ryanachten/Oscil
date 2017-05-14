@@ -73,6 +73,33 @@ function refract(dataArray, bufferLength){
 
 function macroblocks(dataArray, bufferLength){		
 
+
+		//Runtime UI stuff
+		var visSettings	= document.getElementById('vis-settings');
+			visSettings.style.display = 'block';
+
+		var sampleCount = 256;
+		var sampleCountInput = document.createElement('input');
+			sampleCountInput.id = 'sampleCountInput';
+			sampleCountInput.type = 'number';
+			sampleCountInput.className = 'vis-setting';
+			sampleCountInput.min = 10;
+			sampleCountInput.max = 1000;
+			sampleCountInput.value = 256;
+			sampleCountInput.addEventListener("change", function(){
+				sampleCount = parseInt(sampleCountInput.value);
+				console.log('sampleCount: ' + sampleCount);
+			});
+
+		var sampleCountLabel = document.createElement('label');
+			sampleCountLabel.htmlFor = 'sampleCountInput';
+			sampleCountLabel.innerHTML = 'Sample Count';
+			sampleCountLabel.className = 'vis-setting';
+
+		visSettings.appendChild(sampleCountLabel);
+		visSettings.appendChild(sampleCountInput);
+
+
 		var img = new Image();
 		img.src = 'https://upload.wikimedia.org/wikipedia/commons/4/44/Jelly_cc11.jpg' + '?' + new Date().getTime();
 		img.setAttribute('crossOrigin', '');
@@ -91,6 +118,7 @@ function macroblocks(dataArray, bufferLength){
 			}
 			var imgdata = canvasCtx.getImageData(0,0, canvWidth, canvHeight);
 			var data = imgdata.data;
+
 
 			for(var i = 0; i < bufferLength; i+=70) {
 
@@ -112,7 +140,8 @@ function macroblocks(dataArray, bufferLength){
 
 				function channelNoise(){
 
-					var sampleCount = 256;
+					// sampleCount = 255;
+					// console.log('sampleCount: ' + sampleCount);
 
 					for (var i = 0; i < data.length; i+=sampleCount) {
 

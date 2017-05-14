@@ -37,7 +37,6 @@ function removeVisualSettings(){
 	if(visSettings.length == 0){
 		return;
 	}
-
 	$('.vis-setting').remove();
 }
 
