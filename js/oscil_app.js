@@ -46,6 +46,7 @@ visualisationMode.onchange = function(){
 	drawVisual = undefined;
 	
 	removeVisualSettings();
+	document.getElementById('vis-settings').style.display = 'none';
 	
 	visualise(visualisationMode.value);
 }
