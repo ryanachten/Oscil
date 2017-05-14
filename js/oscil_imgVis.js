@@ -140,9 +140,6 @@ function macroblocks(dataArray, bufferLength){
 
 				function channelNoise(){
 
-					// sampleCount = 255;
-					// console.log('sampleCount: ' + sampleCount);
-
 					for (var i = 0; i < data.length; i+=sampleCount) {
 
 						var r = data[i]; var g = data[i+1]; var b = data[i+2];
