@@ -471,6 +471,24 @@ function pixMix(dataArray, bufferLength){
 
 function pixShuffle(dataArray, bufferLength){
 
+	//Runtime UI stuff
+	var visSettings	= document.getElementById('vis-settings');
+		visSettings.style.display = 'block';
+
+	var imageAlink = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Jelly_cc11.jpg/800px-Jelly_cc11.jpg';
+	var imageAlinkInput = document.createElement('input');
+		imageAlinkInput.id = 'imageAlinkInput';
+		imageAlinkInput.type = 'text';
+		imageAlinkInput.className = 'vis-setting';
+		imageAlinkInput.placeholder = imageAlink;
+		imageAlinkInput.addEventListener("change", function(){
+			imageAlink = imageAlinkInput.value;
+			console.log('imageAlink: ' + imageAlink);
+			init();
+		});
+
+	// visSettings.appendChild(alphaLabel);
+	visSettings.appendChild(imageAlinkInput);
 
 	canvasCtx.clearRect(0,0 , canvWidth, canvHeight);
 
@@ -490,7 +508,7 @@ function pixShuffle(dataArray, bufferLength){
 
 
 	var imgA = new Image();
-	imgA.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Jelly_cc11.jpg/800px-Jelly_cc11.jpg' + '?' + new Date().getTime();
+	imgA.src = imageAlink + '?' + new Date().getTime();
 	imgA.setAttribute('crossOrigin', '');
 		
 
@@ -503,7 +521,10 @@ function pixShuffle(dataArray, bufferLength){
 	var counter = 0;
 
 	imgA.onload = imgB.onload = function(){
+		init();
+	};
 
+	function init(){
 		canvas2Ctx.drawImage(imgA, 0,0, canv2Width,canv2Height);				
 		imgAdata = canvas2Ctx.getImageData(0,0, canv2Width,canv2Height);
 
@@ -511,11 +532,9 @@ function pixShuffle(dataArray, bufferLength){
 		imgBdata = canvas3Ctx.getImageData(0,0, canv3Width,canv3Height);
 
 		startAnimating(5);
-	};
+	}
 
 	function draw(){
-
-		// canvasCtx.clearRect(0,0, canvWidth, canvHeight);
 
 		for(var k = 0; k < bufferLength; k+=50) {
 
@@ -534,7 +553,6 @@ function pixShuffle(dataArray, bufferLength){
 				for (var j = 0; j < sampleSize; j++) {
 					
 					var rand = Math.floor((Math.random()*4)+-2);
-					// var sampleRandMode = ; //TODO: add into UI at runtime
 
 					var sampleRand = Math.floor((Math.random()*sampleSize)+0);
 					
