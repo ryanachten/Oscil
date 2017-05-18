@@ -118,6 +118,9 @@ function visualise(visMode){
 	else if(visMode === 'Gradient'){
 		gradient(dataArray, bufferLength);
 	}
+	else if(visMode === 'PolyShapes'){
+		polyShapes(dataArray, bufferLength);
+	}
 	else if(visMode === 'Particles'){
 		particles(dataArray, bufferLength);
 	}
