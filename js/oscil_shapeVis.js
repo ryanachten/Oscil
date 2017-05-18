@@ -141,6 +141,71 @@ function gradient(dataArray, bufferLength){
 	draw();
 }
 
+function polyShapes(dataArray, bufferLength){
+
+	canvasCtx.translate(canvWidth/2, canvHeight/2);
+	var circleResolution, radius, angle;
+	var radiusMode = true;
+	
+	var da, logda;
+	draw();
+
+	
+	function draw(){
+
+		for(var i = 0; i < bufferLength; i+=30) {
+
+			analyser.getByteFrequencyData(dataArray);
+			da = dataArray[i];
+
+			if (da !== 0){
+				logda = Math.log(da) / Math.log(4);
+				console.log(logda);
+			}
+			
+			drawPoly(logda);
+		}
+
+		function drawPoly(logda){
+			circleResolution = (Math.random() * 80) +2;
+			if(radiusMode){
+				radius = (canvWidth/4)/logda; 
+				if(radius > canvWidth/4) radius = canvWidth/4;
+			}else{
+				radius = (Math.random() * canvWidth/4) +2;
+			}
+
+			angle = Math.PI*2/circleResolution;
+			
+
+			canvasCtx.lineWidth = (Math.random() * 15) +4;
+			canvasCtx.strokeStyle = 'hsl('+ ((Math.random() * 360) +1)
+											+ ', 70%, 70%)';
+
+			canvasCtx.translate(-canvWidth/2, -canvHeight/2);
+
+			canvasCtx.fillStyle = 'rgba(237, 230, 224, 0.2)';
+			canvasCtx.fillRect(0,0, canvWidth,canvHeight);
+
+			canvasCtx.translate(canvWidth/2, canvHeight/2);
+
+			canvasCtx.beginPath();
+			for (var i = 0; i <= circleResolution; i++) {
+				var x = Math.cos(angle*i) * radius;
+				var y = Math.sin(angle*i) * radius;
+				// console.log('x: ' + x);
+				// console.log('y: ' + y);
+
+				canvasCtx.lineTo(x, y);
+			}
+			canvasCtx.closePath();
+			canvasCtx.stroke();
+		}
+		
+		drawVisual = requestAnimationFrame(draw);
+	}
+}
+
 function particles(dataArray, bufferLength){
 
 		//Runtime UI stuff
