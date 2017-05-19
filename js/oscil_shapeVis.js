@@ -152,6 +152,7 @@ function polyShapes(dataArray, bufferLength){
 		var radiusModeCheck = document.createElement('input');
 			radiusModeCheck.id = 'radiusMode';
 			radiusModeCheck.type = 'checkbox';
+			radiusModeCheck.className = 'vis-setting';
 			radiusModeCheck.checked = true;
 		var radiusModeLabel = document.createElement('label');
 			radiusModeLabel.htmlFor = 'radiusMode';
@@ -162,6 +163,7 @@ function polyShapes(dataArray, bufferLength){
 		var resolutionModeCheck = document.createElement('input');
 			resolutionModeCheck.id = 'resolutionMode';
 			resolutionModeCheck.type = 'checkbox';
+			resolutionModeCheck.className = 'vis-setting';
 			resolutionModeCheck.checked = false;
 		var resolutionModeLabel = document.createElement('label');
 			resolutionModeLabel.htmlFor = 'resolutionMode';
@@ -172,6 +174,7 @@ function polyShapes(dataArray, bufferLength){
 		var strokeModeCheck = document.createElement('input');
 			strokeModeCheck.id = 'strokeMode';
 			strokeModeCheck.type = 'checkbox';
+			strokeModeCheck.className = 'vis-setting';
 			strokeModeCheck.checked = true;
 		var strokeModeLabel = document.createElement('label');
 			strokeModeLabel.htmlFor = 'strokeMode';
