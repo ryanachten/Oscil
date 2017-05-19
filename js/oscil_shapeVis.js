@@ -149,12 +149,12 @@ function polyShapes(dataArray, bufferLength){
 	var resolutionMode = true;
 
 	var da, logda;
-	draw();
+	startAnimating(25);
 
-	
+
 	function draw(){
 
-		for(var i = 0; i < bufferLength; i+=30) {
+		for(var i = 0; i < bufferLength; i+=50) {
 
 			analyser.getByteFrequencyData(dataArray);
 			da = dataArray[i];
@@ -208,8 +208,35 @@ function polyShapes(dataArray, bufferLength){
 			canvasCtx.closePath();
 			canvasCtx.stroke();
 		}
-		
-		drawVisual = requestAnimationFrame(draw);
+	}
+
+	var stop = false;
+	var frameCount = 0;
+	var fps, fpsInterval, startTime, now, then, elapsed;
+
+	function startAnimating(fps){
+		fpsInterval = 1000/fps;
+		then = Date.now();
+		startTime = then;
+		animate();
+	}
+
+
+	function animate(){
+
+		if(stop){
+			return;
+		}
+		drawVisual = requestAnimationFrame(animate);
+
+		now = Date.now();
+		elapsed = now - then;
+
+		if(elapsed > fpsInterval){
+			then = now - (elapsed % fpsInterval);
+
+			draw();
+		}
 	}
 }
 
