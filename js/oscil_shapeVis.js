@@ -145,8 +145,9 @@ function polyShapes(dataArray, bufferLength){
 
 	canvasCtx.translate(canvWidth/2, canvHeight/2);
 	var circleResolution, radius, angle;
-	var radiusMode = true;
-	
+	var radiusMode = false;
+	var resolutionMode = true;
+
 	var da, logda;
 	draw();
 
@@ -167,7 +168,13 @@ function polyShapes(dataArray, bufferLength){
 		}
 
 		function drawPoly(logda){
-			circleResolution = (Math.random() * 80) +2;
+			if(resolutionMode){
+				circleResolution = logda*3;
+				if(circleResolution < 3) circleResolution = 3;
+			}else{
+				circleResolution = (Math.random() * 80) +2;
+			}
+			
 			if(radiusMode){
 				radius = (canvWidth/4)/logda; 
 				if(radius > canvWidth/4) radius = canvWidth/4;
