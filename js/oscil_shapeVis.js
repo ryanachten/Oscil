@@ -187,16 +187,11 @@ function polyShapes(dataArray, bufferLength){
 	visSettings.appendChild(strokeDiv);
 	visSettings.appendChild(resolutionDiv);
 	visSettings.appendChild(radiusDiv);
-	
-	
 
-	canvasCtx.translate(canvWidth/2, canvHeight/2);
+
 	var circleResolution, radius, angle, radAxis;
-
-	//Runtime UI variables -TODO
-	var radiusMode, resolutionMode, strokeMode;
-
 	var da, logda;
+
 	startAnimating(25);
 
 
@@ -209,22 +204,20 @@ function polyShapes(dataArray, bufferLength){
 
 			if (da !== 0){
 				logda = Math.log(da) / Math.log(4);
-				console.log(logda);
+				// console.log(logda);
 			}
 			drawPoly(logda);
 		}
 
 		function drawPoly(logda){
-			resolutionMode = resolutionModeCheck.checked;
-			if(resolutionMode){
+			if(resolutionModeCheck.checked){
 				circleResolution = logda*3;
 				if(circleResolution < 3) circleResolution = 3;
 			}else{
 				circleResolution = (Math.random() * 80) +2;
 			}
 			
-			radiusMode = radiusModeCheck.checked;
-			if(radiusMode){
+			if(radiusModeCheck.checked){
 				radAxis = (canvWidth > canvHeight) ? canvHeight/2 : canvWidth/2;
 				radius = radAxis/logda; 
 				if(radius > (radAxis-10)) radius = radAxis-10;
@@ -234,32 +227,24 @@ function polyShapes(dataArray, bufferLength){
 
 			angle = Math.PI*2/circleResolution;
 
-			canvasCtx.translate(-canvWidth/2, -canvHeight/2);
-
 			canvasCtx.fillStyle = 'rgba(237, 230, 224, 0.1)';
 			canvasCtx.fillRect(0,0, canvWidth,canvHeight);
-
-			canvasCtx.translate(canvWidth/2, canvHeight/2);
 
 			canvasCtx.beginPath();
 			for (var i = 0; i <= circleResolution; i++) {
 				var x = Math.cos(angle*i) * radius;
 				var y = Math.sin(angle*i) * radius;
-				canvasCtx.lineTo(x, y);
+				canvasCtx.lineTo(canvWidth/2 + x, canvHeight/2+ y);
 			}
 			canvasCtx.closePath();
 
-			strokeMode = strokeModeCheck.checked;
-			if(strokeMode){
+			if(strokeModeCheck.checked){
 				canvasCtx.lineWidth = (logda * 5) + 3;
 				// canvasCtx.lineWidth = (Math.random() * 15) +4;
-				canvasCtx.strokeStyle = 'hsl('+ (360/logda +25)
-											+ ', 70%, 70%)';
+				canvasCtx.strokeStyle = 'hsl('+ (360/logda +25)	+ ', 70%, 70%)';
 				canvasCtx.stroke();
 			}else{
-				
-				canvasCtx.fillStyle = 'hsl('+ (360/logda +25)
-											+ ', 70%, 70%)';
+				canvasCtx.fillStyle = 'hsl('+ (360/logda +25) + ', 70%, 70%)';
 				canvasCtx.fill();
 			}
 		}
@@ -275,6 +260,7 @@ function polyShapes(dataArray, bufferLength){
 		startTime = then;
 		animate();
 	}
+
 
 	function animate(){
 
