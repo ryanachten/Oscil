@@ -143,13 +143,58 @@ function gradient(dataArray, bufferLength){
 
 function polyShapes(dataArray, bufferLength){
 
+	//Runtime UI stuff
+	var visSettings	= document.getElementById('vis-settings');
+		visSettings.style.display = 'block';
+
+	var radiusDiv = document.createElement('div');
+			radiusDiv.className = 'vis-setting';
+		var radiusModeCheck = document.createElement('input');
+			radiusModeCheck.id = 'radiusMode';
+			radiusModeCheck.type = 'checkbox';
+			radiusModeCheck.checked = true;
+		var radiusModeLabel = document.createElement('label');
+			radiusModeLabel.htmlFor = 'radiusMode';
+			radiusModeLabel.innerHTML = 'Radius Mode';
+			radiusModeLabel.className = 'vis-setting';
+	var resolutionDiv = document.createElement('div');
+			radiusDiv.className = 'vis-setting';
+		var resolutionModeCheck = document.createElement('input');
+			resolutionModeCheck.id = 'resolutionMode';
+			resolutionModeCheck.type = 'checkbox';
+			resolutionModeCheck.checked = false;
+		var resolutionModeLabel = document.createElement('label');
+			resolutionModeLabel.htmlFor = 'resolutionMode';
+			resolutionModeLabel.innerHTML = 'Resolution Mode';
+			resolutionModeLabel.className = 'vis-setting';
+	var strokeDiv = document.createElement('div');
+			strokeDiv.className = 'vis-setting';
+		var strokeModeCheck = document.createElement('input');
+			strokeModeCheck.id = 'strokeMode';
+			strokeModeCheck.type = 'checkbox';
+			strokeModeCheck.checked = true;
+		var strokeModeLabel = document.createElement('label');
+			strokeModeLabel.htmlFor = 'strokeMode';
+			strokeModeLabel.innerHTML = 'Stroke Mode';
+			strokeModeLabel.className = 'vis-setting';
+
+	radiusDiv.appendChild(resolutionModeLabel);
+	radiusDiv.appendChild(resolutionModeCheck);
+	resolutionDiv.appendChild(radiusModeLabel);
+	resolutionDiv.appendChild(radiusModeCheck);
+	strokeDiv.appendChild(strokeModeLabel);
+	strokeDiv.appendChild(strokeModeCheck);
+	visSettings.appendChild(strokeDiv);
+	visSettings.appendChild(resolutionDiv);
+	visSettings.appendChild(radiusDiv);
+	
+	
+
 	canvasCtx.translate(canvWidth/2, canvHeight/2);
-	var circleResolution, radius, angle;
+	var circleResolution, radius, angle, radAxis;
 
 	//Runtime UI variables -TODO
-	var radiusMode = true;
-	var resolutionMode = false;
-	var strokeMode = true;
+	var radiusMode, resolutionMode, strokeMode;
 
 	var da, logda;
 	startAnimating(25);
@@ -170,6 +215,7 @@ function polyShapes(dataArray, bufferLength){
 		}
 
 		function drawPoly(logda){
+			resolutionMode = resolutionModeCheck.checked;
 			if(resolutionMode){
 				circleResolution = logda*3;
 				if(circleResolution < 3) circleResolution = 3;
@@ -177,18 +223,20 @@ function polyShapes(dataArray, bufferLength){
 				circleResolution = (Math.random() * 80) +2;
 			}
 			
+			radiusMode = radiusModeCheck.checked;
 			if(radiusMode){
-				radius = (canvWidth/4)/logda; 
-				if(radius > canvWidth/4) radius = canvWidth/4;
+				radAxis = (canvWidth > canvHeight) ? canvHeight/2 : canvWidth/2;
+				radius = radAxis/logda; 
+				if(radius > (radAxis-10)) radius = radAxis-10;
 			}else{
-				radius = (Math.random() * canvWidth/4) +2;
+				radius = (Math.random() * radAxis) +2;
 			}
 
 			angle = Math.PI*2/circleResolution;
 
 			canvasCtx.translate(-canvWidth/2, -canvHeight/2);
 
-			canvasCtx.fillStyle = 'rgba(237, 230, 224, 0.2)';
+			canvasCtx.fillStyle = 'rgba(237, 230, 224, 0.1)';
 			canvasCtx.fillRect(0,0, canvWidth,canvHeight);
 
 			canvasCtx.translate(canvWidth/2, canvHeight/2);
@@ -201,6 +249,7 @@ function polyShapes(dataArray, bufferLength){
 			}
 			canvasCtx.closePath();
 
+			strokeMode = strokeModeCheck.checked;
 			if(strokeMode){
 				canvasCtx.lineWidth = (logda * 5) + 3;
 				// canvasCtx.lineWidth = (Math.random() * 15) +4;
