@@ -145,8 +145,11 @@ function polyShapes(dataArray, bufferLength){
 
 	canvasCtx.translate(canvWidth/2, canvHeight/2);
 	var circleResolution, radius, angle;
-	var radiusMode = false;
-	var resolutionMode = true;
+
+	//Runtime UI variables -TODO
+	var radiusMode = true;
+	var resolutionMode = false;
+	var strokeMode = true;
 
 	var da, logda;
 	startAnimating(25);
@@ -163,7 +166,6 @@ function polyShapes(dataArray, bufferLength){
 				logda = Math.log(da) / Math.log(4);
 				console.log(logda);
 			}
-			
 			drawPoly(logda);
 		}
 
@@ -183,11 +185,6 @@ function polyShapes(dataArray, bufferLength){
 			}
 
 			angle = Math.PI*2/circleResolution;
-			
-
-			canvasCtx.lineWidth = (Math.random() * 15) +4;
-			canvasCtx.strokeStyle = 'hsl('+ ((Math.random() * 360) +1)
-											+ ', 70%, 70%)';
 
 			canvasCtx.translate(-canvWidth/2, -canvHeight/2);
 
@@ -200,13 +197,22 @@ function polyShapes(dataArray, bufferLength){
 			for (var i = 0; i <= circleResolution; i++) {
 				var x = Math.cos(angle*i) * radius;
 				var y = Math.sin(angle*i) * radius;
-				// console.log('x: ' + x);
-				// console.log('y: ' + y);
-
 				canvasCtx.lineTo(x, y);
 			}
 			canvasCtx.closePath();
-			canvasCtx.stroke();
+
+			if(strokeMode){
+				canvasCtx.lineWidth = (logda * 5) + 3;
+				// canvasCtx.lineWidth = (Math.random() * 15) +4;
+				canvasCtx.strokeStyle = 'hsl('+ (360/logda +25)
+											+ ', 70%, 70%)';
+				canvasCtx.stroke();
+			}else{
+				
+				canvasCtx.fillStyle = 'hsl('+ (360/logda +25)
+											+ ', 70%, 70%)';
+				canvasCtx.fill();
+			}
 		}
 	}
 
@@ -220,7 +226,6 @@ function polyShapes(dataArray, bufferLength){
 		startTime = then;
 		animate();
 	}
-
 
 	function animate(){
 
