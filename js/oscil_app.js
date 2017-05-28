@@ -139,6 +139,9 @@ function visualise(visMode){
 	else if(visMode === 'DumbAgents'){
 		dumbAgents(dataArray, bufferLength);
 	}
+	else if(visMode === 'ShapeAgents'){
+		shapeAgents(dataArray, bufferLength);
+	}
 	else if(visMode === 'Test'){
 		tests(dataArray, bufferLength); //
 	}

@@ -542,3 +542,110 @@ function dumbAgents(dataArray, bufferLength){
 		}
 	}
 }
+
+
+function shapeAgents(dataArray, bufferLength){
+
+		var formResolution = 50;
+		var stepSize = 2;
+		var distortionFactor = 1;
+		var initRadius = 150;
+		var centerX, centerY;
+		var x = [formResolution];
+		var y = [formResolution];
+		var filled = false;
+		var freeze = false; //needed?
+
+		function init(){
+			centerX = canvWidth/2;
+			centerY = canvHeight/2;
+			var angle = (360/formResolution) * (Math.PI / 180);
+			for(var i=0; i < formResolution; i++){
+				x[i] = Math.cos(angle*i) * initRadius;
+				y[i] = Math.sin(angle*i) * initRadius;
+			}
+
+		}
+		init();
+
+		function draw(){
+
+			canvasCtx.fillStyle = 'rgba(237, 230, 224, 0.1)';
+			canvasCtx.fillRect(0,0, canvWidth,canvHeight);
+
+			//float towards randomised space on screen (in lieu of mouse)
+			var randX = Math.random() * canvWidth;
+			var randY = Math.random() * canvHeight;
+
+
+			centerX += (randX-centerX) * 0.01;
+			centerY += (randY-centerY) * 0.01;
+
+			//calc new points
+			for(var i=0; i < formResolution; i++){
+				var stepRandX = Math.random()*stepSize;
+				stepRandX *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
+
+				var stepRandY = Math.random()*stepSize;
+				stepRandY *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
+
+
+				console.log('stepRandX: ' + stepRandX);
+				console.log('stepRandY: ' + stepRandY);
+
+
+				x[i] += stepRandX;
+				y[i] += stepRandY;
+
+				if(x[i]+centerX < 0 || x[i]+centerX > canvWidth){
+					// console.log('x['+ i + '+centerX: ' + (x[i]+centerX));
+					x[i] -= stepRandX;
+				}
+				if(y[i]+centerY < 0 || y[i]+centerY > canvHeight){
+					// console.log('y['+ i + '+centerY: ' + (y[i]+centerY));
+					y[i] -= stepRandY;
+				}
+			}
+
+			canvasCtx.beginPath();
+
+			for(var i=0; i < formResolution; i++){
+				canvasCtx.lineTo(x[i]+centerX, y[i]+centerY);
+			}
+			canvasCtx.closePath();
+
+			//add if filled condition
+			canvasCtx.strokeStyle = 'black';
+			canvasCtx.stroke();
+		}
+
+
+		var stop = false;
+		var frameCount = 0;
+		var fps, fpsInterval, startTime, now, then, elapsed;
+
+		function startAnimating(fps){
+			fpsInterval = 1000/fps;
+			then = Date.now();
+			startTime = then;
+			animate();
+		}
+
+		function animate(){
+
+			if(stop){
+				return;
+			}
+			drawVisual = requestAnimationFrame(animate);
+
+			now = Date.now();
+			elapsed = now - then;
+
+			if(elapsed > fpsInterval){
+				then = now - (elapsed % fpsInterval);
+
+				draw();
+			}
+		}
+		startAnimating(10)
+	}
