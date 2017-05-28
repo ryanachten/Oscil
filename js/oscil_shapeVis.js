@@ -546,63 +546,122 @@ function dumbAgents(dataArray, bufferLength){
 
 function shapeAgents(dataArray, bufferLength){
 
-		var formResolution = 50;
-		var stepSize = 2;
-		var distortionFactor = 1;
-		var initRadius = 150;
-		var centerX, centerY;
-		var x = [formResolution];
-		var y = [formResolution];
-		var filled = false;
-		var freeze = false; //needed?
+	//Runtime UI stuff
+	var visSettings	= document.getElementById('vis-settings');
+		visSettings.style.display = 'block';
 
-		function init(){
-			centerX = canvWidth/2;
-			centerY = canvHeight/2;
-			var angle = (360/formResolution) * (Math.PI / 180);
-			for(var i=0; i < formResolution; i++){
-				x[i] = Math.cos(angle*i) * initRadius;
-				y[i] = Math.sin(angle*i) * initRadius;
+	var formResolution = 20;
+	var resolutionDiv = document.createElement('div');
+	var resolutionInput = document.createElement('input');
+		resolutionInput.id = 'resolutionInput';
+		resolutionInput.type = 'number';
+		resolutionInput.className = 'vis-setting';
+		resolutionInput.min = 3;
+		resolutionInput.max = 100;
+		resolutionInput.value = formResolution;
+		resolutionInput.addEventListener("change", function(){
+			formResolution = parseInt(resolutionInput.value);
+		});
+	var resolutionLabel = document.createElement('label');
+		resolutionLabel.htmlFor = 'resolutionInput';
+		resolutionLabel.innerHTML = 'Resolution';
+		resolutionLabel.className = 'vis-setting';
+
+	var initRadius = 50;
+	var initRadiusDiv = document.createElement('div');
+	var initRadiusInput = document.createElement('input');
+		initRadiusInput.id = 'initRadiusInput';
+		initRadiusInput.type = 'number';
+		initRadiusInput.className = 'vis-setting';
+		initRadiusInput.min = 10;
+		initRadiusInput.max = canvWidth/2;
+		initRadiusInput.value = initRadius;
+		initRadiusInput.addEventListener("change", function(){
+			initRadius = parseInt(initRadiusInput.value);
+			init();
+		});
+	var initRadiusLabel = document.createElement('label');
+		initRadiusLabel.htmlFor = 'initRadiusInput';
+		initRadiusLabel.innerHTML = 'Initial Radius';
+		initRadiusLabel.className = 'vis-setting';
+
+	var filledInput = document.createElement('input');
+	var filledDiv = document.createElement('div');
+		filledInput.id = 'alphaInput';
+		filledInput.type = 'checkbox';
+		filledInput.className = 'vis-setting';
+		filledInput.checked = false;
+	var filledInputLabel = document.createElement('label');
+		filledInputLabel.htmlFor = 'filledInput';
+		filledInputLabel.innerHTML = 'Fill Shape';
+		filledInputLabel.className = 'vis-setting';
+	
+		resolutionDiv.appendChild(resolutionLabel);
+		resolutionDiv.appendChild(resolutionInput);
+	visSettings.appendChild(resolutionDiv);
+		initRadiusDiv.appendChild(initRadiusLabel);
+		initRadiusDiv.appendChild(initRadiusInput);
+	visSettings.appendChild(initRadiusDiv);
+		filledDiv.appendChild(filledInputLabel);
+		filledDiv.appendChild(filledInput);
+	visSettings.appendChild(filledDiv);
+
+	
+	var centerStepSize = 0.01;
+	var centerX, centerY;
+	var x = [formResolution];
+	var y = [formResolution];
+	var logda = 3;
+
+
+	function init(){
+		centerX = canvWidth/2;
+		centerY = canvHeight/2;
+		var angle = (360/formResolution) * (Math.PI / 180);
+		for(var i=0; i < formResolution; i++){
+			x[i] = Math.cos(angle*i) * initRadius;
+			y[i] = Math.sin(angle*i) * initRadius;
+		}
+	}
+	init();
+
+
+	function draw(){
+
+		for(var j = 0; j < bufferLength; j+=30) {
+
+			analyser.getByteFrequencyData(dataArray);
+			var da = dataArray[i];
+
+			if (da !== 0 && typeof da != 'undefined'){
+				logda = Math.floor(Math.log(da) / Math.log(1.8));
+				// console.log('logda: ' + logda);
 			}
 
-		}
-		init();
-
-		function draw(){
-
-			canvasCtx.fillStyle = 'rgba(237, 230, 224, 0.1)';
+			canvasCtx.fillStyle = 'rgba(237, 230, 224, 1)';
 			canvasCtx.fillRect(0,0, canvWidth,canvHeight);
 
 			//float towards randomised space on screen (in lieu of mouse)
 			var randX = Math.random() * canvWidth;
 			var randY = Math.random() * canvHeight;
-
-
-			centerX += (randX-centerX) * 0.01;
-			centerY += (randY-centerY) * 0.01;
+			centerX += (randX-centerX) * centerStepSize;
+			centerY += (randY-centerY) * centerStepSize;
 
 			//calc new points
 			for(var i=0; i < formResolution; i++){
-				var stepRandX = Math.random()*stepSize;
+				var stepRandX = logda;
 				stepRandX *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
 
-				var stepRandY = Math.random()*stepSize;
+				var stepRandY = logda;
 				stepRandY *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
-
-
-				console.log('stepRandX: ' + stepRandX);
-				console.log('stepRandY: ' + stepRandY);
-
 
 				x[i] += stepRandX;
 				y[i] += stepRandY;
 
 				if(x[i]+centerX < 0 || x[i]+centerX > canvWidth){
-					// console.log('x['+ i + '+centerX: ' + (x[i]+centerX));
 					x[i] -= stepRandX;
 				}
 				if(y[i]+centerY < 0 || y[i]+centerY > canvHeight){
-					// console.log('y['+ i + '+centerY: ' + (y[i]+centerY));
 					y[i] -= stepRandY;
 				}
 			}
@@ -614,38 +673,44 @@ function shapeAgents(dataArray, bufferLength){
 			}
 			canvasCtx.closePath();
 
-			//add if filled condition
-			canvasCtx.strokeStyle = 'black';
-			canvasCtx.stroke();
-		}
-
-
-		var stop = false;
-		var frameCount = 0;
-		var fps, fpsInterval, startTime, now, then, elapsed;
-
-		function startAnimating(fps){
-			fpsInterval = 1000/fps;
-			then = Date.now();
-			startTime = then;
-			animate();
-		}
-
-		function animate(){
-
-			if(stop){
-				return;
+			if(filledInput.checked){
+				canvasCtx.fillStyle = 'black';
+				canvasCtx.fill();	
+			}else{
+				canvasCtx.strokeStyle = 'black';
+				canvasCtx.stroke();	
 			}
-			drawVisual = requestAnimationFrame(animate);
-
-			now = Date.now();
-			elapsed = now - then;
-
-			if(elapsed > fpsInterval){
-				then = now - (elapsed % fpsInterval);
-
-				draw();
-			}
+			
 		}
-		startAnimating(10)
 	}
+
+
+	var stop = false;
+	var frameCount = 0;
+	var fps, fpsInterval, startTime, now, then, elapsed;
+
+	function startAnimating(fps){
+		fpsInterval = 1000/fps;
+		then = Date.now();
+		startTime = then;
+		animate();
+	}
+
+	function animate(){
+
+		if(stop){
+			return;
+		}
+		drawVisual = requestAnimationFrame(animate);
+
+		now = Date.now();
+		elapsed = now - then;
+
+		if(elapsed > fpsInterval){
+			then = now - (elapsed % fpsInterval);
+
+			draw();
+		}
+	}
+	startAnimating(10);
+}
