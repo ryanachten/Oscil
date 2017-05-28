@@ -567,14 +567,14 @@ function shapeAgents(dataArray, bufferLength){
 		resolutionLabel.innerHTML = 'Resolution';
 		resolutionLabel.className = 'vis-setting';
 
-	var initRadius = 50;
+	var initRadius = (canvWidth > canvHeight ? canvHeight : canvWidth)/8;
 	var initRadiusDiv = document.createElement('div');
 	var initRadiusInput = document.createElement('input');
 		initRadiusInput.id = 'initRadiusInput';
 		initRadiusInput.type = 'number';
 		initRadiusInput.className = 'vis-setting';
 		initRadiusInput.min = 10;
-		initRadiusInput.max = canvWidth/2;
+		initRadiusInput.max = (canvWidth > canvHeight ? canvHeight : canvWidth)/4;
 		initRadiusInput.value = initRadius;
 		initRadiusInput.addEventListener("change", function(){
 			initRadius = parseInt(initRadiusInput.value);
@@ -634,8 +634,7 @@ function shapeAgents(dataArray, bufferLength){
 			var da = dataArray[i];
 
 			if (da !== 0 && typeof da != 'undefined'){
-				logda = Math.floor(Math.log(da) / Math.log(1.8));
-				// console.log('logda: ' + logda);
+				logda = Math.floor(Math.log(da) / Math.log(2))/2;
 			}
 
 			canvasCtx.fillStyle = 'rgba(237, 230, 224, 1)';
@@ -649,10 +648,10 @@ function shapeAgents(dataArray, bufferLength){
 
 			//calc new points
 			for(var i=0; i < formResolution; i++){
-				var stepRandX = logda;
+				var stepRandX = Math.random()*logda;
 				stepRandX *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
 
-				var stepRandY = logda;
+				var stepRandY = Math.random()*logda;
 				stepRandY *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
 
 				x[i] += stepRandX;
@@ -667,7 +666,6 @@ function shapeAgents(dataArray, bufferLength){
 			}
 
 			canvasCtx.beginPath();
-
 			for(var i=0; i < formResolution; i++){
 				canvasCtx.lineTo(x[i]+centerX, y[i]+centerY);
 			}
