@@ -575,6 +575,7 @@ function shapeAgents(dataArray, bufferLength){
 		initRadiusInput.className = 'vis-setting';
 		initRadiusInput.min = 10;
 		initRadiusInput.max = (canvWidth > canvHeight ? canvHeight : canvWidth)/4;
+		initRadiusInput.step = 10;
 		initRadiusInput.value = initRadius;
 		initRadiusInput.addEventListener("change", function(){
 			initRadius = parseInt(initRadiusInput.value);
@@ -587,7 +588,7 @@ function shapeAgents(dataArray, bufferLength){
 
 	var filledInput = document.createElement('input');
 	var filledDiv = document.createElement('div');
-		filledInput.id = 'alphaInput';
+		filledInput.id = 'filledInput';
 		filledInput.type = 'checkbox';
 		filledInput.className = 'vis-setting';
 		filledInput.checked = false;
@@ -595,6 +596,17 @@ function shapeAgents(dataArray, bufferLength){
 		filledInputLabel.htmlFor = 'filledInput';
 		filledInputLabel.innerHTML = 'Fill Shape';
 		filledInputLabel.className = 'vis-setting';
+
+	var clearInput = document.createElement('input');
+	var clearDiv = document.createElement('div');
+		clearInput.id = 'clearInput';
+		clearInput.type = 'checkbox';
+		clearInput.className = 'vis-setting';
+		clearInput.checked = false;
+	var clearInputLabel = document.createElement('label');
+		clearInputLabel.htmlFor = 'clearInput';
+		clearInputLabel.innerHTML = 'Interval Clear';
+		clearInputLabel.className = 'vis-setting';
 	
 		resolutionDiv.appendChild(resolutionLabel);
 		resolutionDiv.appendChild(resolutionInput);
@@ -605,8 +617,11 @@ function shapeAgents(dataArray, bufferLength){
 		filledDiv.appendChild(filledInputLabel);
 		filledDiv.appendChild(filledInput);
 	visSettings.appendChild(filledDiv);
+		clearDiv.appendChild(clearInputLabel);
+		clearDiv.appendChild(clearInput);
+	visSettings.appendChild(clearDiv);
 
-	
+	var stepSize = 2;
 	var centerStepSize = 0.01;
 	var centerX, centerY;
 	var x = [formResolution];
@@ -615,6 +630,10 @@ function shapeAgents(dataArray, bufferLength){
 
 
 	function init(){
+
+		canvasCtx.fillStyle = 'rgba(237, 230, 224, 1)';
+		canvasCtx.fillRect(0,0, canvWidth,canvHeight);
+
 		centerX = canvWidth/2;
 		centerY = canvHeight/2;
 		var angle = (360/formResolution) * (Math.PI / 180);
@@ -634,11 +653,13 @@ function shapeAgents(dataArray, bufferLength){
 			var da = dataArray[i];
 
 			if (da !== 0 && typeof da != 'undefined'){
-				logda = Math.floor(Math.log(da) / Math.log(2))/2;
+				logda = Math.floor(Math.log(da) / Math.log(2));
 			}
 
-			canvasCtx.fillStyle = 'rgba(237, 230, 224, 1)';
-			canvasCtx.fillRect(0,0, canvWidth,canvHeight);
+			if(clearInput.checked){
+				canvasCtx.fillStyle = 'rgba(237, 230, 224, 1)';
+				canvasCtx.fillRect(0,0, canvWidth,canvHeight);
+			}
 
 			//float towards randomised space on screen (in lieu of mouse)
 			var randX = Math.random() * canvWidth;
@@ -648,10 +669,10 @@ function shapeAgents(dataArray, bufferLength){
 
 			//calc new points
 			for(var i=0; i < formResolution; i++){
-				var stepRandX = Math.random()*logda;
+				var stepRandX = (Math.random()*stepSize+(stepSize*-1));
 				stepRandX *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
 
-				var stepRandY = Math.random()*logda;
+				var stepRandY = (Math.random()*stepSize+(stepSize*-1));
 				stepRandY *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
 
 				x[i] += stepRandX;
@@ -671,11 +692,15 @@ function shapeAgents(dataArray, bufferLength){
 			}
 			canvasCtx.closePath();
 
+			canvasCtx.lineJoin = "round";
+			canvasCtx.lineWidth = logda+1;
+			canvasCtx.miterLimit = logda;
+
 			if(filledInput.checked){
-				canvasCtx.fillStyle = 'black';
+				canvasCtx.fillStyle = 'hsl('+ logda*5+20 +',70%,70%)';
 				canvasCtx.fill();	
 			}else{
-				canvasCtx.strokeStyle = 'black';
+				canvasCtx.strokeStyle = 'hsl('+ logda*5+20 +',70%,70%)';
 				canvasCtx.stroke();	
 			}
 			

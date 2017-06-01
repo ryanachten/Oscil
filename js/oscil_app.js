@@ -28,7 +28,7 @@ maxDb.onchange = function(){
 
 var smoothingRange = document.getElementById("smoothing-input");
 smoothingRange.onchange = function(){
-	console.log("val: " + smoothingRange.value);
+	// console.log("val: " + smoothingRange.value);
 	analyser.smoothingTimeConstant = smoothingRange.value/100;
 }
 
