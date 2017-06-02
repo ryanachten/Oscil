@@ -142,6 +142,9 @@ function visualise(visMode){
 	else if(visMode === 'ShapeAgents'){
 		shapeAgents(dataArray, bufferLength);
 	}
+	else if(visMode === 'BrownianTree'){
+		brownianTree(dataArray, bufferLength);
+	}
 	else if(visMode === 'Test'){
 		tests(dataArray, bufferLength); //
 	}

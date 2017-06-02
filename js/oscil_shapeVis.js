@@ -739,15 +739,65 @@ function shapeAgents(dataArray, bufferLength){
 
 function brownianTree(dataArray, bufferLength){
 
-		var maxCount = 5000;
-		var currentCount = 1;
-		var x = [];
-		var y = [];
-		var r = []; //radius
-		var maxRad = 5;
-		var showRandomSeeds = true;
+		//Runtime UI stuff
+		var visSettings	= document.getElementById('vis-settings');
+		visSettings.style.display = 'block';
+
+		var showRandInput = document.createElement('input');
+		var showRandDiv = document.createElement('div');
+			showRandInput.id = 'showRandInput';
+			showRandInput.type = 'checkbox';
+			showRandInput.className = 'vis-setting';
+			showRandInput.checked = true;
+			showRandInput.addEventListener("change", function(){
+				init();
+			});
+		var showRandInputLabel = document.createElement('label');
+			showRandInputLabel.htmlFor = 'showRandInput';
+			showRandInputLabel.innerHTML = 'Show Random Seeds';
+			showRandInputLabel.className = 'vis-setting';
+
+		var maxRadDiv = document.createElement('div');
+		var maxRadInput = document.createElement('input');
+			maxRadInput.id = 'alphaInput';
+			maxRadInput.type = 'number';
+			maxRadInput.className = 'vis-setting';
+			maxRadInput.min = 0;
+			maxRadInput.max = 20;
+			maxRadInput.value = 5;
+			maxRadInput.addEventListener("change", function(){
+				init();
+			});
+		var maxRadLabel = document.createElement('label');
+			maxRadLabel.htmlFor = 'maxRadInput';
+			maxRadLabel.innerHTML = 'Max Radius';
+			maxRadLabel.className = 'vis-setting';
+			
+			showRandDiv.appendChild(showRandInputLabel);
+			showRandDiv.appendChild(showRandInput);
+			maxRadDiv.appendChild(maxRadLabel);
+			maxRadDiv.appendChild(maxRadInput);
+		visSettings.appendChild(showRandDiv);
+		visSettings.appendChild(maxRadDiv);
+
+
+		var currentCount;
+		var x, y, r;
+		var maxRad;
+		var showRandomSeeds;
 
 		function init(){
+
+			canvasCtx.clearRect(0,0,canvWidth,canvHeight);
+			canvasCtx.fillStyle = bgColor;
+			canvasCtx.fillRect(0,0,canvWidth,canvHeight);
+
+			currentCount = 1;
+			x = [];
+			y = [];
+			r = []; //radius
+			maxRad = parseInt(maxRadInput.value);;
+			showRandomSeeds = showRandInput.checked;
 
 			x[0] = Math.random()*canvWidth;
 			y[0] = Math.random()*canvHeight;
@@ -773,7 +823,6 @@ function brownianTree(dataArray, bufferLength){
 				}
 			}
 
-			//TODO: add random line and pos
 			if(showRandomSeeds){
 				canvasCtx.beginPath();
 				canvasCtx.moveTo(newX, newY);
@@ -802,22 +851,34 @@ function brownianTree(dataArray, bufferLength){
 			canvasCtx.closePath();
 
 			currentCount++;
-			// console.log('currentCount: ' + currentCount);
 		}
-
 
 		var stop = false;
 		var frameCount = 0;
 		var fps, fpsInterval, startTime, now, then, elapsed;
+		var logda;
 
-		function startAnimating(fps){
-			fpsInterval = 1000/fps;
+		function startAnimating(){			
 			then = Date.now();
 			startTime = then;
 			animate();
 		}
 
-		function animate(){
+		function animate(fps){
+
+			for(var i = 0; i < bufferLength; i+=30) {
+
+				analyser.getByteFrequencyData(dataArray);
+				var da = dataArray[i];
+
+				if (da !== 0){
+					logda = Math.floor(Math.log(da) / Math.log(1.2))+3;
+					// console.log(logda);
+				}
+			}
+
+			fps = logda;
+			fpsInterval = 1000/fps;
 
 			if(stop){
 				return;
@@ -829,10 +890,12 @@ function brownianTree(dataArray, bufferLength){
 
 			if(elapsed > fpsInterval){
 				then = now - (elapsed % fpsInterval);
-
+				// console.log('fps: ' + fps);
 				draw();
 			}
 		}
-		startAnimating(30);	
+
+
+		startAnimating();
 }
 	
