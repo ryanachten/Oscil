@@ -41,7 +41,11 @@ function tests(dataArray, bufferLength){
 			//check if new circle intersects w/ another
 			for(var i=0; i < currentCount; i++){
 				var d = Math.sqrt(Math.pow(newX-x[i],2)+Math.pow(newY-y[i],2));
+				console.log('x[i]: ' + x[i] + ' y[i]: ' + y[i]);
+				console.log('newX: ' + newX + ' newY: ' + newY);
 				console.log('d: ' + d);
+				console.log('newR + r[i]: ' + newR + ' + ' + r[i]);
+
 				if(d < (newR + r[i])){
 					console.log('intersection');
 					intersection = true;
@@ -49,13 +53,13 @@ function tests(dataArray, bufferLength){
 				}
 			}
 
-			if(!intersection){
+			if(intersection === false){
 				//get closest neighbour and closest radius
 				var newRadius = canvWidth;
 				for(var i=0; i < currentCount; i++){
 					var d = Math.sqrt(Math.pow(newX-x[i],2)+Math.pow(newY-y[i],2));
-					console.log('newRadius > : ' + newRadius);
-					if(newRadius > d-r[i]){
+					// console.log('newRadius > : ' + newRadius);
+					if(newRadius > (d-r[i])){
 						// console.log('newRadius > : ' + newRadius);
 						newRadius = d-r[i];
 						// console.log('d-r[i] : ' + (d-r[i]));
@@ -68,14 +72,27 @@ function tests(dataArray, bufferLength){
 				y[currentCount] = newY;
 				r[currentCount] = newRadius;
 
-				canvasCtx.beginPath();
 				console.log('draw');
+				canvasCtx.beginPath();
 				canvasCtx.arc(x[currentCount], y[currentCount], r[currentCount]*2, 0, Math.PI*2);
 				canvasCtx.strokeStyle = 'black';
 				canvasCtx.stroke();
 				canvasCtx.closePath();
 
+				canvasCtx.beginPath();
+				var n = closestIndex[currentCount];
+				console.log('n: ' + n);
+				canvasCtx.moveTo(x[currentCount], y[currentCount]);
+				canvasCtx.lineTo(x[n], y[n]);
+				canvasCtx.strokeStyle = 'black';
+				canvasCtx.stroke();
+				canvasCtx.closePath();
+
+				canvasCtx.fillStyle = 'black';
+				canvasCtx.fillText(currentCount,x[currentCount],y[currentCount]);
+
 				currentCount++;
+				console.log('    ');
 			}
 
 			
@@ -94,7 +111,7 @@ function tests(dataArray, bufferLength){
 
 		function animate(){
 
-			if(stop){
+			if(stop || currentCount == 10){
 				return;
 			}
 			drawVisual = requestAnimationFrame(animate);
@@ -110,5 +127,5 @@ function tests(dataArray, bufferLength){
 		}
 		startAnimating(1);	
 	}
-	// structuralAgents();
+	structuralAgents();
 }
