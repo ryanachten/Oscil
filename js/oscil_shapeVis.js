@@ -543,7 +543,6 @@ function dumbAgents(dataArray, bufferLength){
 	}
 }
 
-
 function shapeAgents(dataArray, bufferLength){
 
 	//Runtime UI stuff
