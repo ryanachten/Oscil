@@ -159,6 +159,18 @@ function polyShapes(dataArray, bufferLength){
 	var visSettings	= document.getElementById('vis-settings');
 		visSettings.style.display = 'block';
 
+	var alphaInput = document.createElement('input');
+		alphaInput.type = 'range';
+		alphaInput.id = 'sampleCountInput';
+		alphaInput.className = 'vis-setting';
+		alphaInput.min = 0;
+		alphaInput.max = 10;
+		alphaInput.value = 1;
+	var alphaLabel = document.createElement('label');
+		alphaLabel.htmlFor = 'alphaInput';
+		alphaLabel.innerHTML = 'Bg Alpha';
+		alphaLabel.className = 'vis-setting';
+
 	var radiusDiv = document.createElement('div');
 			radiusDiv.className = 'vis-setting';
 		var radiusModeCheck = document.createElement('input');
@@ -202,6 +214,8 @@ function polyShapes(dataArray, bufferLength){
 			strokeModeLabel.innerHTML = 'Stroke Mode';
 			strokeModeLabel.className = 'vis-setting';
 
+	visSettings.appendChild(alphaLabel);
+	visSettings.appendChild(alphaInput);
 	radiusDiv.appendChild(resolutionModeLabel);
 	radiusDiv.appendChild(resolutionModeCheck);
 	radiusDiv.appendChild(resolutionModePaddel);
@@ -254,7 +268,7 @@ function polyShapes(dataArray, bufferLength){
 
 			angle = Math.PI*2/circleResolution;
 
-			canvasCtx.fillStyle = 'rgba(237, 230, 224, 0.1)';
+			canvasCtx.fillStyle = 'rgba(237, 230, 224, '+ (alphaInput.value/10) +')';
 			canvasCtx.fillRect(0,0, canvWidth,canvHeight);
 
 			canvasCtx.beginPath();
@@ -806,7 +820,7 @@ function brownianTree(dataArray, bufferLength){
 
 		var maxRadDiv = document.createElement('div');
 		var maxRadInput = document.createElement('input');
-			maxRadInput.id = 'alphaInput';
+			maxRadInput.id = 'maxRadInput';
 			maxRadInput.type = 'range';
 			maxRadInput.className = 'vis-setting';
 			maxRadInput.min = 0;
