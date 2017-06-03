@@ -128,4 +128,38 @@ function tests(dataArray, bufferLength){
 		startAnimating(1);	
 	}
 	// structuralAgents();
+
+	function letterTest(){
+
+		var textSample = 'there is always soma, delicious soma, half a gramme for a half-holiday, a gramme for a week-end, two grammes for a trip to the gorgeous East, three for a dark eternity on the moon';
+		// var textSample = 'Ryan Achten'
+
+		textSample = textSample.toUpperCase();
+		// canvasCtx.textAlign = 'center';
+		canvasCtx.fillStyle = 'black';
+
+		var fontSize = 0;
+		var maxFontSize = canvHeight/4;
+		var xPos = 0;
+		var yPos = maxFontSize/2;
+
+		for(var i=0; i < textSample.length; i++){
+			xPos += fontSize;
+			fontSize = Math.floor((Math.random()*maxFontSize+10));
+			if((xPos+maxFontSize/2) > canvWidth){
+				xPos = 0;
+				yPos += (maxFontSize/2);
+				if (yPos > canvHeight) {
+					console.log('Final letter: ' + textSample[i-1] + ' index: ' + i);
+					break;
+				};
+			}
+			canvasCtx.font = fontSize + "px Arial";
+			canvasCtx.fillText(textSample[i], xPos, yPos);
+		}
+
+
+
+	}
+	letterTest();
 }
