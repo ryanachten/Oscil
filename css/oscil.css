@@ -14,7 +14,7 @@ h2{
 	letter-spacing: 2px;
 	font-size: 1em;
 	margin-bottom: 5px;
-    margin-top: 20px;
+    /*margin-top: 20px;*/
 }
 h3{
 	font-family: 'Roboto', sans-serif;
@@ -44,7 +44,7 @@ h3{
 .input-field{
 	border: none;
 	background-color: rgba(255,255,255,0.5);
-	margin-left: 10px;
+	/*margin-left: 10px;*/
 	font-size: 15px;
 	margin-right: 10px;
     margin-bottom: 10px;
@@ -52,4 +52,21 @@ h3{
 
 #visual-select{
 	margin: none;
+}
+
+/*Foundation Overrides*/
+.tabs-content{
+	background-color: rgba(0,0,0,0);
+}
+.tabs-title{
+	width: 50%;
+}
+.tabs-title a{
+	color: #000000;
+}
+input:checked~.switch-paddle{
+	background-color: #afc3d3;
+}
+.switch{
+	height: 3rem;
 }

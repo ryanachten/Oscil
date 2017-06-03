@@ -127,5 +127,5 @@ function tests(dataArray, bufferLength){
 		}
 		startAnimating(1);	
 	}
-	structuralAgents();
+	// structuralAgents();
 }

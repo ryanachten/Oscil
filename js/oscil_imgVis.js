@@ -1,3 +1,5 @@
+$(document).foundation();
+
 function refract(dataArray, bufferLength){
 
 	canvasCtx.clearRect(0,0,canvWidth,canvHeight);
@@ -81,14 +83,15 @@ function macroblocks(dataArray, bufferLength){
 		var sampleCount = 256;
 		var sampleCountInput = document.createElement('input');
 			sampleCountInput.id = 'sampleCountInput';
-			sampleCountInput.type = 'number';
+			sampleCountInput.type = 'range';
 			sampleCountInput.className = 'vis-setting';
-			sampleCountInput.min = 10;
-			sampleCountInput.max = 1000;
-			sampleCountInput.value = 256;
+			sampleCountInput.min = 3;
+			sampleCountInput.max = 12;
+			sampleCountInput.value = 9;
 			sampleCountInput.addEventListener("change", function(){
-				sampleCount = parseInt(sampleCountInput.value);
-				console.log('sampleCount: ' + sampleCount);
+				var n = parseInt(sampleCountInput.value);
+				sampleCount = Math.pow(2, n);
+				// console.log('sampleCount: ' + sampleCount);
 			});
 
 		var sampleCountLabel = document.createElement('label');
@@ -170,8 +173,10 @@ function repeatPix(dataArray, bufferLength){
 		var modSampleWidthMode = document.createElement('input');
 			modSampleWidthMode.id = 'modSampleWidthMode';
 			modSampleWidthMode.type = 'checkbox';
-			modSampleWidthMode.className = 'vis-setting';
-
+			modSampleWidthMode.className = 'vis-setting switch-input';
+		var modSamplePaddel = document.createElement('label');
+			modSamplePaddel.className = 'vis-setting switch-paddle';
+			modSamplePaddel.htmlFor = 'modSampleWidthMode';
 		var modSampleLabel = document.createElement('label');
 			modSampleLabel.htmlFor = 'modSampleWidthMode';
 			modSampleLabel.innerHTML = 'Sample Width Mode';
@@ -179,30 +184,48 @@ function repeatPix(dataArray, bufferLength){
 
 		var repeatDiv = document.createElement('form');
 			repeatDiv.className = 'vis-setting';
+
+		var repeatXDiv = document.createElement('div');	
+			repeatXDiv.className = 'vis-setting switch';
 		var repeatXmode = document.createElement('input');
 			repeatXmode.id = 'repeatXmode';
 			repeatXmode.type = 'radio';
 			repeatXmode.name = 'repeatMode';
-			repeatXmode.className = 'vis-setting';
+			repeatXmode.className = 'vis-setting switch-input';
+		var repeatXmodePaddel = document.createElement('label');
+			repeatXmodePaddel.className = 'vis-setting switch-paddle';
+			repeatXmodePaddel.htmlFor = 'repeatXmode';
 		var repeatXmodeLabel = document.createElement('label');
 			repeatXmodeLabel.htmlFor = 'repeatXmode';
 			repeatXmodeLabel.innerHTML = 'Repeat X';
 			repeatXmodeLabel.className = 'vis-setting';
+
+		var repeatYDiv = document.createElement('div');	
+			repeatYDiv.className = 'vis-setting switch';
 		var repeatYmode = document.createElement('input');
 			repeatYmode.id = 'repeatYmode';
 			repeatYmode.type = 'radio';
 			repeatYmode.name = 'repeatMode';
-			repeatYmode.checked = 'true';
-			repeatYmode.className = 'vis-setting';
+			repeatYmode.checked = true;
+			repeatYmode.className = 'vis-setting switch-input';
+		var repeatYmodePaddel = document.createElement('label');
+			repeatYmodePaddel.className = 'vis-setting switch-paddle';
+			repeatYmodePaddel.htmlFor = 'repeatYmode';
 		var repeatYmodeLabel = document.createElement('label');
 			repeatYmodeLabel.htmlFor = 'repeatYmode';
 			repeatYmodeLabel.innerHTML = 'Repeat Y';
 			repeatYmodeLabel.className = 'vis-setting';
+
+		var repeatBothDiv = document.createElement('div');	
+			repeatBothDiv.className = 'vis-setting switch';
 		var repeatBothmode = document.createElement('input');
 			repeatBothmode.id = 'repeatBothmode';
 			repeatBothmode.type = 'radio';
 			repeatBothmode.name = 'repeatMode';
-			repeatBothmode.className = 'vis-setting';
+			repeatBothmode.className = 'vis-setting switch-input';
+		var repeatBothmodePaddel = document.createElement('label');
+			repeatBothmodePaddel.className = 'vis-setting switch-paddle';
+			repeatBothmodePaddel.htmlFor = 'repeatBothmode';
 		var repeatBothmodeLabel = document.createElement('label');
 			repeatBothmodeLabel.htmlFor = 'repeatBothmode';
 			repeatBothmodeLabel.innerHTML = 'Both';
@@ -211,12 +234,20 @@ function repeatPix(dataArray, bufferLength){
 
 		visSettings.appendChild(modSampleLabel);
 		visSettings.appendChild(modSampleWidthMode);
-		repeatDiv.appendChild(repeatXmodeLabel);
-		repeatDiv.appendChild(repeatXmode);
-		repeatDiv.appendChild(repeatYmodeLabel);
-		repeatDiv.appendChild(repeatYmode);
-		repeatDiv.appendChild(repeatBothmodeLabel);
-		repeatDiv.appendChild(repeatBothmode);
+		visSettings.appendChild(modSamplePaddel);
+
+				repeatXDiv.appendChild(repeatXmodeLabel);
+				repeatXDiv.appendChild(repeatXmode);
+				repeatXDiv.appendChild(repeatXmodePaddel);
+			repeatDiv.appendChild(repeatXDiv)
+				repeatYDiv.appendChild(repeatYmodeLabel);
+				repeatYDiv.appendChild(repeatYmode);
+				repeatYDiv.appendChild(repeatYmodePaddel);
+			repeatDiv.appendChild(repeatYDiv)
+			repeatBothDiv.appendChild(repeatBothmodeLabel);
+				repeatBothDiv.appendChild(repeatBothmode);
+				repeatBothDiv.appendChild(repeatBothmodePaddel);
+			repeatDiv.appendChild(repeatBothDiv)
 		visSettings.appendChild(repeatDiv);
 
 

@@ -1,8 +1,4 @@
-/*
-Resources:
-	mdn/voice-change-o-matic
-	https://github.com/mdn/voice-change-o-matic/blob/gh-pages/scripts/app.js
-*/
+$(document).foundation();
 
 var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 var analyser = audioCtx.createAnalyser();

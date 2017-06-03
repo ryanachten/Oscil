@@ -74,33 +74,45 @@ function gradient(dataArray, bufferLength){
 	var visSettings	= document.getElementById('vis-settings');
 		visSettings.style.display = 'block';
 
-	var gradModeDiv = document.createElement('form');
-			gradModeDiv.className = 'vis-setting';
+		var linearDiv = document.createElement('div');
+			linearDiv.className = 'vis-setting switch';
 		var linearMode = document.createElement('input');
 			linearMode.id = 'linearMode';
 			linearMode.type = 'radio';
 			linearMode.name = 'gradMode';
-			linearMode.className = 'vis-setting';
+			linearMode.className = 'vis-setting switch-input';
 		var linearModeLabel = document.createElement('label');
 			linearModeLabel.htmlFor = 'linearMode';
 			linearModeLabel.innerHTML = 'Linear';
 			linearModeLabel.className = 'vis-setting';
+		var linearModePaddel = document.createElement('label');
+			linearModePaddel.className = 'vis-setting switch-paddle';
+			linearModePaddel.htmlFor = 'linearMode';
+		
+		var radialDiv = document.createElement('div');
+			radialDiv.className = 'vis-setting switch';
 		var radialMode = document.createElement('input');
 			radialMode.id = 'radialMode';
 			radialMode.type = 'radio';
 			radialMode.name = 'gradMode';
-			radialMode.className = 'vis-setting';
+			radialMode.className = 'vis-setting switch-input';
 			radialMode.checked = 'true';
+		var radialModePaddel = document.createElement('label');
+			radialModePaddel.className = 'vis-setting switch-paddle';
+			radialModePaddel.htmlFor = 'radialMode';
 		var radialModeLabel = document.createElement('label');
 			radialModeLabel.htmlFor = 'radialMode';
 			radialModeLabel.innerHTML = 'Radial';
 			radialModeLabel.className = 'vis-setting';
 
-		gradModeDiv.appendChild(linearModeLabel);
-		gradModeDiv.appendChild(linearMode);
-		gradModeDiv.appendChild(radialModeLabel);
-		gradModeDiv.appendChild(radialMode);
-		visSettings.appendChild(gradModeDiv);
+		linearDiv.appendChild(linearModeLabel);
+		linearDiv.appendChild(linearMode);
+		linearDiv.appendChild(linearModePaddel);
+		radialDiv.appendChild(radialModeLabel);
+		radialDiv.appendChild(radialMode);
+		radialDiv.appendChild(radialModePaddel);
+		visSettings.appendChild(linearDiv);
+		visSettings.appendChild(radialDiv);
 
 
 	canvasCtx.clearRect(0,0,canvWidth,canvHeight);
@@ -152,8 +164,11 @@ function polyShapes(dataArray, bufferLength){
 		var radiusModeCheck = document.createElement('input');
 			radiusModeCheck.id = 'radiusMode';
 			radiusModeCheck.type = 'checkbox';
-			radiusModeCheck.className = 'vis-setting';
+			radiusModeCheck.className = 'vis-setting switch-input';
 			radiusModeCheck.checked = true;
+		var radiusModePaddel = document.createElement('label');
+			radiusModePaddel.className = 'vis-setting switch-paddle';
+			radiusModePaddel.htmlFor = 'radiusMode';
 		var radiusModeLabel = document.createElement('label');
 			radiusModeLabel.htmlFor = 'radiusMode';
 			radiusModeLabel.innerHTML = 'Radius Mode';
@@ -163,8 +178,11 @@ function polyShapes(dataArray, bufferLength){
 		var resolutionModeCheck = document.createElement('input');
 			resolutionModeCheck.id = 'resolutionMode';
 			resolutionModeCheck.type = 'checkbox';
-			resolutionModeCheck.className = 'vis-setting';
+			resolutionModeCheck.className = 'vis-setting switch-input';
 			resolutionModeCheck.checked = false;
+		var resolutionModePaddel = document.createElement('label');
+			resolutionModePaddel.className = 'vis-setting switch-paddle';
+			resolutionModePaddel.htmlFor = 'resolutionMode';
 		var resolutionModeLabel = document.createElement('label');
 			resolutionModeLabel.htmlFor = 'resolutionMode';
 			resolutionModeLabel.innerHTML = 'Resolution Mode';
@@ -174,8 +192,11 @@ function polyShapes(dataArray, bufferLength){
 		var strokeModeCheck = document.createElement('input');
 			strokeModeCheck.id = 'strokeMode';
 			strokeModeCheck.type = 'checkbox';
-			strokeModeCheck.className = 'vis-setting';
+			strokeModeCheck.className = 'vis-setting switch-input';
 			strokeModeCheck.checked = true;
+		var strokeModePaddel = document.createElement('label');
+			strokeModePaddel.className = 'vis-setting switch-paddle';
+			strokeModePaddel.htmlFor = 'strokeMode';
 		var strokeModeLabel = document.createElement('label');
 			strokeModeLabel.htmlFor = 'strokeMode';
 			strokeModeLabel.innerHTML = 'Stroke Mode';
@@ -183,10 +204,13 @@ function polyShapes(dataArray, bufferLength){
 
 	radiusDiv.appendChild(resolutionModeLabel);
 	radiusDiv.appendChild(resolutionModeCheck);
+	radiusDiv.appendChild(resolutionModePaddel);
 	resolutionDiv.appendChild(radiusModeLabel);
-	resolutionDiv.appendChild(radiusModeCheck);
+	resolutionDiv.appendChild(radiusModeCheck)
+	resolutionDiv.appendChild(radiusModePaddel);
 	strokeDiv.appendChild(strokeModeLabel);
 	strokeDiv.appendChild(strokeModeCheck);
+	strokeDiv.appendChild(strokeModePaddel);
 	visSettings.appendChild(strokeDiv);
 	visSettings.appendChild(resolutionDiv);
 	visSettings.appendChild(radiusDiv);
@@ -293,7 +317,7 @@ function particles(dataArray, bufferLength){
 		var particleCount = 30;
 		var particleCountInput = document.createElement('input');
 			particleCountInput.id = 'particleCountInput';
-			particleCountInput.type = 'number';
+			particleCountInput.type = 'range';
 			particleCountInput.className = 'vis-setting';
 			particleCountInput.min = 5;
 			particleCountInput.max = 50;
@@ -410,7 +434,7 @@ function dumbAgents(dataArray, bufferLength){
 	var alpha = 0.2;
 	var alphaInput = document.createElement('input');
 		alphaInput.id = 'alphaInput';
-		alphaInput.type = 'number';
+		alphaInput.type = 'range';
 		alphaInput.className = 'vis-setting';
 		alphaInput.min = 0;
 		alphaInput.max = 100;
@@ -436,12 +460,23 @@ function dumbAgents(dataArray, bufferLength){
 	var west = 6;
 	var northwest = 7;
 
-	var posX = canvWidth/2;
-	var posY = canvHeight/2;
+	var posX, posY;
 
-	var logda = 3;
+	var logda;
 
-	startAnimating(5);
+	function init(){
+		canvasCtx.clearRect(0,0,canvWidth,canvHeight);
+		canvasCtx.fillStyle = bgColor;
+		canvasCtx.fillRect(0,0,canvWidth,canvHeight);
+		canvasCtx.lineWidth = 1;
+
+		logda = 3;
+		posX = canvWidth/2;
+		posY = canvHeight/2;
+
+		startAnimating(5);
+	}
+	init();
 
 	function draw(){
 
@@ -553,13 +588,14 @@ function shapeAgents(dataArray, bufferLength){
 	var resolutionDiv = document.createElement('div');
 	var resolutionInput = document.createElement('input');
 		resolutionInput.id = 'resolutionInput';
-		resolutionInput.type = 'number';
+		resolutionInput.type = 'range';
 		resolutionInput.className = 'vis-setting';
 		resolutionInput.min = 3;
 		resolutionInput.max = 100;
 		resolutionInput.value = formResolution;
 		resolutionInput.addEventListener("change", function(){
 			formResolution = parseInt(resolutionInput.value);
+			init();
 		});
 	var resolutionLabel = document.createElement('label');
 		resolutionLabel.htmlFor = 'resolutionInput';
@@ -570,7 +606,7 @@ function shapeAgents(dataArray, bufferLength){
 	var initRadiusDiv = document.createElement('div');
 	var initRadiusInput = document.createElement('input');
 		initRadiusInput.id = 'initRadiusInput';
-		initRadiusInput.type = 'number';
+		initRadiusInput.type = 'range';
 		initRadiusInput.className = 'vis-setting';
 		initRadiusInput.min = 10;
 		initRadiusInput.max = (canvWidth > canvHeight ? canvHeight : canvWidth)/4;
@@ -589,8 +625,11 @@ function shapeAgents(dataArray, bufferLength){
 	var filledDiv = document.createElement('div');
 		filledInput.id = 'filledInput';
 		filledInput.type = 'checkbox';
-		filledInput.className = 'vis-setting';
+		filledInput.className = 'vis-setting switch-input';
 		filledInput.checked = false;
+	var filledPaddel = document.createElement('label');
+		filledPaddel.className = 'vis-setting switch-paddle';
+		filledPaddel.htmlFor = 'filledInput';
 	var filledInputLabel = document.createElement('label');
 		filledInputLabel.htmlFor = 'filledInput';
 		filledInputLabel.innerHTML = 'Fill Shape';
@@ -600,8 +639,11 @@ function shapeAgents(dataArray, bufferLength){
 	var clearDiv = document.createElement('div');
 		clearInput.id = 'clearInput';
 		clearInput.type = 'checkbox';
-		clearInput.className = 'vis-setting';
+		clearInput.className = 'vis-setting switch-input';
 		clearInput.checked = false;
+	var clearPaddel = document.createElement('label');
+		clearPaddel.className = 'vis-setting switch-paddle';
+		clearPaddel.htmlFor = 'clearInput';
 	var clearInputLabel = document.createElement('label');
 		clearInputLabel.htmlFor = 'clearInput';
 		clearInputLabel.innerHTML = 'Interval Clear';
@@ -615,9 +657,11 @@ function shapeAgents(dataArray, bufferLength){
 	visSettings.appendChild(initRadiusDiv);
 		filledDiv.appendChild(filledInputLabel);
 		filledDiv.appendChild(filledInput);
+		filledDiv.appendChild(filledPaddel);
 	visSettings.appendChild(filledDiv);
 		clearDiv.appendChild(clearInputLabel);
 		clearDiv.appendChild(clearInput);
+		clearDiv.appendChild(clearPaddel);
 	visSettings.appendChild(clearDiv);
 
 	var stepSize = 2;
@@ -747,11 +791,14 @@ function brownianTree(dataArray, bufferLength){
 		var showRandDiv = document.createElement('div');
 			showRandInput.id = 'showRandInput';
 			showRandInput.type = 'checkbox';
-			showRandInput.className = 'vis-setting';
+			showRandInput.className = 'vis-setting switch-input';
 			showRandInput.checked = true;
 			showRandInput.addEventListener("change", function(){
 				init();
 			});
+		var showRandPaddel = document.createElement('label');
+			showRandPaddel.className = 'vis-setting switch-paddle';
+			showRandPaddel.htmlFor = 'showRandInput';
 		var showRandInputLabel = document.createElement('label');
 			showRandInputLabel.htmlFor = 'showRandInput';
 			showRandInputLabel.innerHTML = 'Show Random Seeds';
@@ -760,7 +807,7 @@ function brownianTree(dataArray, bufferLength){
 		var maxRadDiv = document.createElement('div');
 		var maxRadInput = document.createElement('input');
 			maxRadInput.id = 'alphaInput';
-			maxRadInput.type = 'number';
+			maxRadInput.type = 'range';
 			maxRadInput.className = 'vis-setting';
 			maxRadInput.min = 0;
 			maxRadInput.max = 20;
@@ -775,9 +822,10 @@ function brownianTree(dataArray, bufferLength){
 			
 			showRandDiv.appendChild(showRandInputLabel);
 			showRandDiv.appendChild(showRandInput);
+			showRandDiv.appendChild(showRandPaddel);
+		visSettings.appendChild(showRandDiv);
 			maxRadDiv.appendChild(maxRadLabel);
 			maxRadDiv.appendChild(maxRadInput);
-		visSettings.appendChild(showRandDiv);
 		visSettings.appendChild(maxRadDiv);
 
 
@@ -831,6 +879,7 @@ function brownianTree(dataArray, bufferLength){
 				canvasCtx.fill();
 				canvasCtx.moveTo(newX, newY);
 				canvasCtx.lineTo(x[closestIndex], y[closestIndex]);
+				canvasCtx.lineWidth = 1;
 				canvasCtx.strokeStyle = 'black';
 				canvasCtx.stroke();
 				canvasCtx.closePath();
