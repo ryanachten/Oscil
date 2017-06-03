@@ -143,7 +143,10 @@ function tests(dataArray, bufferLength){
 		var xPos = 0;
 		var yPos = maxFontSize/2;
 
-		for(var i=0; i < textSample.length; i++){
+		var endOfPage = false;
+		var i = 0;
+
+		function addLetter(){
 			xPos += fontSize;
 			fontSize = Math.floor((Math.random()*maxFontSize+10));
 			if((xPos+maxFontSize/2) > canvWidth){
@@ -151,13 +154,18 @@ function tests(dataArray, bufferLength){
 				yPos += (maxFontSize/2);
 				if (yPos > canvHeight) {
 					console.log('Final letter: ' + textSample[i-1] + ' index: ' + i);
-					break;
+					endOfPage = true;
 				};
 			}
 			canvasCtx.font = fontSize + "px Arial";
 			canvasCtx.fillText(textSample[i], xPos, yPos);
-		}
 
+			if(!endOfPage){
+				i++;	
+				setTimeout(addLetter, 500);
+			}
+		}
+		addLetter();
 
 
 	}
