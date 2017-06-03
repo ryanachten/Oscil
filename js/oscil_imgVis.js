@@ -1,5 +1,3 @@
-$(document).foundation();
-
 function refract(dataArray, bufferLength){
 
 	canvasCtx.clearRect(0,0,canvWidth,canvHeight);
