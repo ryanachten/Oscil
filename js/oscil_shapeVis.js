@@ -1091,10 +1091,29 @@ function concretePoetry(dataArray, bufferLength){
 		endOfPage = false;
 	}
 
+	var logda, expda;
+	function getFreqData(){
+		for(var i = 0; i < bufferLength; i+=50) {
+
+			analyser.getByteFrequencyData(dataArray);
+			var da = dataArray[i];
+			if (da !== 0){
+				logda = (Math.log(da) / Math.log(4))*-1;
+				expda = Math.floor(Math.exp(logda)*1000);
+			}
+			console.log('logda: ' + logda);
+			console.log('expda: ' + expda);
+			console.log(' ');
+		}
+	}
 
 	function addLetter(){
+
+		getFreqData();
+
 		xPos += fontSize;
 		fontSize = Math.floor((Math.random()*maxFontSize+10));
+		// console.log('fontSize: ' + fontSize);
 		if((xPos+maxFontSize/2) > canvWidth){
 			xPos = 0;
 			yPos += leading;
@@ -1109,13 +1128,13 @@ function concretePoetry(dataArray, bufferLength){
 		if(!endOfPage){
 			i++;
 			if(i >= textSample.length) i = 0;	
-			setTimeout(addLetter, 100);
+			setTimeout(addLetter, expda);
 		}
 		else{
 			resetPage();
 			i++;
 			if(i >= textSample.length) i = 0;
-			setTimeout(addLetter, 100);
+			setTimeout(addLetter, expda);
 		}
 	}
 	addLetter();
