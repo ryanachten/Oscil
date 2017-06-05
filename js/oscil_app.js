@@ -141,6 +141,9 @@ function visualise(visMode){
 	else if(visMode === 'BrownianTree'){
 		brownianTree(dataArray, bufferLength);
 	}
+	else if(visMode === 'ConcretePoetry'){
+		concretePoetry(dataArray, bufferLength);
+	}
 	else if(visMode === 'Test'){
 		tests(dataArray, bufferLength); //
 	}

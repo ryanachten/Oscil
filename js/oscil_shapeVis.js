@@ -961,4 +961,162 @@ function brownianTree(dataArray, bufferLength){
 
 		startAnimating();
 }
+
+function concretePoetry(dataArray, bufferLength){
+
+	//Runtime UI stuff
+	var visSettings	= document.getElementById('vis-settings');
+		visSettings.style.display = 'block';
+
+	var textAreaInput = document.createElement('textarea');
+		textAreaInput.id = 'textAreaInput';
+		textAreaInput.className = 'vis-setting';
+		textAreaInput.placeholder = 'there is always soma, delicious soma, half a gramme for a half-holiday, a gramme for a week-end, two grammes for a trip to the gorgeous East, three for a dark eternity on the moon';
+		textAreaInput.addEventListener("change", function(){
+			init();			
+		});
+	var textAreaLabel = document.createElement('label');
+		textAreaLabel.htmlFor = 'textAreaInput';
+		textAreaLabel.innerHTML = 'Text Sample';
+		textAreaLabel.className = 'vis-setting';
+
+	var caseDiv = document.createElement('form');
+			caseDiv.className = 'vis-setting';
+
+	var lowerCaseDiv = document.createElement('div');	
+			lowerCaseDiv.className = 'vis-setting switch';
+		var lowerCasemode = document.createElement('input');
+			lowerCasemode.id = 'lowerCasemode';
+			lowerCasemode.type = 'radio';
+			lowerCasemode.name = 'caseMode';
+			lowerCasemode.className = 'vis-setting switch-input';
+			lowerCasemode.addEventListener("change", function(){
+				init();			
+			});
+		var lowerCasemodePaddel = document.createElement('label');
+			lowerCasemodePaddel.className = 'vis-setting switch-paddle';
+			lowerCasemodePaddel.htmlFor = 'lowerCasemode';
+		var lowerCasemodeLabel = document.createElement('label');
+			lowerCasemodeLabel.htmlFor = 'lowerCasemode';
+			lowerCasemodeLabel.innerHTML = 'Lowercase';
+			lowerCasemodeLabel.className = 'vis-setting';
+
+		var upperCaseDiv = document.createElement('div');	
+			upperCaseDiv.className = 'vis-setting switch';
+		var upperCasemode = document.createElement('input');
+			upperCasemode.id = 'upperCasemode';
+			upperCasemode.type = 'radio';
+			upperCasemode.name = 'caseMode';
+			upperCasemode.checked = true;
+			upperCasemode.className = 'vis-setting switch-input';
+			upperCasemode.addEventListener("change", function(){
+				init();			
+			});
+		var upperCasemodePaddel = document.createElement('label');
+			upperCasemodePaddel.className = 'vis-setting switch-paddle';
+			upperCasemodePaddel.htmlFor = 'upperCasemode';
+		var upperCasemodeLabel = document.createElement('label');
+			upperCasemodeLabel.htmlFor = 'upperCasemode';
+			upperCasemodeLabel.innerHTML = 'Uppercase';
+			upperCasemodeLabel.className = 'vis-setting';
+
+		var caseOffDiv = document.createElement('div');	
+			caseOffDiv.className = 'vis-setting switch';
+		var caseOffmode = document.createElement('input');
+			caseOffmode.id = 'caseOffmode';
+			caseOffmode.type = 'radio';
+			caseOffmode.name = 'caseMode';
+			caseOffmode.className = 'vis-setting switch-input';
+			caseOffmode.addEventListener("change", function(){
+				init();			
+			});
+		var caseOffmodePaddel = document.createElement('label');
+			caseOffmodePaddel.className = 'vis-setting switch-paddle';
+			caseOffmodePaddel.htmlFor = 'caseOffmode';
+		var caseOffmodeLabel = document.createElement('label');
+			caseOffmodeLabel.htmlFor = 'caseOffmode';
+			caseOffmodeLabel.innerHTML = 'Off';
+			caseOffmodeLabel.className = 'vis-setting';
+
+	visSettings.appendChild(textAreaLabel);
+	visSettings.appendChild(textAreaInput);
+
+				lowerCaseDiv.appendChild(lowerCasemodeLabel);
+				lowerCaseDiv.appendChild(lowerCasemode);
+				lowerCaseDiv.appendChild(lowerCasemodePaddel);
+			caseDiv.appendChild(lowerCaseDiv)
+				upperCaseDiv.appendChild(upperCasemodeLabel);
+				upperCaseDiv.appendChild(upperCasemode);
+				upperCaseDiv.appendChild(upperCasemodePaddel);
+			caseDiv.appendChild(upperCaseDiv)
+				caseOffDiv.appendChild(caseOffmodeLabel);
+				caseOffDiv.appendChild(caseOffmode);
+				caseOffDiv.appendChild(caseOffmodePaddel);
+			caseDiv.appendChild(caseOffDiv)
+		visSettings.appendChild(caseDiv);
+
+	var textSample, typeFace, maxFontSize, leading;
+	var xPos, yPos, endOfPage;
+	var i, fontSize;
 	
+	function init(){
+		if(textAreaInput.value.length > 0){
+			textSample = textAreaInput.value;
+		}else{
+			textSample = textAreaInput.placeholder;
+		}
+		if(upperCasemode.checked){
+			textSample = textSample.toUpperCase();
+		}else if(lowerCasemode.checked){
+			textSample = textSample.toLowerCase();
+		}
+		
+		typeFace = 'Arial';
+		maxFontSize = canvHeight/4;
+		leading = 100;
+		i = fontSize = 0;
+
+		resetPage();	
+	}
+	init();
+
+	function resetPage(){
+		canvasCtx.clearRect(0,0, canvWidth, canvHeight);
+		canvasCtx.fillStyle = bgColor;
+		canvasCtx.fillRect(0,0, canvWidth, canvHeight);
+		canvasCtx.fillStyle = 'black';
+
+		xPos = 0;
+		yPos = maxFontSize/2;
+		endOfPage = false;
+	}
+
+
+	function addLetter(){
+		xPos += fontSize;
+		fontSize = Math.floor((Math.random()*maxFontSize+10));
+		if((xPos+maxFontSize/2) > canvWidth){
+			xPos = 0;
+			yPos += leading;
+			if (yPos > canvHeight) {
+				console.log('Final letter: ' + textSample[i-1] + ' index: ' + i);
+				endOfPage = true;
+			};
+		}
+		canvasCtx.font = fontSize + "px "+ typeFace + "";
+		canvasCtx.fillText(textSample[i], xPos, yPos);
+
+		if(!endOfPage){
+			i++;
+			if(i >= textSample.length) i = 0;	
+			setTimeout(addLetter, 100);
+		}
+		else{
+			resetPage();
+			i++;
+			if(i >= textSample.length) i = 0;
+			setTimeout(addLetter, 100);
+		}
+	}
+	addLetter();
+}
