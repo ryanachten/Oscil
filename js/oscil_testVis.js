@@ -111,7 +111,7 @@ function tests(dataArray, bufferLength){
 
 		function animate(){
 
-			if(stop || currentCount == 10){
+			if(stop){
 				return;
 			}
 			drawVisual = requestAnimationFrame(animate);
@@ -161,9 +161,24 @@ function tests(dataArray, bufferLength){
 			canvasCtx.fillText(textSample[i], xPos, yPos);
 
 			if(!endOfPage){
-				i++;	
-				setTimeout(addLetter, 500);
+				i++;
+				if(i >= textSample.length) i = 0;	
+				setTimeout(addLetter, 100);
 			}
+			else{
+				canvasCtx.clearRect(0,0, canvWidth, canvHeight);
+				canvasCtx.fillStyle = bgColor;
+				canvasCtx.fillRect(0,0, canvWidth, canvHeight);
+				canvasCtx.fillStyle = 'black';
+
+				endOfPage = false;
+				xPos = 0;
+				yPos = maxFontSize/2;
+				i++;
+				if(i >= textSample.length) i = 0;
+				setTimeout(addLetter, 100);
+			}
+			
 		}
 		addLetter();
 

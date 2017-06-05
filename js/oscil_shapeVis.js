@@ -158,7 +158,7 @@ function polyShapes(dataArray, bufferLength){
 	//Runtime UI stuff
 	var visSettings	= document.getElementById('vis-settings');
 		visSettings.style.display = 'block';
-
+		
 	var alphaInput = document.createElement('input');
 		alphaInput.type = 'range';
 		alphaInput.id = 'sampleCountInput';
