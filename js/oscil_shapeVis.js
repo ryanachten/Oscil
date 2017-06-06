@@ -1038,24 +1038,42 @@ function concretePoetry(dataArray, bufferLength){
 			caseOffmodeLabel.innerHTML = 'Off';
 			caseOffmodeLabel.className = 'vis-setting';
 
+		var leadingInput = document.createElement('input');
+			leadingInput.id = 'leadingInput';
+			leadingInput.type = 'range';
+			leadingInput.className = 'vis-setting';
+			leadingInput.min = 10;
+			leadingInput.max = (canvHeight/4)*2;
+			leadingInput.value = 100;
+		var leadingLabel = document.createElement('label');
+			leadingLabel.htmlFor = 'leadingInput';
+			leadingLabel.innerHTML = 'Line Height';
+			leadingLabel.className = 'vis-setting';
+
+
 	visSettings.appendChild(textAreaLabel);
 	visSettings.appendChild(textAreaInput);
 
-				lowerCaseDiv.appendChild(lowerCasemodeLabel);
-				lowerCaseDiv.appendChild(lowerCasemode);
-				lowerCaseDiv.appendChild(lowerCasemodePaddel);
-			caseDiv.appendChild(lowerCaseDiv)
-				upperCaseDiv.appendChild(upperCasemodeLabel);
-				upperCaseDiv.appendChild(upperCasemode);
-				upperCaseDiv.appendChild(upperCasemodePaddel);
-			caseDiv.appendChild(upperCaseDiv)
-				caseOffDiv.appendChild(caseOffmodeLabel);
-				caseOffDiv.appendChild(caseOffmode);
-				caseOffDiv.appendChild(caseOffmodePaddel);
-			caseDiv.appendChild(caseOffDiv)
-		visSettings.appendChild(caseDiv);
+	visSettings.appendChild(leadingLabel);
+	visSettings.appendChild(leadingInput);
 
-	var textSample, typeFace, maxFontSize, leading;
+			lowerCaseDiv.appendChild(lowerCasemodeLabel);
+			lowerCaseDiv.appendChild(lowerCasemode);
+			lowerCaseDiv.appendChild(lowerCasemodePaddel);
+		caseDiv.appendChild(lowerCaseDiv)
+			upperCaseDiv.appendChild(upperCasemodeLabel);
+			upperCaseDiv.appendChild(upperCasemode);
+			upperCaseDiv.appendChild(upperCasemodePaddel);
+		caseDiv.appendChild(upperCaseDiv)
+			caseOffDiv.appendChild(caseOffmodeLabel);
+			caseOffDiv.appendChild(caseOffmode);
+			caseOffDiv.appendChild(caseOffmodePaddel);
+		caseDiv.appendChild(caseOffDiv)
+	visSettings.appendChild(caseDiv);
+
+	
+
+	var textSample, typeFace, maxFontSize;
 	var xPos, yPos, endOfPage;
 	var i, fontSize;
 	
@@ -1073,7 +1091,6 @@ function concretePoetry(dataArray, bufferLength){
 		
 		typeFace = 'Arial';
 		maxFontSize = canvHeight/4;
-		leading = 100;
 		i = fontSize = 0;
 
 		resetPage();	
@@ -1092,31 +1109,23 @@ function concretePoetry(dataArray, bufferLength){
 	}
 
 	var logda, expda;
-	function getFreqData(){
-		for(var i = 0; i < bufferLength; i+=50) {
-
-			analyser.getByteFrequencyData(dataArray);
-			var da = dataArray[i];
-			if (da !== 0){
-				logda = (Math.log(da) / Math.log(4))*-1;
-				expda = Math.floor(Math.exp(logda)*1000);
-			}
-			console.log('logda: ' + logda);
-			console.log('expda: ' + expda);
-			console.log(' ');
-		}
-	}
 
 	function addLetter(){
 
-		getFreqData();
+		analyser.getByteFrequencyData(dataArray);
+		var da = dataArray[0];
+		if (da !== 0){
+			logda = (Math.log(da) / Math.log(7))*-1;
+			expda = Math.floor(Math.exp(logda)*1000);
+		}
+		// console.log('logda: ' + logda);
+		// console.log(' ');
 
 		xPos += fontSize;
 		fontSize = Math.floor((Math.random()*maxFontSize+10));
-		// console.log('fontSize: ' + fontSize);
 		if((xPos+maxFontSize/2) > canvWidth){
 			xPos = 0;
-			yPos += leading;
+			yPos += parseInt(leadingInput.value);;
 			if (yPos > canvHeight) {
 				console.log('Final letter: ' + textSample[i-1] + ' index: ' + i);
 				endOfPage = true;
