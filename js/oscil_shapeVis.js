@@ -1137,13 +1137,18 @@ function concretePoetry(dataArray, bufferLength){
 		if(!endOfPage){
 			i++;
 			if(i >= textSample.length) i = 0;	
-			setTimeout(addLetter, expda);
+			drawVisual = setTimeout(addLetter, expda);
 		}
 		else{
 			resetPage();
 			i++;
 			if(i >= textSample.length) i = 0;
-			setTimeout(addLetter, expda);
+			drawVisual = setTimeout(addLetter, expda);
+		}
+		if(document.getElementById('visual-select').value !== 'ConcretePoetry'){
+			console.log('clearMe');
+			clearTimeout(drawVisual);
+
 		}
 	}
 	addLetter();
