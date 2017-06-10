@@ -1,7 +1,7 @@
 function refract(dataArray, bufferLength){
 
 
-	var imgUrl = 'http://pngimg.com/uploads/palm_tree/palm_tree_PNG2494.png';
+	var imgUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Various_Arecaceae.jpg/630px-Various_Arecaceae.jpg';
 	var img;
 	var tileCount;
 
@@ -14,7 +14,8 @@ function refract(dataArray, bufferLength){
 		img.src = imgUrl;
 
 		img.onload = function(){
-			startAnimating(15);
+			startAnimating(10);
+			// draw();
 		}
 	}
 	init();
@@ -30,11 +31,16 @@ function refract(dataArray, bufferLength){
 			if (da !== 0){
 				tileCount = Math.floor(Math.log(da)/Math.log(1.5));
 			}
-			if (tileCount < 2) tileCount = 2;
+
+			if (tileCount < 2 || typeof tileCount == 'undefined') tileCount = 2;
+			// tileCount = 5;
+			if (tileCount % 2 !== 0){
+				tileCount+=1;
+			}
 
 			canvasCtx.clearRect(0,0,canvWidth, canvHeight);
 			canvasCtx.fillRect(0,0,canvWidth, canvHeight);
-			// console.log('tileCount: '+ tileCount);
+			console.log('tileCount: '+ tileCount);
 			tileImg(tileCount);
 		}
 
@@ -46,8 +52,8 @@ function refract(dataArray, bufferLength){
 					var imgWidth = canvWidth/tileCount;
 					var imgHeight = canvHeight/tileCount;
 
-					if (i % 2 == 0){
-						if (j % 2 == 0){
+					if (i % 2 === 0){
+						if (j % 2 === 0){
 							canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
 						}else{
 							canvasCtx.save();
@@ -60,7 +66,7 @@ function refract(dataArray, bufferLength){
 						canvasCtx.save();
 						canvasCtx.scale(-1,1);
 						canvasCtx.translate((canvWidth+imgWidth)*-1, 0);
-						if (j % 2 == 0){
+						if (j % 2 === 0){
 							canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
 						}else{
 							canvasCtx.save();
