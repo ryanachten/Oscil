@@ -1,20 +1,26 @@
 function refract(dataArray, bufferLength){
 
-	canvasCtx.clearRect(0,0,canvWidth,canvHeight);
-	canvasCtx.fillStyle = 'bgColor';
-	canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
-	var img = new Image();
-	img.src = 'http://pngimg.com/uploads/palm_tree/palm_tree_PNG2494.png';
+	var imgUrl = 'http://pngimg.com/uploads/palm_tree/palm_tree_PNG2494.png';
+	var img;
+	var tileCount;
 
-	img.onload = function(){
-		draw();
+	function init(){
+		canvasCtx.clearRect(0,0,canvWidth,canvHeight);
+		canvasCtx.fillStyle = bgColor;
+		canvasCtx.fillRect(0,0, canvWidth, canvHeight);
+
+		img = new Image();
+		img.src = imgUrl;
+
+		img.onload = function(){
+			startAnimating(15);
+		}
 	}
+	init();
+
 
 	function draw(){
-		
-		canvasCtx.fillStyle = 'bgColor';
-			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
 		analyser.getByteFrequencyData(dataArray);
 		//TODO: Also doesn't work with any other Fft than 256
@@ -22,16 +28,17 @@ function refract(dataArray, bufferLength){
 		for(var i = 0; i < bufferLength; i+=50) {
 			var da = dataArray[i];
 			if (da !== 0){
-				var tileCount = Math.floor(Math.log(da)/Math.log(1.5));
-				if (tileCount < 2) tileCount = 2;
-
-				canvasCtx.clearRect(0,0,canvWidth, canvHeight);
-				tileImg(tileCount);
+				tileCount = Math.floor(Math.log(da)/Math.log(1.5));
 			}
+			if (tileCount < 2) tileCount = 2;
+
+			canvasCtx.clearRect(0,0,canvWidth, canvHeight);
+			canvasCtx.fillRect(0,0,canvWidth, canvHeight);
+			// console.log('tileCount: '+ tileCount);
+			tileImg(tileCount);
 		}
+
 		function tileImg(tileCount){
-			
-			canvasCtx.globalCompositeOperation = "source-over";
 			
 			for (var i = 0; i < tileCount; i++) {
 				for (var j = 0; j < tileCount; j++){
@@ -41,33 +48,60 @@ function refract(dataArray, bufferLength){
 
 					if (i % 2 == 0){
 						if (j % 2 == 0){
-								canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
-							}else{
-								canvasCtx.save();
-								canvasCtx.scale(1,-1);
-								canvasCtx.translate(0, (canvHeight+imgHeight)*-1);
-								canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
-								canvasCtx.restore();
-							}
+							canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
 						}else{
 							canvasCtx.save();
-							canvasCtx.scale(-1,1);
-							canvasCtx.translate((canvWidth+imgWidth)*-1, 0);
-							if (j % 2 == 0){
-								canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
-							}else{
-								canvasCtx.save();
-								canvasCtx.scale(1,-1);
-								canvasCtx.translate(0, (canvHeight+imgHeight)*-1);
-								canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
-								canvasCtx.restore();
-							}
+							canvasCtx.scale(1,-1);
+							canvasCtx.translate(0, (canvHeight+imgHeight)*-1);
+							canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
 							canvasCtx.restore();
 						}
+					}else{
+						canvasCtx.save();
+						canvasCtx.scale(-1,1);
+						canvasCtx.translate((canvWidth+imgWidth)*-1, 0);
+						if (j % 2 == 0){
+							canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
+						}else{
+							canvasCtx.save();
+							canvasCtx.scale(1,-1);
+							canvasCtx.translate(0, (canvHeight+imgHeight)*-1);
+							canvasCtx.drawImage(img, imgWidth*i, imgHeight*j, imgWidth, imgHeight);
+							canvasCtx.restore();
+						}
+						canvasCtx.restore();
 					}
 				}
 			}
-		drawVisual = requestAnimationFrame(draw);
+		}
+	}
+	//for controlling FPS
+	var stop = false;
+	var frameCount = 0;
+	var fps, fpsInterval, startTime, now, then, elapsed;
+
+	function startAnimating(fps){
+		fpsInterval = 1000/fps;
+		then = Date.now();
+		startTime = then;
+		animate();
+	}
+
+	function animate(){
+
+		if(stop){
+			return;
+		}
+		drawVisual = requestAnimationFrame(animate);
+
+		now = Date.now();
+		elapsed = now - then;
+
+		if(elapsed > fpsInterval){
+			then = now - (elapsed % fpsInterval);
+
+			draw();
+		}
 	}
 }
 
