@@ -19,11 +19,47 @@ function refract(dataArray, bufferLength){
 		imgUrlLabel.innerHTML = 'Img URL';
 		imgUrlLabel.className = 'vis-setting';
 
+	var fpsInput = document.createElement('input');
+		fpsInput.type = 'range';
+		fpsInput.id = 'fpsInput';
+		fpsInput.className = 'vis-setting';
+		fpsInput.min = 5;
+		fpsInput.max = 30;
+		fpsInput.value = 15;
+		fpsInput.addEventListener("change", function(){
+			init();			
+		});
+	var fpsLabel = document.createElement('label');
+		fpsLabel.htmlFor = 'fpsInput';
+		fpsLabel.innerHTML = 'FPS Rate';
+		fpsLabel.className = 'vis-setting';
+
+	var sampleRateInput = document.createElement('input');
+		sampleRateInput.type = 'range';
+		sampleRateInput.id = 'sampleRateInput';
+		sampleRateInput.className = 'vis-setting';
+		sampleRateInput.min = 10;
+		sampleRateInput.max = 50;
+		sampleRateInput.value = 30;
+		sampleRateInput.addEventListener("change", function(){
+			sampleRate = parseInt(sampleRateInput.value);		
+		});
+	var sampleRateLabel = document.createElement('label');
+		sampleRateLabel.htmlFor = 'sampleRateInput';
+		sampleRateLabel.innerHTML = 'Sample Rate';
+		sampleRateLabel.className = 'vis-setting';
+
 	imgForm.appendChild(imgUrlLabel);
 	imgForm.appendChild(imgUrlInput);
 	visSettings.appendChild(imgForm);
+	visSettings.appendChild(fpsLabel);
+	visSettings.appendChild(fpsInput);
+	visSettings.appendChild(sampleRateLabel);
+	visSettings.appendChild(sampleRateInput);
 
 	var img, tileCount;
+	var fpsRate;
+	var sampleRate = parseInt(sampleRateInput.value);
 
 	function init(){
 		canvasCtx.clearRect(0,0,canvWidth,canvHeight);
@@ -33,17 +69,15 @@ function refract(dataArray, bufferLength){
 		img = new Image();
 		if(imgUrlInput.value.length > 0){
 			if(imgUrlInput.value.match(/\.(jpeg|jpg|gif|png)$/)){
-				console.log('valid url');
+				console.log('valid url (no img extension)');
 				img.src = imgUrlInput.value;
 				if($('#imgUrlInput').hasClass('is-invalid-input')){
-					console.log('removeClass');
 					$('#imgUrlInput').removeClass('is-invalid-input');
 				}
 			}
 			else{
 				console.log('invalid url');
 				if(!$('#imgUrlInput').hasClass('is-invalid-input')){
-					console.log('addClass');
 					$('#imgUrlInput').addClass('is-invalid-input');
 				}
 				img.src = imgUrlInput.placeholder;
@@ -54,20 +88,17 @@ function refract(dataArray, bufferLength){
 		}
 
 		img.onerror = function(){
-			console.log('onerror');
+			console.log('image url w/ valid extension but content not image');
 
 			img.src = imgUrlInput.placeholder;
 
 			if(!$('#imgUrlInput').hasClass('is-invalid-input')){
-				console.log('addClass');
 				$('#imgUrlInput').addClass('is-invalid-input');
 			}
 		}
 
 		img.onload = function(){
-			console.log('draw');
-			
-			startAnimating(10);
+			startAnimating(fpsInput.value);
 		}
 	}
 	init();
@@ -77,7 +108,7 @@ function refract(dataArray, bufferLength){
 
 		analyser.getByteFrequencyData(dataArray);
 
-		for(var i = 0; i < bufferLength; i+=50) {
+		for(var i = 0; i < bufferLength; i+=sampleRate) {
 			var da = dataArray[i];
 			if (da !== 0){
 				tileCount = Math.floor(Math.log(da)/Math.log(1.5));
