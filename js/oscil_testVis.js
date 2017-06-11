@@ -25,7 +25,7 @@ function tests(dataArray, bufferLength){
 		canvasPattern.height = patternHeight;
 		var contextPattern = canvasPattern.getContext("2d");
 
-		var textMode = 'letter'; //or 'letter'
+		var textMode = 'word'; //or 'letter'
 		var decorationMode = 'dash'; //or 'pattern'
 		
 		var letterIndex = 0;
@@ -208,5 +208,87 @@ function tests(dataArray, bufferLength){
 			}
 		}
 	}
-	typeDither();
+	// typeDither();
+
+
+	function imgShuffle(){
+
+		var tileCount = 10;
+
+		function init(){
+			canvasCtx.clearRect(0,0,canvWidth,canvHeight);
+			canvasCtx.fillStyle = bgColor;
+			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
+
+			img = new Image();
+			img.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Various_Cactaceae.jpg/800px-Various_Cactaceae.jpg';
+
+
+			img.onload = function(){
+				startAnimating(10);
+			}
+		}
+		init();
+
+
+		function draw(){
+
+			canvasCtx.clearRect(0,0,canvWidth, canvHeight);
+			canvasCtx.fillRect(0,0,canvWidth, canvHeight);
+			tileImg(tileCount);
+		}
+
+		function tileImg(tileCount){
+			
+			for (var i = 0; i < tileCount; i++) {
+				for (var j = 0; j < tileCount; j++){
+
+					var imgWidth = canvWidth/tileCount;
+					var imgHeight = canvHeight/tileCount;
+
+					var randClipX = Math.floor(Math.random()*img.width);
+					if(randClipX + imgWidth > img.width) randClipX = img.width - imgWidth;
+
+					var randClipY = Math.floor(Math.random()*img.height);
+					if(randClipY + imgHeight > img.height) randClipY = img.height - imgHeight;
+					// console.log('Clip: ' + randClipX + ' ' + randClipY);
+
+					canvasCtx.drawImage(img, 	randClipX, randClipY, //clip pos
+												imgWidth, imgHeight, //clip size
+												imgWidth*i, imgHeight*j, //place pos
+												imgWidth, imgHeight); //place size
+
+				}
+			}
+		}
+		//for controlling FPS
+		var stop = false;
+		var frameCount = 0;
+		var fps, fpsInterval, startTime, now, then, elapsed;
+
+		function startAnimating(fps){
+			fpsInterval = 1000/fps;
+			then = Date.now();
+			startTime = then;
+			animate();
+		}
+
+		function animate(){
+			if(stop){
+				return;
+			}
+			drawVisual = requestAnimationFrame(animate);
+
+			now = Date.now();
+			elapsed = now - then;
+
+			if(elapsed > fpsInterval){
+				then = now - (elapsed % fpsInterval);
+
+				draw();
+			}
+		}
+	}
+
+	imgShuffle();	
 }
