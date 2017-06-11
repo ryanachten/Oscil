@@ -1,9 +1,29 @@
 function refract(dataArray, bufferLength){
 
+	//Runtime UI stuff
+	var visSettings	= document.getElementById('vis-settings');
+		visSettings.style.display = 'block';
 
-	var imgUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Various_Arecaceae.jpg/630px-Various_Arecaceae.jpg';
-	var img;
-	var tileCount;
+	var imgForm = document.createElement('div');
+		imgForm.className = 'vis-setting';
+	var imgUrlInput = document.createElement('input');
+		imgUrlInput.id = 'imgUrlInput';
+		imgUrlInput.type = 'text';
+		imgUrlInput.className = 'vis-setting';
+		imgUrlInput.placeholder = 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Various_Arecaceae.jpg/630px-Various_Arecaceae.jpg';
+		imgUrlInput.addEventListener("change", function(){
+			init();			
+		});
+	var imgUrlLabel = document.createElement('label');
+		imgUrlLabel.htmlFor = 'imgUrlInput';
+		imgUrlLabel.innerHTML = 'Img URL';
+		imgUrlLabel.className = 'vis-setting';
+
+	imgForm.appendChild(imgUrlLabel);
+	imgForm.appendChild(imgUrlInput);
+	visSettings.appendChild(imgForm);
+
+	var img, tileCount;
 
 	function init(){
 		canvasCtx.clearRect(0,0,canvWidth,canvHeight);
@@ -11,11 +31,43 @@ function refract(dataArray, bufferLength){
 		canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
 		img = new Image();
-		img.src = imgUrl;
+		if(imgUrlInput.value.length > 0){
+			if(imgUrlInput.value.match(/\.(jpeg|jpg|gif|png)$/)){
+				console.log('valid url');
+				img.src = imgUrlInput.value;
+				if($('#imgUrlInput').hasClass('is-invalid-input')){
+					console.log('removeClass');
+					$('#imgUrlInput').removeClass('is-invalid-input');
+				}
+			}
+			else{
+				console.log('invalid url');
+				if(!$('#imgUrlInput').hasClass('is-invalid-input')){
+					console.log('addClass');
+					$('#imgUrlInput').addClass('is-invalid-input');
+				}
+				img.src = imgUrlInput.placeholder;
+			}
+		}
+		else{
+			img.src = imgUrlInput.placeholder;
+		}
+
+		img.onerror = function(){
+			console.log('onerror');
+
+			img.src = imgUrlInput.placeholder;
+
+			if(!$('#imgUrlInput').hasClass('is-invalid-input')){
+				console.log('addClass');
+				$('#imgUrlInput').addClass('is-invalid-input');
+			}
+		}
 
 		img.onload = function(){
+			console.log('draw');
+			
 			startAnimating(10);
-			// draw();
 		}
 	}
 	init();
@@ -24,7 +76,6 @@ function refract(dataArray, bufferLength){
 	function draw(){
 
 		analyser.getByteFrequencyData(dataArray);
-		//TODO: Also doesn't work with any other Fft than 256
 
 		for(var i = 0; i < bufferLength; i+=50) {
 			var da = dataArray[i];
@@ -33,14 +84,12 @@ function refract(dataArray, bufferLength){
 			}
 
 			if (tileCount < 2 || typeof tileCount == 'undefined') tileCount = 2;
-			// tileCount = 5;
 			if (tileCount % 2 !== 0){
 				tileCount+=1;
 			}
 
 			canvasCtx.clearRect(0,0,canvWidth, canvHeight);
 			canvasCtx.fillRect(0,0,canvWidth, canvHeight);
-			console.log('tileCount: '+ tileCount);
 			tileImg(tileCount);
 		}
 
@@ -94,7 +143,6 @@ function refract(dataArray, bufferLength){
 	}
 
 	function animate(){
-
 		if(stop){
 			return;
 		}
@@ -107,6 +155,10 @@ function refract(dataArray, bufferLength){
 			then = now - (elapsed % fpsInterval);
 
 			draw();
+		}
+		if(document.getElementById('visual-select').value !== 'Refract'){
+			console.log('clearMe');
+			window.cancelAnimationFrame(drawVisual);
 		}
 	}
 }
