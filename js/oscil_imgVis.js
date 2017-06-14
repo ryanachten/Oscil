@@ -771,7 +771,7 @@ function imgShuffle(dataArray, bufferLength){
 			canvasCtx.fillStyle = bgColor;
 			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
-			imgMode = 'random';
+			imgMode = 'move';
 						
 			img = new Image();
 			img.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Various_Cactaceae.jpg/800px-Various_Cactaceae.jpg';
@@ -786,9 +786,7 @@ function imgShuffle(dataArray, bufferLength){
 		}
 		init();
 
-		var logda;
 		var da; 
-
 		function draw(){
 
 			canvasCtx.clearRect(0,0,canvWidth, canvHeight);
@@ -796,11 +794,6 @@ function imgShuffle(dataArray, bufferLength){
 
 			analyser.getByteFrequencyData(dataArray);
 			da = dataArray[0];
-			// if (da !== 0){
-			// 	logda = da;
-			// 	// logda = Math.log(da) / Math.log(4)
-			// 	console.log('da: ' + logda);
-			// }
 
 			if(imgMode === 'random'){
 				randomTileImg();
@@ -844,8 +837,11 @@ function imgShuffle(dataArray, bufferLength){
 			var imgWidth = canvWidth/tileCount;
 			var imgHeight = canvHeight/tileCount;
 
-			var accel = Math.floor(Math.random()*5+1);
-			// accel = 3;		
+			var sumDivisionLevel = 50; //add to GUI
+			var maxTileCount = Math.floor(da/sumDivisionLevel+2);
+			var minTileCount = Math.floor((da/sumDivisionLevel)/2+2);
+			accel = Math.floor((Math.random()*maxTileCount)+minTileCount);
+			// console.log('accel: ' + accel);		
 			
 			for (var i = 0; i < tileCount; i++) {
 				for (var j = 0; j < tileCount; j++){
