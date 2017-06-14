@@ -214,6 +214,7 @@ function tests(dataArray, bufferLength){
 	function imgShuffle(){
 
 		var tileCount = 10;
+		var tileCoords = [];
 
 		function init(){
 			canvasCtx.clearRect(0,0,canvWidth,canvHeight);
@@ -225,7 +226,7 @@ function tests(dataArray, bufferLength){
 
 
 			img.onload = function(){
-				startAnimating(10);
+				startAnimating(15);
 			}
 		}
 		init();
@@ -235,10 +236,14 @@ function tests(dataArray, bufferLength){
 
 			canvasCtx.clearRect(0,0,canvWidth, canvHeight);
 			canvasCtx.fillRect(0,0,canvWidth, canvHeight);
-			tileImg(tileCount);
+
+			// randomTileImg();
+			moveTileImg();
 		}
 
-		function tileImg(tileCount){
+		function randomTileImg(){
+
+			tileCount = Math.floor((Math.random()*20)+2);
 			
 			for (var i = 0; i < tileCount; i++) {
 				for (var j = 0; j < tileCount; j++){
@@ -246,11 +251,8 @@ function tests(dataArray, bufferLength){
 					var imgWidth = canvWidth/tileCount;
 					var imgHeight = canvHeight/tileCount;
 
-					var randClipX = Math.floor(Math.random()*img.width);
-					if(randClipX + imgWidth > img.width) randClipX = img.width - imgWidth;
-
-					var randClipY = Math.floor(Math.random()*img.height);
-					if(randClipY + imgHeight > img.height) randClipY = img.height - imgHeight;
+					var randClipX = Math.floor(Math.random()*(img.width-imgWidth));
+					var randClipY = Math.floor(Math.random()*(img.height-imgHeight));
 					// console.log('Clip: ' + randClipX + ' ' + randClipY);
 
 					canvasCtx.drawImage(img, 	randClipX, randClipY, //clip pos
@@ -261,6 +263,71 @@ function tests(dataArray, bufferLength){
 				}
 			}
 		}
+
+		var counter = 0;
+		var initialised = false;
+		function moveTileImg(){
+
+			var imgWidth = canvWidth/tileCount;
+			var imgHeight = canvHeight/tileCount;
+
+			var accel = Math.floor(Math.random()*5+1);
+			accel =3;
+			console.log('accel: ' + accel);			
+			
+			for (var i = 0; i < tileCount; i++) {
+				for (var j = 0; j < tileCount; j++){
+
+					if(!initialised){
+						var randClipX = Math.floor(Math.random()*(img.width-imgWidth));
+						var randClipY = Math.floor(Math.random()*(img.height-imgHeight));
+						
+						var directionY = Math.floor(Math.random()*2);
+						if(directionY===0) directionY = -1;
+						var directionX = Math.floor(Math.random()*2);
+						if(directionX===0) directionX = -1;
+
+						var coords = { 	x: randClipX, y: randClipY,
+										directX: directionX, directY: directionY};
+						tileCoords.push(coords);
+					
+					}else{
+						randClipX = tileCoords[counter].x;
+						randClipY = tileCoords[counter].y;
+						var newX = randClipX+=(accel*tileCoords[counter].directX);
+						var newY = randClipY+=(accel*tileCoords[counter].directY);
+
+						if(newX > img.width-imgWidth || newX < 0){
+							// console.log('directX: ' + tileCoords[counter].directX);
+							tileCoords[counter].directX *= -1;
+							// console.log('directX: ' + tileCoords[counter].directX);
+						}
+						if(newY > img.height-imgHeight || newY < 0){
+							// console.log('directY: ' + tileCoords[counter].directY);
+							tileCoords[counter].directY *= -1;
+							// console.log('directY: ' + tileCoords[counter].directY);
+						}
+						tileCoords[counter].x = newX;
+						tileCoords[counter].y = newY;
+						
+						if(counter+1 >= tileCoords.length){
+							counter = 0;
+						}else{
+							counter++;
+						}
+						// console.log('counter: ' + counter);
+					}
+					// console.log('Clip: ' + randClipX + ' ' + randClipY);
+					canvasCtx.drawImage(img, 	randClipX, randClipY, //clip pos
+												imgWidth, imgHeight, //clip size
+												imgWidth*i, imgHeight*j, //place pos
+												imgWidth, imgHeight); //place size
+				}
+			}
+			initialised = true;
+			// console.log('initialised');
+		}
+
 		//for controlling FPS
 		var stop = false;
 		var frameCount = 0;
