@@ -786,7 +786,8 @@ function imgShuffle(dataArray, bufferLength){
 		}
 		init();
 
-		var logda; 
+		var logda;
+		var da; 
 
 		function draw(){
 
@@ -794,12 +795,12 @@ function imgShuffle(dataArray, bufferLength){
 			canvasCtx.fillRect(0,0,canvWidth, canvHeight);
 
 			analyser.getByteFrequencyData(dataArray);
-			var da = dataArray[0];
-			if (da !== 0){
-				logda = da;
-				// logda = Math.log(da) / Math.log(4)
-				console.log('da: ' + logda);
-			}
+			da = dataArray[0];
+			// if (da !== 0){
+			// 	logda = da;
+			// 	// logda = Math.log(da) / Math.log(4)
+			// 	console.log('da: ' + logda);
+			// }
 
 			if(imgMode === 'random'){
 				randomTileImg();
@@ -810,8 +811,12 @@ function imgShuffle(dataArray, bufferLength){
 
 		function randomTileImg(){
 
-			tileCount = Math.floor(logda/30.5+4);
-			console.log('tileCount: ' + tileCount);
+			var sumDivisionLevel = 30; //add to GUI
+			var maxTileCount = Math.floor(da/sumDivisionLevel+2);
+			var minTileCount = Math.floor((da/sumDivisionLevel)/2+2);
+			tileCount = Math.floor((Math.random()*maxTileCount)+minTileCount);
+			// console.log('maxTileCount: ' + maxTileCount + ' minTileCount: ' + minTileCount);
+			// console.log('tileCount: ' + tileCount);
 
 			for (var i = 0; i < tileCount; i++) {
 				for (var j = 0; j < tileCount; j++){
