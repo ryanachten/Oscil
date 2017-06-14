@@ -762,161 +762,259 @@ function pixShuffle(dataArray, bufferLength){
 
 function imgShuffle(dataArray, bufferLength){
 
-		var tileCount = 10;
-		var tileCoords = [];
-		var imgMode;
+	//Runtime UI stuff
+	var visSettings	= document.getElementById('vis-settings');
+		visSettings.style.display = 'block';
 
-		function init(){
-			canvasCtx.clearRect(0,0,canvWidth,canvHeight);
-			canvasCtx.fillStyle = bgColor;
-			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
+	var imgModeDiv = document.createElement('form');
+			imgModeDiv.className = 'vis-setting';
 
+	var randomImgDiv = document.createElement('div');	
+			randomImgDiv.className = 'vis-setting switch';
+		var randomImgMode = document.createElement('input');
+			randomImgMode.id = 'randomImgMode';
+			randomImgMode.type = 'radio';
+			randomImgMode.name = 'imgMode';
+			randomImgMode.className = 'vis-setting switch-input';
+			randomImgMode.addEventListener("change", function(){
+				init();			
+			});
+		var randomImgModePaddel = document.createElement('label');
+			randomImgModePaddel.className = 'vis-setting switch-paddle';
+			randomImgModePaddel.htmlFor = 'randomImgMode';
+		var randomImgModeLabel = document.createElement('label');
+			randomImgModeLabel.htmlFor = 'randomImgMode';
+			randomImgModeLabel.innerHTML = 'Random Mode';
+			randomImgModeLabel.className = 'vis-setting';
+
+		var moveImgDiv = document.createElement('div');	
+			moveImgDiv.className = 'vis-setting switch';
+		var moveImgMode = document.createElement('input');
+			moveImgMode.id = 'moveImgMode';
+			moveImgMode.type = 'radio';
+			moveImgMode.name = 'imgMode';
+			moveImgMode.checked = true;
+			moveImgMode.className = 'vis-setting switch-input';
+			moveImgMode.addEventListener("change", function(){
+				init();			
+			});
+		var moveImgModePaddel = document.createElement('label');
+			moveImgModePaddel.className = 'vis-setting switch-paddle';
+			moveImgModePaddel.htmlFor = 'moveImgMode';
+		var moveImgModeLabel = document.createElement('label');
+			moveImgModeLabel.htmlFor = 'moveImgMode';
+			moveImgModeLabel.innerHTML = 'Move Mode';
+			moveImgModeLabel.className = 'vis-setting';
+
+	var subDivInput = document.createElement('input');
+		subDivInput.type = 'range';
+		subDivInput.id = 'subDivInput';
+		subDivInput.className = 'vis-setting';
+		subDivInput.min = 1;
+		subDivInput.max = 10;
+		subDivInput.value = 5;
+		subDivInput.addEventListener("change", function(){
+				init();			
+			});
+	var subDivLabel = document.createElement('label');
+		subDivLabel.htmlFor = 'subDivInput';
+		subDivLabel.className = 'vis-setting';
+
+	var tileCountInput = document.createElement('input');
+		tileCountInput.type = 'range';
+		tileCountInput.id = 'tileCountInput';
+		tileCountInput.className = 'vis-setting';
+		tileCountInput.min = 4;
+		tileCountInput.max = 70;
+		tileCountInput.value = 10;
+		tileCountInput.addEventListener("change", function(){
+				init();			
+			});
+	var tileCountLabel = document.createElement('label');
+		tileCountLabel.htmlFor = 'tileCountInput';
+		tileCountLabel.className = 'vis-setting';
+		tileCountLabel.innerHTML = 'Tile Count';
+
+			randomImgDiv.appendChild(randomImgModeLabel);
+			randomImgDiv.appendChild(randomImgMode);
+			randomImgDiv.appendChild(randomImgModePaddel);
+		imgModeDiv.appendChild(randomImgDiv)
+			moveImgDiv.appendChild(moveImgModeLabel);
+			moveImgDiv.appendChild(moveImgMode);
+			moveImgDiv.appendChild(moveImgModePaddel);
+		imgModeDiv.appendChild(moveImgDiv)
+	visSettings.appendChild(imgModeDiv);
+	visSettings.appendChild(subDivLabel);
+	visSettings.appendChild(subDivInput);
+	visSettings.appendChild(tileCountLabel);
+	visSettings.appendChild(tileCountInput);
+
+	
+	var imgMode, tileCount;
+	var counter, initialised, tileCoords; //move mode vars
+	var sumDivisionLevel;
+
+	function init(){
+		canvasCtx.clearRect(0,0,canvWidth,canvHeight);
+		canvasCtx.fillStyle = bgColor;
+		canvasCtx.fillRect(0,0, canvWidth, canvHeight);
+
+		tileCount = 10; //add to GUI
+		if(randomImgMode.checked){
+			subDivLabel.innerHTML = 'Tile Count';
+			tileCountInput.style.display = 'none';
+			tileCountLabel.style.display = 'none';
+			imgMode = 'random';
+		}else if(moveImgMode.checked){
+			subDivLabel.innerHTML = 'Acceleration';
+			tileCountInput.style.display = 'block';
+			tileCountLabel.style.display = 'block';
 			imgMode = 'move';
-						
-			img = new Image();
-			img.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Various_Cactaceae.jpg/800px-Various_Cactaceae.jpg';
-
-			img.onload = function(){
-				if(imgMode === 'random'){
-					startAnimating(5);
-				}else{
-					startAnimating(30);
-				}
-			}
+			tileCount = parseInt(tileCountInput.value);
 		}
-		init();
+		
+		sumDivisionLevel = (parseInt(subDivInput.value)/10)*100;
+		tileCoords = [];
+		initialised = false; 
+		counter = 0;		
+					
+		img = new Image();
+		img.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Various_Cactaceae.jpg/800px-Various_Cactaceae.jpg';
 
-		var da; 
-		function draw(){
-
-			canvasCtx.clearRect(0,0,canvWidth, canvHeight);
-			canvasCtx.fillRect(0,0,canvWidth, canvHeight);
-
-			analyser.getByteFrequencyData(dataArray);
-			da = dataArray[0];
-
+		img.onload = function(){
 			if(imgMode === 'random'){
-				randomTileImg();
+				startAnimating(5);
 			}else{
-				moveTileImg();
+				startAnimating(30);
 			}
 		}
+	}
+	init();
 
-		function randomTileImg(){
+	var da; 
+	function draw(){
 
-			var sumDivisionLevel = 30; //add to GUI
-			var maxTileCount = Math.floor(da/sumDivisionLevel+2);
-			var minTileCount = Math.floor((da/sumDivisionLevel)/2+2);
-			tileCount = Math.floor((Math.random()*maxTileCount)+minTileCount);
-			// console.log('maxTileCount: ' + maxTileCount + ' minTileCount: ' + minTileCount);
-			// console.log('tileCount: ' + tileCount);
+		canvasCtx.clearRect(0,0,canvWidth, canvHeight);
+		canvasCtx.fillRect(0,0,canvWidth, canvHeight);
 
-			for (var i = 0; i < tileCount; i++) {
-				for (var j = 0; j < tileCount; j++){
+		analyser.getByteFrequencyData(dataArray);
+		da = dataArray[0];
 
-					var imgWidth = canvWidth/tileCount;
-					var imgHeight = canvHeight/tileCount;
+		if(imgMode === 'random'){
+			randomTileImg();
+		}else{
+			moveTileImg();
+		}
+	}
 
+	function randomTileImg(){
+
+		var maxTileCount = Math.floor(da/sumDivisionLevel+4);
+		var minTileCount = Math.floor((da/sumDivisionLevel)/2+4);
+		tileCount = Math.floor((Math.random()*maxTileCount)+minTileCount);
+
+		for (var i = 0; i < tileCount; i++) {
+			for (var j = 0; j < tileCount; j++){
+
+				var imgWidth = canvWidth/tileCount;
+				var imgHeight = canvHeight/tileCount;
+
+				var randClipX = Math.floor(Math.random()*(img.width-imgWidth));
+				var randClipY = Math.floor(Math.random()*(img.height-imgHeight));
+
+				canvasCtx.drawImage(img, 	randClipX, randClipY, //clip pos
+											imgWidth, imgHeight, //clip size
+											imgWidth*i, imgHeight*j, //place pos
+											imgWidth, imgHeight); //place size
+
+			}
+		}
+	}
+
+	function moveTileImg(){
+
+		var imgWidth = canvWidth/tileCount;
+		var imgHeight = canvHeight/tileCount;
+
+		var maxTileCount = Math.floor(da/sumDivisionLevel+2);
+		var minTileCount = Math.floor((da/sumDivisionLevel)/2+2);
+		accel = Math.floor((Math.random()*maxTileCount)+minTileCount);
+		// console.log('accel: ' + accel);		
+		
+		for (var i = 0; i < tileCount; i++) {
+			for (var j = 0; j < tileCount; j++){
+
+				if(!initialised){
 					var randClipX = Math.floor(Math.random()*(img.width-imgWidth));
 					var randClipY = Math.floor(Math.random()*(img.height-imgHeight));
-					// console.log('Clip: ' + randClipX + ' ' + randClipY);
-
-					canvasCtx.drawImage(img, 	randClipX, randClipY, //clip pos
-												imgWidth, imgHeight, //clip size
-												imgWidth*i, imgHeight*j, //place pos
-												imgWidth, imgHeight); //place size
-
-				}
-			}
-		}
-
-		var counter = 0;
-		var initialised = false;
-		function moveTileImg(){
-
-			var imgWidth = canvWidth/tileCount;
-			var imgHeight = canvHeight/tileCount;
-
-			var sumDivisionLevel = 50; //add to GUI
-			var maxTileCount = Math.floor(da/sumDivisionLevel+2);
-			var minTileCount = Math.floor((da/sumDivisionLevel)/2+2);
-			accel = Math.floor((Math.random()*maxTileCount)+minTileCount);
-			// console.log('accel: ' + accel);		
-			
-			for (var i = 0; i < tileCount; i++) {
-				for (var j = 0; j < tileCount; j++){
-
-					if(!initialised){
-						var randClipX = Math.floor(Math.random()*(img.width-imgWidth));
-						var randClipY = Math.floor(Math.random()*(img.height-imgHeight));
-						
-						var directionY = Math.floor(Math.random()*2);
-						if(directionY===0) directionY = -1;
-						var directionX = Math.floor(Math.random()*2);
-						if(directionX===0) directionX = -1;
-
-						var coords = { 	x: randClipX, y: randClipY,
-										directX: directionX, directY: directionY};
-						tileCoords.push(coords);
 					
-					}else{
-						randClipX = tileCoords[counter].x;
-						randClipY = tileCoords[counter].y;
-						var newX = randClipX+=(accel*tileCoords[counter].directX);
-						var newY = randClipY+=(accel*tileCoords[counter].directY);
+					var directionY = Math.floor(Math.random()*2);
+					if(directionY===0) directionY = -1;
+					var directionX = Math.floor(Math.random()*2);
+					if(directionX===0) directionX = -1;
 
-						if(newX > img.width-imgWidth || newX < 0){
-							tileCoords[counter].directX *= -1;
-							newX = randClipX+=(accel*tileCoords[counter].directX);
-						}
-						if(newY > img.height-imgHeight || newY < 0){
-							tileCoords[counter].directY *= -1;
-							newY = randClipY+=(accel*tileCoords[counter].directY);
-						}
-						tileCoords[counter].x = newX;
-						tileCoords[counter].y = newY;
-						
-						if(counter+1 >= tileCoords.length){
-							counter = 0;
-						}else{
-							counter++;
-						}
+					var coords = { 	x: randClipX, y: randClipY,
+									directX: directionX, directY: directionY};
+					tileCoords.push(coords);
+				
+				}else{
+					randClipX = tileCoords[counter].x;
+					randClipY = tileCoords[counter].y;
+					
+					var newX = randClipX+=(accel*tileCoords[counter].directX);
+					var newY = randClipY+=(accel*tileCoords[counter].directY);
+					if(newX > img.width-imgWidth || newX < 0){
+						tileCoords[counter].directX *= -1;
+						newX = randClipX+=(accel*tileCoords[counter].directX);
 					}
-					canvasCtx.drawImage(img, 	randClipX, randClipY, //clip pos
-												imgWidth, imgHeight, //clip size
-												imgWidth*i, imgHeight*j, //place pos
-												imgWidth, imgHeight); //place size
+					if(newY > img.height-imgHeight || newY < 0){
+						tileCoords[counter].directY *= -1;
+						newY = randClipY+=(accel*tileCoords[counter].directY);
+					}
+
+					tileCoords[counter].x = newX;
+					tileCoords[counter].y = newY;
+					
+					if(counter+1 >= tileCoords.length){
+						counter = 0;
+					}else{
+						counter++;
+					}
 				}
-			}
-			initialised = true;
-			// console.log('initialised');
-		}
-
-		//for controlling FPS
-		var stop = false;
-		var frameCount = 0;
-		var fps, fpsInterval, startTime, now, then, elapsed;
-
-		function startAnimating(fps){
-			fpsInterval = 1000/fps;
-			then = Date.now();
-			startTime = then;
-			animate();
-		}
-
-		function animate(){
-			if(stop){
-				return;
-			}
-			drawVisual = requestAnimationFrame(animate);
-
-			now = Date.now();
-			elapsed = now - then;
-
-			if(elapsed > fpsInterval){
-				then = now - (elapsed % fpsInterval);
-
-				draw();
+				canvasCtx.drawImage(img, 	randClipX, randClipY, //clip pos
+											imgWidth, imgHeight, //clip size
+											imgWidth*i, imgHeight*j, //place pos
+											imgWidth, imgHeight); //place size
 			}
 		}
+		initialised = true;
+	}
+
+	//for controlling FPS
+	var stop = false;
+	var frameCount = 0;
+	var fps, fpsInterval, startTime, now, then, elapsed;
+
+	function startAnimating(fps){
+		fpsInterval = 1000/fps;
+		then = Date.now();
+		startTime = then;
+		animate();
+	}
+
+	function animate(){
+		if(stop){
+			return;
+		}
+		drawVisual = requestAnimationFrame(animate);
+
+		now = Date.now();
+		elapsed = now - then;
+
+		if(elapsed > fpsInterval){
+			then = now - (elapsed % fpsInterval);
+
+			draw();
+		}
+	}
 }
