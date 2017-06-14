@@ -758,3 +758,154 @@ function pixShuffle(dataArray, bufferLength){
 		}
 	}
 }
+
+
+function imgShuffle(dataArray, bufferLength){
+
+		var tileCount = 10;
+		var tileCoords = [];
+		var imgMode;
+
+		function init(){
+			canvasCtx.clearRect(0,0,canvWidth,canvHeight);
+			canvasCtx.fillStyle = bgColor;
+			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
+
+			imgMode = 'move';
+						
+			img = new Image();
+			img.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Various_Cactaceae.jpg/800px-Various_Cactaceae.jpg';
+
+			img.onload = function(){
+				if(imgMode === 'random'){
+					startAnimating(5);
+				}else{
+					startAnimating(30);
+				}
+			}
+		}
+		init();
+
+
+		function draw(){
+
+			canvasCtx.clearRect(0,0,canvWidth, canvHeight);
+			canvasCtx.fillRect(0,0,canvWidth, canvHeight);
+
+			if(imgMode === 'random'){
+				randomTileImg();
+			}else{
+				moveTileImg();
+			}
+		}
+
+		function randomTileImg(){
+
+			tileCount = Math.floor((Math.random()*20)+2);
+			
+			for (var i = 0; i < tileCount; i++) {
+				for (var j = 0; j < tileCount; j++){
+
+					var imgWidth = canvWidth/tileCount;
+					var imgHeight = canvHeight/tileCount;
+
+					var randClipX = Math.floor(Math.random()*(img.width-imgWidth));
+					var randClipY = Math.floor(Math.random()*(img.height-imgHeight));
+					// console.log('Clip: ' + randClipX + ' ' + randClipY);
+
+					canvasCtx.drawImage(img, 	randClipX, randClipY, //clip pos
+												imgWidth, imgHeight, //clip size
+												imgWidth*i, imgHeight*j, //place pos
+												imgWidth, imgHeight); //place size
+
+				}
+			}
+		}
+
+		var counter = 0;
+		var initialised = false;
+		function moveTileImg(){
+
+			var imgWidth = canvWidth/tileCount;
+			var imgHeight = canvHeight/tileCount;
+
+			var accel = Math.floor(Math.random()*5+1);
+			// accel = 3;		
+			
+			for (var i = 0; i < tileCount; i++) {
+				for (var j = 0; j < tileCount; j++){
+
+					if(!initialised){
+						var randClipX = Math.floor(Math.random()*(img.width-imgWidth));
+						var randClipY = Math.floor(Math.random()*(img.height-imgHeight));
+						
+						var directionY = Math.floor(Math.random()*2);
+						if(directionY===0) directionY = -1;
+						var directionX = Math.floor(Math.random()*2);
+						if(directionX===0) directionX = -1;
+
+						var coords = { 	x: randClipX, y: randClipY,
+										directX: directionX, directY: directionY};
+						tileCoords.push(coords);
+					
+					}else{
+						randClipX = tileCoords[counter].x;
+						randClipY = tileCoords[counter].y;
+						var newX = randClipX+=(accel*tileCoords[counter].directX);
+						var newY = randClipY+=(accel*tileCoords[counter].directY);
+
+						if(newX > img.width-imgWidth || newX < 0){
+							tileCoords[counter].directX *= -1;
+							newX = randClipX+=(accel*tileCoords[counter].directX);
+						}
+						if(newY > img.height-imgHeight || newY < 0){
+							tileCoords[counter].directY *= -1;
+							newY = randClipY+=(accel*tileCoords[counter].directY);
+						}
+						tileCoords[counter].x = newX;
+						tileCoords[counter].y = newY;
+						
+						if(counter+1 >= tileCoords.length){
+							counter = 0;
+						}else{
+							counter++;
+						}
+					}
+					canvasCtx.drawImage(img, 	randClipX, randClipY, //clip pos
+												imgWidth, imgHeight, //clip size
+												imgWidth*i, imgHeight*j, //place pos
+												imgWidth, imgHeight); //place size
+				}
+			}
+			initialised = true;
+			// console.log('initialised');
+		}
+
+		//for controlling FPS
+		var stop = false;
+		var frameCount = 0;
+		var fps, fpsInterval, startTime, now, then, elapsed;
+
+		function startAnimating(fps){
+			fpsInterval = 1000/fps;
+			then = Date.now();
+			startTime = then;
+			animate();
+		}
+
+		function animate(){
+			if(stop){
+				return;
+			}
+			drawVisual = requestAnimationFrame(animate);
+
+			now = Date.now();
+			elapsed = now - then;
+
+			if(elapsed > fpsInterval){
+				then = now - (elapsed % fpsInterval);
+
+				draw();
+			}
+		}
+}

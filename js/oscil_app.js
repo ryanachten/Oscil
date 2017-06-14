@@ -144,6 +144,9 @@ function visualise(visMode){
 	else if(visMode === 'ConcretePoetry'){
 		concretePoetry(dataArray, bufferLength);
 	}
+	else if(visMode === 'ImgShuffle'){
+		imgShuffle(dataArray, bufferLength);
+	}
 	else if(visMode === 'Test'){
 		tests(dataArray, bufferLength); //
 	}
