@@ -880,6 +880,7 @@ function imgShuffle(dataArray, bufferLength){
 					
 		img = new Image();
 		img.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Various_Cactaceae.jpg/800px-Various_Cactaceae.jpg';
+		img.setAttribute('crossOrigin', '');
 
 		img.onload = function(){
 			if(imgMode === 'random'){
@@ -1015,6 +1016,13 @@ function imgShuffle(dataArray, bufferLength){
 			then = now - (elapsed % fpsInterval);
 
 			draw();
+		}
+		if(document.getElementById('visual-select').value !== 'ImgShuffle'){
+			console.log('clearMe');
+			window.cancelAnimationFrame(drawVisual);
+			canvasCtx.clearRect(0,0, canvWidth, canvHeight);
+			canvasCtx.fillStyle = bgColor;
+			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 		}
 	}
 }
