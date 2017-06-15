@@ -240,12 +240,11 @@ function tests(dataArray, bufferLength){
 		var maxSize, minSize;
 		function init(){
 			//greyscale to srokeweight
-			var sampleCount = 8;
-			maxSize = 20;
+			var sampleCount = 32;
+			maxSize = 10;
 			minSize = 0;
 			var counter = 0;
 
-			canvasCtx.strokeStyle = 'black';
 			for (var i = 0; i < canvWidth; i+=sampleCount) {
 				for (var j = 0; j < canvHeight; j+=sampleCount) {
 					imgData = canvas2Ctx.getImageData(i,j, 1,1);
@@ -270,25 +269,17 @@ function tests(dataArray, bufferLength){
 		}
 
 		function draw(){
+
+			canvasCtx.fillStyle = bgColor;
+			canvasCtx.fillRect(0,0,canvWidth, canvHeight);
+			var sizeRand = Math.floor(Math.random()*10+0); //add audio reaction here
+
 			for(var i = 0; i < shapeDataAr.length; i++){
 				
-				var sizeRand = Math.floor(Math.random()*shapeDataAr[i].size/2+0);
-				if(Math.floor(Math.random()*2+1) == 2){
-					// console.log('negative');
-					sizeRand *= -1;
-				}
-
-				shapeDataAr[i].size += sizeRand;
-				// console.log('size1: ' + shapeDataAr[i].size);
-				// console.log('sizeRand: ' + sizeRand);
-				if(shapeDataAr[i].size < minSize) shapeDataAr[i].size = maxSize;
-				if(shapeDataAr[i].size > maxSize) shapeDataAr[i].size = minSize;
-				// console.log('size2: ' + shapeDataAr[i].size);
-				// console.log(' ');
-
+				var tempSize = shapeDataAr[i].size + sizeRand;
 
 				canvasCtx.beginPath();				
-				canvasCtx.arc(shapeDataAr[i].x,shapeDataAr[i].y,shapeDataAr[i].size, 0, Math.PI*2);
+				canvasCtx.arc(shapeDataAr[i].x+(tempSize),shapeDataAr[i].y+(tempSize),tempSize, 0, Math.PI*2);
 				canvasCtx.fillStyle ='rgb('+ shapeDataAr[i].r + ',' + shapeDataAr[i].g + ',' + shapeDataAr[i].b +')';
 				canvasCtx.fill();
 				canvasCtx.closePath();
