@@ -231,18 +231,21 @@ function tests(dataArray, bufferLength){
 		var shapeDataAr = [];
 		img.onload = function(){
 			canvas2Ctx.drawImage(img, 0,0, canvWidth,canvHeight);
-			// imgData = canvasCtx.getImageData(0,0, canvWidth,canvHeight);
-			// data = imgData.data;
-			// greyscale();
 			init();
 		}
  
 		var maxSize, minSize;
+		var shapeMode;
+		var randPerPixel, randMax;
+
 		function init(){
-			//greyscale to srokeweight
-			var sampleCount = 32;
-			maxSize = 10;
+			var sampleCount = 16;
+			maxSize = 5;
 			minSize = 0;
+			shapeMode = 'ellipse';
+			randPerPixel = true;
+			randMax = 20;
+
 			var counter = 0;
 
 			for (var i = 0; i < canvWidth; i+=sampleCount) {
@@ -252,36 +255,61 @@ function tests(dataArray, bufferLength){
 					var avg = (data[0] + data[1] + data[2])/3;
 					var size = (data[counter]/255)*maxSize+minSize;
 					
-					var shapeData = {	r: data[0],
-										g: data[1],
-										b: data[2],
+					var shapeData = {	r: data[0],	g: data[1], b: data[2],
 										avg: avg,
 										size: size,
-										x: i,
-										y: j
+										x: i, y: j
 					}
 					shapeDataAr.push(shapeData);
 				}
 			}
-			
 			startAnimating(5);
-			// draw();
 		}
 
 		function draw(){
 
 			canvasCtx.fillStyle = bgColor;
 			canvasCtx.fillRect(0,0,canvWidth, canvHeight);
-			var sizeRand = Math.floor(Math.random()*10+0); //add audio reaction here
+
+			var sizeRand;
+			if(!randPerPixel){
+				sizeRand = Math.floor(Math.random()*randMax+0); //add audio reaction here
+			}
+			
 
 			for(var i = 0; i < shapeDataAr.length; i++){
 				
+				if(shapeMode === 'ellipse'){
+					ellipseMode(i);
+				}else{
+					lineMode(i);
+				}
+			}
+			
+			function ellipseMode(i){
+				if(randPerPixel){
+					sizeRand = Math.floor(Math.random()*randMax+0); //add audio reaction here
+				}
 				var tempSize = shapeDataAr[i].size + sizeRand;
 
 				canvasCtx.beginPath();				
 				canvasCtx.arc(shapeDataAr[i].x+(tempSize),shapeDataAr[i].y+(tempSize),tempSize, 0, Math.PI*2);
 				canvasCtx.fillStyle ='rgb('+ shapeDataAr[i].r + ',' + shapeDataAr[i].g + ',' + shapeDataAr[i].b +')';
 				canvasCtx.fill();
+				canvasCtx.closePath();
+			}
+
+			function lineMode(i){
+				if(randPerPixel){
+					sizeRand = Math.floor(Math.random()*randMax+0); //add audio reaction here
+				}
+				var tempSize = shapeDataAr[i].size + sizeRand;
+				canvasCtx.lineWidth = tempSize;
+				canvasCtx.beginPath();
+				canvasCtx.moveTo(shapeDataAr[i].x,shapeDataAr[i].y);
+				canvasCtx.lineTo(shapeDataAr[i].x+(tempSize*1.5),shapeDataAr[i].y+(tempSize*1.5));				
+				canvasCtx.strokeStyle ='rgb('+ shapeDataAr[i].r + ',' + shapeDataAr[i].g + ',' + shapeDataAr[i].b +')';
+				canvasCtx.stroke();
 				canvasCtx.closePath();
 			}
 		}
