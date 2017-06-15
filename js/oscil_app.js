@@ -147,6 +147,9 @@ function visualise(visMode){
 	else if(visMode === 'ImgShuffle'){
 		imgShuffle(dataArray, bufferLength);
 	}
+	else if(visMode === 'PixelPainting'){
+		pixelPainting(dataArray, bufferLength);
+	}
 	else if(visMode === 'Test'){
 		tests(dataArray, bufferLength); //
 	}

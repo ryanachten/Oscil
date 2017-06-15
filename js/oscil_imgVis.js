@@ -1026,3 +1026,135 @@ function imgShuffle(dataArray, bufferLength){
 		}
 	}
 }
+
+
+function pixelPainting(dataArray, bufferLength){
+
+	var canvas2 = document.createElement('canvas');
+		canvas2.width = $(window).width(); canvas2.height = $(window).height();
+		var canv2Width = canvas2.width; var canv2Height = canvas2.height;
+		var canvas2Ctx = canvas2.getContext('2d');
+		document.getElementById('container').appendChild(canvas2);
+		canvas2.style.display = 'none';
+
+	var imgUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Vasnetsov_Frog_Princess.jpg/800px-Vasnetsov_Frog_Princess.jpg';
+	imgUrl += ('?' + new Date().getTime());
+	var img = new Image();
+	img.src = imgUrl;
+	img.width = canv2Width;
+	img.height = canv2Height;
+	img.setAttribute('crossOrigin', '');
+
+	var imgData, data;
+	var shapeDataAr = [];
+	img.onload = function(){
+		canvas2Ctx.drawImage(img, 0,0, canvWidth,canvHeight);
+		init();
+	}
+
+	var maxSize, minSize;
+	var shapeMode;
+	var randPerPixel, randMax;
+
+	function init(){
+		var sampleCount = 16;
+		maxSize = 5;
+		minSize = 0;
+		shapeMode = 'ellipse';
+		randPerPixel = true;
+		randMax = 20;
+
+		var counter = 0;
+
+		for (var i = 0; i < canvWidth; i+=sampleCount) {
+			for (var j = 0; j < canvHeight; j+=sampleCount) {
+				imgData = canvas2Ctx.getImageData(i,j, 1,1);
+				var data = imgData.data;
+				var avg = (data[0] + data[1] + data[2])/3;
+				var size = (data[counter]/255)*maxSize+minSize;
+				
+				var shapeData = {	r: data[0],	g: data[1], b: data[2],
+									avg: avg,
+									size: size,
+									x: i, y: j
+				}
+				shapeDataAr.push(shapeData);
+			}
+		}
+		startAnimating(5);
+	}
+
+	function draw(){
+
+		canvasCtx.fillStyle = bgColor;
+		canvasCtx.fillRect(0,0,canvWidth, canvHeight);
+
+		var sizeRand;
+		if(!randPerPixel){
+			sizeRand = Math.floor(Math.random()*randMax+0); //add audio reaction here
+		}
+		
+		for(var i = 0; i < shapeDataAr.length; i++){
+			
+			if(shapeMode === 'ellipse'){
+				ellipseMode(i);
+			}else{
+				lineMode(i);
+			}
+		}
+		
+		function ellipseMode(i){
+			if(randPerPixel){
+				sizeRand = Math.floor(Math.random()*randMax+0); //add audio reaction here
+			}
+			var tempSize = shapeDataAr[i].size + sizeRand;
+
+			canvasCtx.beginPath();				
+			canvasCtx.arc(shapeDataAr[i].x+(tempSize),shapeDataAr[i].y+(tempSize),tempSize, 0, Math.PI*2);
+			canvasCtx.fillStyle ='rgb('+ shapeDataAr[i].r + ',' + shapeDataAr[i].g + ',' + shapeDataAr[i].b +')';
+			canvasCtx.fill();
+			canvasCtx.closePath();
+		}
+
+		function lineMode(i){
+			if(randPerPixel){
+				sizeRand = Math.floor(Math.random()*randMax+0); //add audio reaction here
+			}
+			var tempSize = shapeDataAr[i].size + sizeRand;
+			canvasCtx.lineWidth = tempSize;
+			canvasCtx.beginPath();
+			canvasCtx.moveTo(shapeDataAr[i].x,shapeDataAr[i].y);
+			canvasCtx.lineTo(shapeDataAr[i].x+(tempSize*1.5),shapeDataAr[i].y+(tempSize*1.5));				
+			canvasCtx.strokeStyle ='rgb('+ shapeDataAr[i].r + ',' + shapeDataAr[i].g + ',' + shapeDataAr[i].b +')';
+			canvasCtx.stroke();
+			canvasCtx.closePath();
+		}
+	}
+
+	var stop = false;
+	var frameCount = 0;
+	var fps, fpsInterval, startTime, now, then, elapsed;
+
+	function startAnimating(fps){
+		fpsInterval = 1000/fps;
+		then = Date.now();
+		startTime = then;
+		animate();
+	}
+
+	function animate(){
+		if(stop){
+			return;
+		}
+		drawVisual = requestAnimationFrame(animate);
+
+		now = Date.now();
+		elapsed = now - then;
+
+		if(elapsed > fpsInterval){
+			then = now - (elapsed % fpsInterval);
+
+			draw();
+		}
+	}
+}
