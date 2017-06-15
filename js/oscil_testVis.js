@@ -228,44 +228,97 @@ function tests(dataArray, bufferLength){
 		img.setAttribute('crossOrigin', '');
 
 		var imgData, data;
+		var shapeDataAr = [];
 		img.onload = function(){
 			canvas2Ctx.drawImage(img, 0,0, canvWidth,canvHeight);
 			// imgData = canvasCtx.getImageData(0,0, canvWidth,canvHeight);
 			// data = imgData.data;
 			// greyscale();
-			draw();
+			init();
 		}
-
-		function greyscale(){
-			for (var i = 0; i < data.length; i+=4) {
-				var avg = (data[i] + data[i+1] + data[i+2])/3;
-				data[i] =   avg; //red * weighting
-				data[i+1] = avg; //green * weighting
-				data[i+2] = avg; //blue * weighting
-			};
-			// canvasCtx.putImageData(imgData, 0,0);
-			// canvasCtx.clearRect(0,0,canvWidth, canvHeight);
-		}
-
-		function draw(){
+ 
+		var maxSize, minSize;
+		function init(){
 			//greyscale to srokeweight
-			var maxSize = 4;
-			var minSize = 0;
+			var sampleCount = 8;
+			maxSize = 20;
+			minSize = 0;
 			var counter = 0;
+
 			canvasCtx.strokeStyle = 'black';
-			for (var i = 0; i < canvWidth; i+=8) {
-				for (var j = 0; j < canvHeight; j+=8) {
+			for (var i = 0; i < canvWidth; i+=sampleCount) {
+				for (var j = 0; j < canvHeight; j+=sampleCount) {
 					imgData = canvas2Ctx.getImageData(i,j, 1,1);
 					var data = imgData.data;
 					var avg = (data[0] + data[1] + data[2])/3;
 					var size = (data[counter]/255)*maxSize+minSize;
-
-					canvasCtx.beginPath();
-					canvasCtx.arc(i,j,size, 0, Math.PI*2);
-					canvasCtx.fillStyle ='rgb('+ data[0] + ',' + data[1] + ',' + data[2] +')';
-					canvasCtx.fill();
-					canvasCtx.closePath();
+					
+					var shapeData = {	r: data[0],
+										g: data[1],
+										b: data[2],
+										avg: avg,
+										size: size,
+										x: i,
+										y: j
+					}
+					shapeDataAr.push(shapeData);
 				}
+			}
+			
+			startAnimating(5);
+			// draw();
+		}
+
+		function draw(){
+			for(var i = 0; i < shapeDataAr.length; i++){
+				
+				var sizeRand = Math.floor(Math.random()*shapeDataAr[i].size/2+0);
+				if(Math.floor(Math.random()*2+1) == 2){
+					// console.log('negative');
+					sizeRand *= -1;
+				}
+
+				shapeDataAr[i].size += sizeRand;
+				// console.log('size1: ' + shapeDataAr[i].size);
+				// console.log('sizeRand: ' + sizeRand);
+				if(shapeDataAr[i].size < minSize) shapeDataAr[i].size = maxSize;
+				if(shapeDataAr[i].size > maxSize) shapeDataAr[i].size = minSize;
+				// console.log('size2: ' + shapeDataAr[i].size);
+				// console.log(' ');
+
+
+				canvasCtx.beginPath();				
+				canvasCtx.arc(shapeDataAr[i].x,shapeDataAr[i].y,shapeDataAr[i].size, 0, Math.PI*2);
+				canvasCtx.fillStyle ='rgb('+ shapeDataAr[i].r + ',' + shapeDataAr[i].g + ',' + shapeDataAr[i].b +')';
+				canvasCtx.fill();
+				canvasCtx.closePath();
+			}
+		}
+
+		var stop = false;
+		var frameCount = 0;
+		var fps, fpsInterval, startTime, now, then, elapsed;
+
+		function startAnimating(fps){
+			fpsInterval = 1000/fps;
+			then = Date.now();
+			startTime = then;
+			animate();
+		}
+
+		function animate(){
+			if(stop){
+				return;
+			}
+			drawVisual = requestAnimationFrame(animate);
+
+			now = Date.now();
+			elapsed = now - then;
+
+			if(elapsed > fpsInterval){
+				then = now - (elapsed % fpsInterval);
+
+				draw();
 			}
 		}
 	}
