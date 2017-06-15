@@ -1060,9 +1060,9 @@ function pixelPainting(dataArray, bufferLength){
 		var sampleCount = 16;
 		maxSize = 5;
 		minSize = 0;
-		shapeMode = 'ellipse';
+		shapeMode = 'line';
 		randPerPixel = true;
-		randMax = 20;
+		// randMax = 20;
 
 		var counter = 0;
 
@@ -1081,17 +1081,23 @@ function pixelPainting(dataArray, bufferLength){
 				shapeDataAr.push(shapeData);
 			}
 		}
-		startAnimating(5);
+		startAnimating(10);
 	}
 
+	var da;
 	function draw(){
 
 		canvasCtx.fillStyle = bgColor;
 		canvasCtx.fillRect(0,0,canvWidth, canvHeight);
 
+		
+		analyser.getByteFrequencyData(dataArray);
+		da = dataArray[0];
+		randMax = 20;
+
 		var sizeRand;
 		if(!randPerPixel){
-			sizeRand = Math.floor(Math.random()*randMax+0); //add audio reaction here
+			sizeRand = Math.floor(Math.random()*(da/randMax)+(da/randMax)/2);
 		}
 		
 		for(var i = 0; i < shapeDataAr.length; i++){
@@ -1105,7 +1111,7 @@ function pixelPainting(dataArray, bufferLength){
 		
 		function ellipseMode(i){
 			if(randPerPixel){
-				sizeRand = Math.floor(Math.random()*randMax+0); //add audio reaction here
+				sizeRand = Math.floor(Math.random()*(da/randMax)+(da/randMax)/2);
 			}
 			var tempSize = shapeDataAr[i].size + sizeRand;
 
@@ -1118,7 +1124,7 @@ function pixelPainting(dataArray, bufferLength){
 
 		function lineMode(i){
 			if(randPerPixel){
-				sizeRand = Math.floor(Math.random()*randMax+0); //add audio reaction here
+				sizeRand = Math.floor(Math.random()*(da/randMax)+(da/randMax)/2);
 			}
 			var tempSize = shapeDataAr[i].size + sizeRand;
 			canvasCtx.lineWidth = tempSize;
