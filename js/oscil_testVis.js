@@ -210,4 +210,65 @@ function tests(dataArray, bufferLength){
 	}
 	// typeDither();
 
+	function pixelPainting(){
+
+		var canvas2 = document.createElement('canvas');
+			canvas2.width = $(window).width(); canvas2.height = $(window).height();
+			var canv2Width = canvas2.width; var canv2Height = canvas2.height;
+			var canvas2Ctx = canvas2.getContext('2d');
+			document.getElementById('container').appendChild(canvas2);
+			canvas2.style.display = 'none';
+
+		var imgUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Vasnetsov_Frog_Princess.jpg/800px-Vasnetsov_Frog_Princess.jpg';
+		imgUrl += ('?' + new Date().getTime());
+		var img = new Image();
+		img.src = imgUrl;
+		img.width = canv2Width;
+		img.height = canv2Height;
+		img.setAttribute('crossOrigin', '');
+
+		var imgData, data;
+		img.onload = function(){
+			canvas2Ctx.drawImage(img, 0,0, canvWidth,canvHeight);
+			// imgData = canvasCtx.getImageData(0,0, canvWidth,canvHeight);
+			// data = imgData.data;
+			// greyscale();
+			draw();
+		}
+
+		function greyscale(){
+			for (var i = 0; i < data.length; i+=4) {
+				var avg = (data[i] + data[i+1] + data[i+2])/3;
+				data[i] =   avg; //red * weighting
+				data[i+1] = avg; //green * weighting
+				data[i+2] = avg; //blue * weighting
+			};
+			// canvasCtx.putImageData(imgData, 0,0);
+			// canvasCtx.clearRect(0,0,canvWidth, canvHeight);
+		}
+
+		function draw(){
+			//greyscale to srokeweight
+			var maxSize = 4;
+			var minSize = 0;
+			var counter = 0;
+			canvasCtx.strokeStyle = 'black';
+			for (var i = 0; i < canvWidth; i+=8) {
+				for (var j = 0; j < canvHeight; j+=8) {
+					imgData = canvas2Ctx.getImageData(i,j, 1,1);
+					var data = imgData.data;
+					var avg = (data[0] + data[1] + data[2])/3;
+					var size = (data[counter]/255)*maxSize+minSize;
+
+					canvasCtx.beginPath();
+					canvasCtx.arc(i,j,size, 0, Math.PI*2);
+					canvasCtx.fillStyle ='rgb('+ data[0] + ',' + data[1] + ',' + data[2] +')';
+					canvasCtx.fill();
+					canvasCtx.closePath();
+				}
+			}
+		}
+	}
+	pixelPainting();
+
 }
