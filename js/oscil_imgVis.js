@@ -1091,7 +1091,52 @@ function pixelPainting(dataArray, bufferLength){
 		var randPerPixLabel = document.createElement('label');
 			randPerPixLabel.htmlFor = 'randPerPixCheck';
 			randPerPixLabel.innerHTML = 'Random Per Pix';
-			randPerPixLabel.className = 'vis-setting';	
+			randPerPixLabel.className = 'vis-setting';
+
+	var sampleSizeInput = document.createElement('input');
+		sampleSizeInput.type = 'range';
+		sampleSizeInput.id = 'sampleSizeInput';
+		sampleSizeInput.className = 'vis-setting';
+		sampleSizeInput.min = 12;
+		sampleSizeInput.max = 60;
+		sampleSizeInput.value = 16;
+		sampleSizeInput.addEventListener("change", function(){
+				init();			
+			});
+	var sampleSizeLabel = document.createElement('label');
+		sampleSizeLabel.htmlFor = 'sampleSizeInput';
+		sampleSizeLabel.className = 'vis-setting';
+		sampleSizeLabel.innerHTML = 'Sample Size';	
+
+	var maxSizeInput = document.createElement('input');
+		maxSizeInput.type = 'range';
+		maxSizeInput.id = 'maxSizeInput';
+		maxSizeInput.className = 'vis-setting';
+		maxSizeInput.min = 2;
+		maxSizeInput.max = 30;
+		maxSizeInput.value = 5;
+		maxSizeInput.addEventListener("change", function(){
+				init();			
+			});
+	var maxSizeLabel = document.createElement('label');
+		maxSizeLabel.htmlFor = 'maxSizeInput';
+		maxSizeLabel.className = 'vis-setting';
+		maxSizeLabel.innerHTML = 'Max Seed Size';
+
+	var maxRandSizeInput = document.createElement('input');
+		maxRandSizeInput.type = 'range';
+		maxRandSizeInput.id = 'maxRandSizeInput';
+		maxRandSizeInput.className = 'vis-setting';
+		maxRandSizeInput.min = 2;
+		maxRandSizeInput.max = 50;
+		maxRandSizeInput.value = 20;
+		maxRandSizeInput.addEventListener("change", function(){
+				init();			
+			});
+	var maxRandSizeLabel = document.createElement('label');
+		maxRandSizeLabel.htmlFor = 'maxRandSizeInput';
+		maxRandSizeLabel.className = 'vis-setting';
+		maxRandSizeLabel.innerHTML = 'Minimise Growth';	
 
 			lineModeDiv.appendChild(lineModeModeLabel);
 			lineModeDiv.appendChild(lineInputMode);
@@ -1104,17 +1149,35 @@ function pixelPainting(dataArray, bufferLength){
 		randModeDiv.appendChild(randPerPixLabel);
 		randModeDiv.appendChild(randPerPixCheck);
 		randModeDiv.appendChild(randPerPixPaddel);
+	visSettings.appendChild(sampleSizeLabel);
+	visSettings.appendChild(sampleSizeInput);
+	visSettings.appendChild(maxSizeLabel);
+	visSettings.appendChild(maxSizeInput);
+	visSettings.appendChild(maxRandSizeLabel);
+	visSettings.appendChild(maxRandSizeInput);
 	visSettings.appendChild(shapeModeDiv);
 	visSettings.appendChild(randModeDiv);
 
 
 	var canvas2 = document.createElement('canvas');
+		canvas2.id = 'canvas2';
 		canvas2.width = $(window).width(); canvas2.height = $(window).height();
 		var canv2Width = canvas2.width; var canv2Height = canvas2.height;
 		var canvas2Ctx = canvas2.getContext('2d');
 		document.getElementById('container').appendChild(canvas2);
 		canvas2.style.display = 'none';
 
+	function removeCanv(){
+		if(document.getElementById('visual-select').value !== 'PixelPainting'){
+			console.log('Remove Canv2');
+			$("#canvas2" ).remove();//not working
+			window.cancelAnimationFrame(drawVisual);
+			document.getElementById('visual-select').removeEventListener("change", removeCanv);
+		}
+	}
+
+	document.getElementById('visual-select').addEventListener("change", removeCanv);
+	
 	var imgUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Antonio_de_Pereda_-_El_sue%C3%B1o_del_caballero_-_Google_Art_Project.jpg/640px-Antonio_de_Pereda_-_El_sue%C3%B1o_del_caballero_-_Google_Art_Project.jpg';
 	imgUrl += ('?' + new Date().getTime());
 	var img = new Image();
@@ -1136,9 +1199,10 @@ function pixelPainting(dataArray, bufferLength){
 
 	function init(){
 		shapeDataAr = [];
-		var sampleCount = 16;
-		maxSize = 5;
+		var sampleCount = parseInt(sampleSizeInput.value);
+		maxSize = parseInt(maxSizeInput.value);
 		minSize = 0;
+		randMax = parseInt(maxRandSizeInput.value);
 		if(ellipseModeInput.checked){
 			shapeMode = 'ellipse';
 		}
@@ -1147,7 +1211,6 @@ function pixelPainting(dataArray, bufferLength){
 		}
 		randPerPixel = false;
 		if(randPerPixCheck.checked) randPerPixel = true;
-		randMax = 20;
 
 		for (var i = 0; i < canvWidth; i+=sampleCount) {
 			for (var j = 0; j < canvHeight; j+=sampleCount) {
