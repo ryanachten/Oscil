@@ -1241,8 +1241,9 @@ function pixelPainting(dataArray, bufferLength){
 	var da;
 	function draw(){
 
+		canvasCtx.clearRect(0,0, canvWidth, canvHeight);
 		canvasCtx.fillStyle = bgColor;
-		canvasCtx.fillRect(0,0,canvWidth, canvHeight);
+		canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
 		analyser.getByteFrequencyData(dataArray);
 		da = dataArray[0];
@@ -1321,6 +1322,7 @@ function pixelPainting(dataArray, bufferLength){
 			canvasCtx.fillStyle = bgColor;
 			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 			window.cancelAnimationFrame(drawVisual);
+			// TODO: still not working
 		}
 	}
 }
