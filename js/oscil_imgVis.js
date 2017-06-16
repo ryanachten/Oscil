@@ -1030,6 +1030,84 @@ function imgShuffle(dataArray, bufferLength){
 
 function pixelPainting(dataArray, bufferLength){
 
+	//Runtime UI stuff
+	var visSettings	= document.getElementById('vis-settings');
+		visSettings.style.display = 'block';
+
+	var shapeModeDiv = document.createElement('form');
+			shapeModeDiv.className = 'vis-setting';
+
+	var ellipseDiv = document.createElement('div');	
+			ellipseDiv.className = 'vis-setting switch';
+		var ellipseModeInput = document.createElement('input');
+			ellipseModeInput.id = 'ellipseModeInput';
+			ellipseModeInput.type = 'radio';
+			ellipseModeInput.name = 'shapeMode';
+			ellipseModeInput.className = 'vis-setting switch-input';
+			ellipseModeInput.checked = true;
+			ellipseModeInput.addEventListener("change", function(){
+				init();			
+			});
+		var ellipseModePaddel = document.createElement('label');
+			ellipseModePaddel.className = 'vis-setting switch-paddle';
+			ellipseModePaddel.htmlFor = 'ellipseModeInput';
+		var ellipseModeLabel = document.createElement('label');
+			ellipseModeLabel.htmlFor = 'ellipseModeInput';
+			ellipseModeLabel.innerHTML = 'Ellipse Mode';
+			ellipseModeLabel.className = 'vis-setting';
+
+		var lineModeDiv = document.createElement('div');	
+			lineModeDiv.className = 'vis-setting switch';
+		var lineInputMode = document.createElement('input');
+			lineInputMode.id = 'lineInputMode';
+			lineInputMode.type = 'radio';
+			lineInputMode.name = 'shapeMode';
+			lineInputMode.className = 'vis-setting switch-input';
+			lineInputMode.addEventListener("change", function(){
+				init();			
+			});
+		var lineModeModePaddel = document.createElement('label');
+			lineModeModePaddel.className = 'vis-setting switch-paddle';
+			lineModeModePaddel.htmlFor = 'lineInputMode';
+		var lineModeModeLabel = document.createElement('label');
+			lineModeModeLabel.htmlFor = 'lineInputMode';
+			lineModeModeLabel.innerHTML = 'Line Mode';
+			lineModeModeLabel.className = 'vis-setting';
+
+
+	var randModeDiv = document.createElement('div');
+			randModeDiv.className = 'vis-setting';
+		var randPerPixCheck = document.createElement('input');
+			randPerPixCheck.id = 'randPerPixCheck';
+			randPerPixCheck.type = 'checkbox';
+			randPerPixCheck.className = 'vis-setting switch-input';
+			randPerPixCheck.checked = true;
+			randPerPixCheck.addEventListener("change", function(){
+				init();			
+			});
+		var randPerPixPaddel = document.createElement('label');
+			randPerPixPaddel.className = 'vis-setting switch-paddle';
+			randPerPixPaddel.htmlFor = 'randPerPixCheck';
+		var randPerPixLabel = document.createElement('label');
+			randPerPixLabel.htmlFor = 'randPerPixCheck';
+			randPerPixLabel.innerHTML = 'Random Per Pix';
+			randPerPixLabel.className = 'vis-setting';	
+
+			lineModeDiv.appendChild(lineModeModeLabel);
+			lineModeDiv.appendChild(lineInputMode);
+			lineModeDiv.appendChild(lineModeModePaddel);
+		shapeModeDiv.appendChild(lineModeDiv);
+			ellipseDiv.appendChild(ellipseModeLabel);
+			ellipseDiv.appendChild(ellipseModeInput);
+			ellipseDiv.appendChild(ellipseModePaddel);
+		shapeModeDiv.appendChild(ellipseDiv);
+		randModeDiv.appendChild(randPerPixLabel);
+		randModeDiv.appendChild(randPerPixCheck);
+		randModeDiv.appendChild(randPerPixPaddel);
+	visSettings.appendChild(shapeModeDiv);
+	visSettings.appendChild(randModeDiv);
+
+
 	var canvas2 = document.createElement('canvas');
 		canvas2.width = $(window).width(); canvas2.height = $(window).height();
 		var canv2Width = canvas2.width; var canv2Height = canvas2.height;
@@ -1037,7 +1115,7 @@ function pixelPainting(dataArray, bufferLength){
 		document.getElementById('container').appendChild(canvas2);
 		canvas2.style.display = 'none';
 
-	var imgUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Vasnetsov_Frog_Princess.jpg/800px-Vasnetsov_Frog_Princess.jpg';
+	var imgUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Antonio_de_Pereda_-_El_sue%C3%B1o_del_caballero_-_Google_Art_Project.jpg/640px-Antonio_de_Pereda_-_El_sue%C3%B1o_del_caballero_-_Google_Art_Project.jpg';
 	imgUrl += ('?' + new Date().getTime());
 	var img = new Image();
 	img.src = imgUrl;
@@ -1046,32 +1124,37 @@ function pixelPainting(dataArray, bufferLength){
 	img.setAttribute('crossOrigin', '');
 
 	var imgData, data;
-	var shapeDataAr = [];
 	img.onload = function(){
 		canvas2Ctx.drawImage(img, 0,0, canvWidth,canvHeight);
 		init();
 	}
 
+	var shapeDataAr;
 	var maxSize, minSize;
 	var shapeMode;
 	var randPerPixel, randMax;
 
 	function init(){
+		shapeDataAr = [];
 		var sampleCount = 16;
 		maxSize = 5;
 		minSize = 0;
-		shapeMode = 'line';
-		randPerPixel = true;
-		// randMax = 20;
-
-		var counter = 0;
+		if(ellipseModeInput.checked){
+			shapeMode = 'ellipse';
+		}
+		else{
+			shapeMode = 'line';
+		}
+		randPerPixel = false;
+		if(randPerPixCheck.checked) randPerPixel = true;
+		randMax = 20;
 
 		for (var i = 0; i < canvWidth; i+=sampleCount) {
 			for (var j = 0; j < canvHeight; j+=sampleCount) {
 				imgData = canvas2Ctx.getImageData(i,j, 1,1);
 				var data = imgData.data;
 				var avg = (data[0] + data[1] + data[2])/3;
-				var size = (data[counter]/255)*maxSize+minSize;
+				var size = (avg/255)*maxSize+minSize;
 				
 				var shapeData = {	r: data[0],	g: data[1], b: data[2],
 									avg: avg,
@@ -1090,10 +1173,8 @@ function pixelPainting(dataArray, bufferLength){
 		canvasCtx.fillStyle = bgColor;
 		canvasCtx.fillRect(0,0,canvWidth, canvHeight);
 
-		
 		analyser.getByteFrequencyData(dataArray);
 		da = dataArray[0];
-		randMax = 20;
 
 		var sizeRand;
 		if(!randPerPixel){
