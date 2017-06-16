@@ -1170,8 +1170,12 @@ function pixelPainting(dataArray, bufferLength){
 	function removeCanv(){
 		if(document.getElementById('visual-select').value !== 'PixelPainting'){
 			console.log('Remove Canv2');
+			
+			// canvasCtx.clearRect(0,0, canvWidth, canvHeight);
+			// canvasCtx.fillStyle = bgColor;
+			// canvasCtx.fillRect(0,0, canvWidth, canvHeight);
+			// window.cancelAnimationFrame(drawVisual);
 			$("#canvas2" ).remove();//not working
-			window.cancelAnimationFrame(drawVisual);
 			document.getElementById('visual-select').removeEventListener("change", removeCanv);
 		}
 	}
@@ -1198,6 +1202,10 @@ function pixelPainting(dataArray, bufferLength){
 	var randPerPixel, randMax;
 
 	function init(){
+		canvasCtx.clearRect(0,0, canvWidth, canvHeight);
+		canvasCtx.fillStyle = bgColor;
+		canvasCtx.fillRect(0,0, canvWidth, canvHeight);
+
 		shapeDataAr = [];
 		var sampleCount = parseInt(sampleSizeInput.value);
 		maxSize = parseInt(maxSizeInput.value);
@@ -1305,6 +1313,14 @@ function pixelPainting(dataArray, bufferLength){
 			then = now - (elapsed % fpsInterval);
 
 			draw();
+		}
+		if(document.getElementById('visual-select').value !== 'PixelPainting'){
+			console.log('Remove Canv2');
+			
+			canvasCtx.clearRect(0,0, canvWidth, canvHeight);
+			canvasCtx.fillStyle = bgColor;
+			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
+			window.cancelAnimationFrame(drawVisual);
 		}
 	}
 }
