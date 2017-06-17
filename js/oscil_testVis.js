@@ -398,13 +398,73 @@ function tests(dataArray, bufferLength){
 
 	function noiseAgent(){
 
-		var noiseStrength = 10;
-		var noiseScale = 500;
+		var visSettings	= document.getElementById('vis-settings');
+		visSettings.style.display = 'block';
+
+		var noiseScaleInput = document.createElement('input');
+			noiseScaleInput.type = 'range';
+			noiseScaleInput.id = 'noiseScaleInput';
+			noiseScaleInput.className = 'vis-setting';
+			noiseScaleInput.min = 100;
+			noiseScaleInput.max = 1000;
+			noiseScaleInput.value = 500;
+			noiseScaleInput.addEventListener("change", function(){
+				init();			
+			});
+		var noiseScaleLabel = document.createElement('label');
+			noiseScaleLabel.htmlFor = 'noiseScaleInput';
+			noiseScaleLabel.className = 'vis-setting';
+			noiseScaleLabel.className = 'vis-setting';
+			noiseScaleLabel.innerHTML = 'Noise Scale';
+
+		var noiseStrengthInput = document.createElement('input');
+			noiseStrengthInput.type = 'range';
+			noiseStrengthInput.id = 'noiseStrengthInput';
+			noiseStrengthInput.className = 'vis-setting';
+			noiseStrengthInput.min = 1;
+			noiseStrengthInput.max = 200;
+			noiseStrengthInput.value = 10;
+			noiseStrengthInput.addEventListener("change", function(){
+				init();			
+			});
+		var noiseStrengthLabel = document.createElement('label');
+			noiseStrengthLabel.htmlFor = 'noiseStrengthInput';
+			noiseStrengthLabel.className = 'vis-setting';
+			noiseStrengthLabel.className = 'vis-setting';
+			noiseStrengthLabel.innerHTML = 'Noise Strength';
+
+		var agentCountInput = document.createElement('input');
+			agentCountInput.type = 'range';
+			agentCountInput.id = 'agentCountInput';
+			agentCountInput.className = 'vis-setting';
+			agentCountInput.min = 1;
+			agentCountInput.max = 1000;
+			agentCountInput.value = 500;
+			agentCountInput.addEventListener("change", function(){
+				init();			
+			});
+		var agentCountLabel = document.createElement('label');
+			agentCountLabel.htmlFor = 'agentCountInput';
+			agentCountLabel.className = 'vis-setting';
+			agentCountLabel.className = 'vis-setting';
+			agentCountLabel.innerHTML = 'Agent Count';
+
+		visSettings.appendChild(noiseScaleLabel);
+		visSettings.appendChild(noiseScaleInput);
+		visSettings.appendChild(noiseStrengthLabel);
+		visSettings.appendChild(noiseStrengthInput);
+		visSettings.appendChild(agentCountLabel);
+		visSettings.appendChild(agentCountInput);
+
+
+		var size = 1;
+		var noiseScale;
+		var noiseStrength;
 		var strokeWidth = 0.3;
 		canvasCtx.strokeStyle = 'black';
-		var agents = [];
-		var agentCount = 500;
-
+		var agents;
+		var agentCount;
+		
 
 		PerlinNoise = new function() {
 
@@ -473,10 +533,9 @@ function tests(dataArray, bufferLength){
 			this.update1 = function(){
 				var normX = this.pX / noiseScale; //canvWidth;
 				var normY = this.pY / noiseScale; //canvHeight;
-				var size = 10;
+				
 				var n = PerlinNoise.noise( size*normX, size*normY, .8); //not sure how to apply noise scale here
 				this.angle = n*noiseStrength; //not sure?
-				
 				this.pX += Math.cos(this.angle) * this.stepSize;
 				this.pY += Math.sin(this.angle) * this.stepSize;
 
@@ -508,7 +567,6 @@ function tests(dataArray, bufferLength){
 			this.update2 = function(){
 				var normX = this.pX / noiseScale; //canvWidth;
 				var normY = this.pY / noiseScale; //canvHeight;
-				var size = 20;
 				var n = PerlinNoise.noise( size*normX, size*normY, .8); //not sure how to apply noise scale here
 				this.angle = n*24; //not sure why 24?
 				this.angle = (this.angle - Math.round(this.angle)) * noiseStrength;
@@ -516,11 +574,10 @@ function tests(dataArray, bufferLength){
 				this.pX += Math.cos(this.angle) * this.stepSize;
 				this.pY += Math.sin(this.angle) * this.stepSize;
 
-				if(	this.pX < -10 || 
-					this.pX > canvWidth+10 ||
-					this.pY < -10 ||
-					this.pY > canvHeight+10
-					) this.isOutside = true; //not sure? also why -10?
+				if(	this.pX < -10) this.isOutside = true; 
+				if( this.pX > canvWidth+10) this.isOutside = true; 
+				if( this.pY < -10) this.isOutside = true; 
+				if( this.pY > canvHeight+10) this.isOutside = true; 
 				
 				if(this.isOutside){
 					// console.log('isOutside');
@@ -543,6 +600,16 @@ function tests(dataArray, bufferLength){
 		})();
 
 		function init(){
+			agentCount = parseInt(agentCountInput.value);
+			canvasCtx.clearRect(0,0, canvWidth, canvHeight);
+			canvasCtx.fillStyle = bgColor;
+			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
+
+			agents = [];
+			// size = parseInt(perlinScaleInput.value); //perlin algo scale
+			noiseScale = parseInt(noiseScaleInput.value);
+			// console.log('size: ' + size);
+			// console.log('size: ' + size);
 
 			for(var i = 0; i < agentCount; i++)	agents.push(Agent);
 			startAnimating(30);
@@ -551,8 +618,8 @@ function tests(dataArray, bufferLength){
 		init();
 
 		function draw(){
+			noiseStrength = parseInt(noiseStrengthInput.value);
 			for(var i = 0; i < agentCount; i++){
-				// console.log('agents[0]: ' + agents[0].posX);
 				agents[i].update1();
 
 			}
