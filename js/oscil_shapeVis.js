@@ -1167,9 +1167,6 @@ function lissajousFigure(dataArray, bufferLength){
 		freqXInput.min = 1;
 		freqXInput.max = 70;
 		freqXInput.value = 40;
-		// freqXInput.addEventListener("change", function(){
-		// 		init();			
-		// 	});
 	var freqXLabel = document.createElement('label');
 		freqXLabel.htmlFor = 'freqXInput';
 		freqXLabel.className = 'vis-setting';
@@ -1182,9 +1179,6 @@ function lissajousFigure(dataArray, bufferLength){
 		freqYInput.min = 1;
 		freqYInput.max = 70;
 		freqYInput.value = 40;
-		// freqYInput.addEventListener("change", function(){
-		// 		init();			
-		// 	});
 	var freqYLabel = document.createElement('label');
 		freqYLabel.htmlFor = 'freqYInput';
 		freqYLabel.className = 'vis-setting';
@@ -1197,13 +1191,10 @@ function lissajousFigure(dataArray, bufferLength){
 		phiInput.min = 1;
 		phiInput.max = 360;
 		phiInput.value = 95;
-		// phiInput.addEventListener("change", function(){
-		// 		init();			
-		// 	});
 	var phiLabel = document.createElement('label');
 		phiLabel.htmlFor = 'phiInput';
 		phiLabel.className = 'vis-setting';
-		phiLabel.innerHTML = 'Phi Y';
+		phiLabel.innerHTML = 'Phi';
 
 	var pointCountInput = document.createElement('input');
 		pointCountInput.type = 'range';
