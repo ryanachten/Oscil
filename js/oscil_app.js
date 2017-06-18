@@ -150,6 +150,9 @@ function visualise(visMode){
 	else if(visMode === 'PixelPainting'){
 		pixelPainting(dataArray, bufferLength);
 	}
+	else if(visMode === 'LissajousFigure'){
+		lissajousFigure(dataArray, bufferLength);
+	}
 	else if(visMode === 'Test'){
 		tests(dataArray, bufferLength); //
 	}
