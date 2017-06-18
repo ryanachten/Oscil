@@ -1153,3 +1153,155 @@ function concretePoetry(dataArray, bufferLength){
 	}
 	addLetter();
 }
+
+function lissajousFigure(dataArray, bufferLength){
+
+	//Runtime UI stuff
+	var visSettings	= document.getElementById('vis-settings');
+		visSettings.style.display = 'block';
+
+	var freqXInput = document.createElement('input');
+		freqXInput.type = 'range';
+		freqXInput.id = 'freqXInput';
+		freqXInput.className = 'vis-setting';
+		freqXInput.min = 1;
+		freqXInput.max = 70;
+		freqXInput.value = 40;
+		freqXInput.addEventListener("change", function(){
+				init();			
+			});
+	var freqXLabel = document.createElement('label');
+		freqXLabel.htmlFor = 'freqXInput';
+		freqXLabel.className = 'vis-setting';
+		freqXLabel.innerHTML = 'Freq X';
+
+	var freqYInput = document.createElement('input');
+		freqYInput.type = 'range';
+		freqYInput.id = 'freqYInput';
+		freqYInput.className = 'vis-setting';
+		freqYInput.min = 1;
+		freqYInput.max = 70;
+		freqYInput.value = 40;
+		freqYInput.addEventListener("change", function(){
+				init();			
+			});
+	var freqYLabel = document.createElement('label');
+		freqYLabel.htmlFor = 'freqYInput';
+		freqYLabel.className = 'vis-setting';
+		freqYLabel.innerHTML = 'Freq Y';
+
+	var phiInput = document.createElement('input');
+		phiInput.type = 'range';
+		phiInput.id = 'phiInput';
+		phiInput.className = 'vis-setting';
+		phiInput.min = 1;
+		phiInput.max = 360;
+		phiInput.value = 95;
+		phiInput.addEventListener("change", function(){
+				init();			
+			});
+	var phiLabel = document.createElement('label');
+		phiLabel.htmlFor = 'phiInput';
+		phiLabel.className = 'vis-setting';
+		phiLabel.innerHTML = 'Phi Y';
+
+	visSettings.appendChild(freqXLabel);
+	visSettings.appendChild(freqXInput);
+	visSettings.appendChild(freqYLabel);
+	visSettings.appendChild(freqYInput);
+	visSettings.appendChild(phiLabel);
+	visSettings.appendChild(phiInput);
+
+	var pointCount = 1000;
+	var freqX, freqY;
+	var phi, angle;
+	var x, y;
+	var margin = 20;
+
+	var factorX = canvWidth/2 - margin;
+	var factorY = canvHeight/2 - margin;
+
+	function init(){
+		canvasCtx.clearRect(0,0, canvWidth, canvHeight);
+		canvasCtx.fillStyle = bgColor;
+		canvasCtx.fillRect(0,0, canvWidth, canvHeight);
+
+		canvasCtx.strokeStyle = 'black';
+
+		freqX = parseInt(freqXInput.value);
+		freqY = parseInt(freqYInput.value);
+		phi = parseInt(phiInput.value);
+		console.log('freqX: ' + freqX + ' freqY: ' + freqY);
+		console.log('phi: ' + phi);
+
+		startAnimating(30);
+	}
+	init();
+
+
+	function draw(){
+
+		canvasCtx.clearRect(0,0, canvWidth, canvHeight);
+		canvasCtx.fillStyle = bgColor;
+		canvasCtx.fillRect(0,0, canvWidth, canvHeight);
+
+		analyser.getByteFrequencyData(dataArray);
+		var da = dataArray[0];
+		var logda = (Math.log(da) / Math.log(2));
+		if(isFinite(logda) && logda !== 0){
+			freqX = logda * parseInt(freqXInput.value);
+			freqY = logda * parseInt(freqYInput.value);
+			phi = parseInt(phiInput.value) - logda;
+		}
+		// console.log('logda: ' + logda);
+		// console.log('freqX: ' + freqX + ' freqY: ' + freqY);
+		// console.log('phi: ' + phi);
+
+		canvasCtx.beginPath();
+
+		for(var i = 0; i < pointCount; i++){
+			angle = map_range(i, 0,pointCount, 0,Math.PI*2);
+
+			x = Math.sin(angle*freqX + (Math.PI/180)*phi);
+			y = Math.sin(angle*freqY);;
+
+			x =  x * factorX + canvWidth/2;
+			y = y * factorY + canvHeight/2;
+
+			canvasCtx.lineTo(x,y);
+		}
+		// canvasCtx.closePath();
+		canvasCtx.stroke();
+	}
+
+	function map_range(value, low1, high1, low2, high2) {
+		return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
+	}
+
+	var stop = false;
+	var frameCount = 0;
+	var fps, fpsInterval, startTime, now, then, elapsed;
+
+	function startAnimating(fps){
+		fpsInterval = 1000/fps;
+		then = Date.now();
+		startTime = then;
+		animate();
+	}
+
+	function animate(){
+		if(stop){
+			return;
+		}
+		drawVisual = requestAnimationFrame(animate);
+
+		now = Date.now();
+		elapsed = now - then;
+
+		if(elapsed > fpsInterval){
+			then = now - (elapsed % fpsInterval);
+
+			draw();
+		}
+	}
+}
