@@ -654,5 +654,110 @@ function tests(dataArray, bufferLength){
 			}
 		}
 	}
-	noiseAgent();
+	// noiseAgent();
+
+	function lissajousFigure(){
+
+		//Runtime UI stuff
+		var visSettings	= document.getElementById('vis-settings');
+			visSettings.style.display = 'block';
+
+		var freqXInput = document.createElement('input');
+			freqXInput.type = 'range';
+			freqXInput.id = 'freqXInput';
+			freqXInput.className = 'vis-setting';
+			freqXInput.min = 1;
+			freqXInput.max = 70;
+			freqXInput.value = 13;
+			freqXInput.addEventListener("change", function(){
+					draw();			
+				});
+		var freqXLabel = document.createElement('label');
+			freqXLabel.htmlFor = 'freqXInput';
+			freqXLabel.className = 'vis-setting';
+			freqXLabel.innerHTML = 'Freq X';
+
+		var freqYInput = document.createElement('input');
+			freqYInput.type = 'range';
+			freqYInput.id = 'freqYInput';
+			freqYInput.className = 'vis-setting';
+			freqYInput.min = 1;
+			freqYInput.max = 70;
+			freqYInput.value = 12;
+			freqYInput.addEventListener("change", function(){
+					draw();			
+				});
+		var freqYLabel = document.createElement('label');
+			freqYLabel.htmlFor = 'freqYInput';
+			freqYLabel.className = 'vis-setting';
+			freqYLabel.innerHTML = 'Freq Y';
+
+		var phiInput = document.createElement('input');
+			phiInput.type = 'range';
+			phiInput.id = 'phiInput';
+			phiInput.className = 'vis-setting';
+			phiInput.min = 1;
+			phiInput.max = 360;
+			phiInput.value = 90;
+			phiInput.addEventListener("change", function(){
+					draw();			
+				});
+		var phiLabel = document.createElement('label');
+			phiLabel.htmlFor = 'phiInput';
+			phiLabel.className = 'vis-setting';
+			phiLabel.innerHTML = 'Phi Y';
+
+		visSettings.appendChild(freqXLabel);
+		visSettings.appendChild(freqXInput);
+		visSettings.appendChild(freqYLabel);
+		visSettings.appendChild(freqYInput);
+		visSettings.appendChild(phiLabel);
+		visSettings.appendChild(phiInput);
+
+		var pointCount = 600;
+		var freqX;
+		var freqY;
+		var phi;
+
+		var angle;
+		var x, y;
+		var margin = 20;
+
+		var factorX = canvWidth/2 - margin;
+		var factorY = canvHeight/2 - margin;
+
+		function draw(){
+
+			canvasCtx.clearRect(0,0, canvWidth, canvHeight);
+			canvasCtx.fillStyle = bgColor;
+			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
+
+			freqX = parseInt(freqXInput.value);
+			freqY = parseInt(freqYInput.value);
+			phi = parseInt(phiInput.value);
+
+			canvasCtx.beginPath();
+
+			for(var i = 0; i < pointCount; i++){
+				angle = map_range(i, 0,pointCount, 0,Math.PI*2);
+
+				x = Math.sin(angle*freqX + (Math.PI/180)*phi);
+				y = Math.sin(angle*freqY);;
+
+				x =  x * factorX + canvWidth/2;
+				y = y * factorY + canvHeight/2;
+
+				canvasCtx.lineTo(x,y);
+			}
+			canvasCtx.closePath();
+			canvasCtx.strokeStyle = 'black';
+			canvasCtx.stroke();
+		}
+		draw();
+
+		function map_range(value, low1, high1, low2, high2) {
+			return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
+		}
+	}
+	lissajousFigure();
 }
