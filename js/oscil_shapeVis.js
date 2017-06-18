@@ -1167,9 +1167,9 @@ function lissajousFigure(dataArray, bufferLength){
 		freqXInput.min = 1;
 		freqXInput.max = 70;
 		freqXInput.value = 40;
-		freqXInput.addEventListener("change", function(){
-				init();			
-			});
+		// freqXInput.addEventListener("change", function(){
+		// 		init();			
+		// 	});
 	var freqXLabel = document.createElement('label');
 		freqXLabel.htmlFor = 'freqXInput';
 		freqXLabel.className = 'vis-setting';
@@ -1182,9 +1182,9 @@ function lissajousFigure(dataArray, bufferLength){
 		freqYInput.min = 1;
 		freqYInput.max = 70;
 		freqYInput.value = 40;
-		freqYInput.addEventListener("change", function(){
-				init();			
-			});
+		// freqYInput.addEventListener("change", function(){
+		// 		init();			
+		// 	});
 	var freqYLabel = document.createElement('label');
 		freqYLabel.htmlFor = 'freqYInput';
 		freqYLabel.className = 'vis-setting';
@@ -1197,14 +1197,31 @@ function lissajousFigure(dataArray, bufferLength){
 		phiInput.min = 1;
 		phiInput.max = 360;
 		phiInput.value = 95;
-		phiInput.addEventListener("change", function(){
-				init();			
-			});
+		// phiInput.addEventListener("change", function(){
+		// 		init();			
+		// 	});
 	var phiLabel = document.createElement('label');
 		phiLabel.htmlFor = 'phiInput';
 		phiLabel.className = 'vis-setting';
 		phiLabel.innerHTML = 'Phi Y';
 
+	var pointCountInput = document.createElement('input');
+		pointCountInput.type = 'range';
+		pointCountInput.id = 'pointCountInput';
+		pointCountInput.className = 'vis-setting';
+		pointCountInput.min = 10;
+		pointCountInput.max = 1000;
+		pointCountInput.value = 1000;
+		pointCountInput.addEventListener("change", function(){
+				init();			
+			});
+	var pointCountLabel = document.createElement('label');
+		pointCountLabel.htmlFor = 'pointCountInput';
+		pointCountLabel.className = 'vis-setting';
+		pointCountLabel.innerHTML = 'Point Count';
+
+	visSettings.appendChild(pointCountLabel);
+	visSettings.appendChild(pointCountInput);
 	visSettings.appendChild(freqXLabel);
 	visSettings.appendChild(freqXInput);
 	visSettings.appendChild(freqYLabel);
@@ -1212,7 +1229,7 @@ function lissajousFigure(dataArray, bufferLength){
 	visSettings.appendChild(phiLabel);
 	visSettings.appendChild(phiInput);
 
-	var pointCount = 1000;
+	var pointCount;
 	var freqX, freqY;
 	var phi, angle;
 	var x, y;
@@ -1227,10 +1244,11 @@ function lissajousFigure(dataArray, bufferLength){
 		canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
 		canvasCtx.strokeStyle = 'black';
-
+		pointCount = parseInt(pointCountInput.value);
 		freqX = parseInt(freqXInput.value);
 		freqY = parseInt(freqYInput.value);
 		phi = parseInt(phiInput.value);
+		console.log('pointCount: ' + pointCount);
 		console.log('freqX: ' + freqX + ' freqY: ' + freqY);
 		console.log('phi: ' + phi);
 
