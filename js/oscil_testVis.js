@@ -667,7 +667,7 @@ function tests(dataArray, bufferLength){
 			freqXInput.id = 'freqXInput';
 			freqXInput.className = 'vis-setting';
 			freqXInput.min = 1;
-			freqXInput.max = 70;
+			freqXInput.max = 20;
 			freqXInput.value = 10;
 		var freqXLabel = document.createElement('label');
 			freqXLabel.htmlFor = 'freqXInput';
@@ -679,7 +679,7 @@ function tests(dataArray, bufferLength){
 			freqYInput.id = 'freqYInput';
 			freqYInput.className = 'vis-setting';
 			freqYInput.min = 1;
-			freqYInput.max = 70;
+			freqYInput.max = 20;
 			freqYInput.value = 7;
 		var freqYLabel = document.createElement('label');
 			freqYLabel.htmlFor = 'freqYInput';
@@ -691,7 +691,7 @@ function tests(dataArray, bufferLength){
 			phiInput.id = 'phiInput';
 			phiInput.className = 'vis-setting';
 			phiInput.min = 1;
-			phiInput.max = 360;
+			phiInput.max = 720;
 			phiInput.value = 15;
 		var phiLabel = document.createElement('label');
 			phiLabel.htmlFor = 'phiInput';
@@ -718,7 +718,7 @@ function tests(dataArray, bufferLength){
 			modFreqXInput.id = 'modFreqXInput';
 			modFreqXInput.className = 'vis-setting';
 			modFreqXInput.min = 1;
-			modFreqXInput.max = 70;
+			modFreqXInput.max = 20;
 			modFreqXInput.value = 3;
 		var modFreqXLabel = document.createElement('label');
 			modFreqXLabel.htmlFor = 'modFreqXInput';
@@ -730,7 +730,7 @@ function tests(dataArray, bufferLength){
 			modFreqYInput.id = 'modFreqYInput';
 			modFreqYInput.className = 'vis-setting';
 			modFreqYInput.min = 1;
-			modFreqYInput.max = 70;
+			modFreqYInput.max = 20;
 			modFreqYInput.value = 2;
 		var modFreqYLabel = document.createElement('label');
 			modFreqYLabel.htmlFor = 'modFreqYInput';
@@ -754,26 +754,19 @@ function tests(dataArray, bufferLength){
 		var pointCount = 1000;
 		var lissajousPoints;
 
-		var freqX;// = 10;
-		var freqY;// = 7;
-		var phi;// = 15;
+		var freqX, freqY;
+		var phi;
 
-		var modFreqX = 3;
-		var modFreqY = 2;
+		var modFreqX, modFreqY;
 
 		var lineWeight = 1;
 		var strokeStyle = 'black';
 		var lineAlpha = 0.5;
 
 		var connectionRadius = 100;
-		var connectionRamp = 6;
 
 
 		function init(){
-			canvasCtx.clearRect(0,0, canvWidth, canvHeight);
-			canvasCtx.fillStyle = bgColor;
-			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
-
 			canvasCtx.strokeStyle = 'black';
 			pointCount = parseInt(pointCountInput.value);
 			startAnimating(10);
@@ -789,11 +782,16 @@ function tests(dataArray, bufferLength){
 			canvasCtx.fillStyle = bgColor;
 			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
-			freqX = parseInt(freqXInput.value);
-			freqY = parseInt(freqYInput.value);
-			modFreqX = parseInt(modFreqXInput.value);
-			modFreqY = parseInt(modFreqYInput.value);
-			phi = parseInt(phiInput.value);
+			analyser.getByteFrequencyData(dataArray);
+			var da = dataArray[0];
+			var logda = (Math.log(da) / Math.log(2));
+			if(isFinite(logda) && logda !== 0){
+				freqX = logda * parseInt(freqXInput.value);
+				freqY = logda * parseInt(freqYInput.value);
+				modFreqX = logda * parseInt(modFreqXInput.value);
+				modFreqY = logda * parseInt(modFreqYInput.value);
+				phi = parseInt(phiInput.value) - logda;
+			}
 
 			for (var i = 0; i <= pointCount; i++) {
 				
