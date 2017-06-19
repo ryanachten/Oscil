@@ -153,6 +153,9 @@ function visualise(visMode){
 	else if(visMode === 'LissajousFigure'){
 		lissajousFigure(dataArray, bufferLength);
 	}
+	else if(visMode === 'LissajousWebs'){
+		lissajousWebs(dataArray, bufferLength);
+	}
 	else if(visMode === 'Test'){
 		tests(dataArray, bufferLength); //
 	}

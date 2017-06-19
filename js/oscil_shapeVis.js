@@ -1386,3 +1386,215 @@ function lissajousFigure(dataArray, bufferLength){
 			}
 		}
 	}
+
+function lissajousWebs(dataArray, bufferLength){
+
+		//Runtime UI stuff
+		var visSettings	= document.getElementById('vis-settings');
+			visSettings.style.display = 'block';
+
+		var freqXInput = document.createElement('input');
+			freqXInput.type = 'range';
+			freqXInput.id = 'freqXInput';
+			freqXInput.className = 'vis-setting';
+			freqXInput.min = 1;
+			freqXInput.max = 20;
+			freqXInput.value = 10;
+		var freqXLabel = document.createElement('label');
+			freqXLabel.htmlFor = 'freqXInput';
+			freqXLabel.className = 'vis-setting';
+			freqXLabel.innerHTML = 'Freq X';
+
+		var freqYInput = document.createElement('input');
+			freqYInput.type = 'range';
+			freqYInput.id = 'freqYInput';
+			freqYInput.className = 'vis-setting';
+			freqYInput.min = 1;
+			freqYInput.max = 20;
+			freqYInput.value = 7;
+		var freqYLabel = document.createElement('label');
+			freqYLabel.htmlFor = 'freqYInput';
+			freqYLabel.className = 'vis-setting';
+			freqYLabel.innerHTML = 'Freq Y';
+
+		var phiInput = document.createElement('input');
+			phiInput.type = 'range';
+			phiInput.id = 'phiInput';
+			phiInput.className = 'vis-setting';
+			phiInput.min = 1;
+			phiInput.max = 720;
+			phiInput.value = 15;
+		var phiLabel = document.createElement('label');
+			phiLabel.htmlFor = 'phiInput';
+			phiLabel.className = 'vis-setting';
+			phiLabel.innerHTML = 'Phi';
+
+		var pointCountInput = document.createElement('input');
+			pointCountInput.type = 'range';
+			pointCountInput.id = 'pointCountInput';
+			pointCountInput.className = 'vis-setting';
+			pointCountInput.min = 10;
+			pointCountInput.max = 1000;
+			pointCountInput.value = 1000;
+			pointCountInput.addEventListener("change", function(){
+					init();			
+				});
+		var pointCountLabel = document.createElement('label');
+			pointCountLabel.htmlFor = 'pointCountInput';
+			pointCountLabel.className = 'vis-setting';
+			pointCountLabel.innerHTML = 'Point Count';
+
+		var modFreqXInput = document.createElement('input');
+			modFreqXInput.type = 'range';
+			modFreqXInput.id = 'modFreqXInput';
+			modFreqXInput.className = 'vis-setting';
+			modFreqXInput.min = 1;
+			modFreqXInput.max = 20;
+			modFreqXInput.value = 3;
+		var modFreqXLabel = document.createElement('label');
+			modFreqXLabel.htmlFor = 'modFreqXInput';
+			modFreqXLabel.className = 'vis-setting';
+			modFreqXLabel.innerHTML = 'Mod Freq X';
+
+		var modFreqYInput = document.createElement('input');
+			modFreqYInput.type = 'range';
+			modFreqYInput.id = 'modFreqYInput';
+			modFreqYInput.className = 'vis-setting';
+			modFreqYInput.min = 1;
+			modFreqYInput.max = 20;
+			modFreqYInput.value = 2;
+		var modFreqYLabel = document.createElement('label');
+			modFreqYLabel.htmlFor = 'modFreqYInput';
+			modFreqYLabel.className = 'vis-setting';
+			modFreqYLabel.innerHTML = 'Mod Freq Y';
+
+		visSettings.appendChild(pointCountLabel);
+		visSettings.appendChild(pointCountInput);
+		visSettings.appendChild(phiLabel);
+		visSettings.appendChild(phiInput);
+		visSettings.appendChild(freqXLabel);
+		visSettings.appendChild(freqXInput);
+		visSettings.appendChild(freqYLabel);
+		visSettings.appendChild(freqYInput);
+
+		visSettings.appendChild(modFreqXLabel);
+		visSettings.appendChild(modFreqXInput);
+		visSettings.appendChild(modFreqYLabel);
+		visSettings.appendChild(modFreqYInput);
+
+		var pointCount = 1000;
+		var lissajousPoints;
+
+		var freqX, freqY;
+		var phi;
+
+		var modFreqX, modFreqY;
+
+		var lineWeight = 1;
+		var strokeStyle = 'black';
+		var lineAlpha = 0.5;
+
+		var connectionRadius = 100;
+
+
+		function init(){
+			canvasCtx.strokeStyle = 'black';
+			pointCount = parseInt(pointCountInput.value);
+			startAnimating(10);
+		}
+		init();
+
+
+		function calcLissajPoints(){
+
+			lissajousPoints = [];
+
+			canvasCtx.clearRect(0,0, canvWidth, canvHeight);
+			canvasCtx.fillStyle = bgColor;
+			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
+
+			analyser.getByteFrequencyData(dataArray);
+			var da = dataArray[0];
+			var logda = (Math.log(da) / Math.log(2));
+			if(isFinite(logda) && logda !== 0){
+				freqX = logda * parseInt(freqXInput.value);
+				freqY = logda * parseInt(freqYInput.value);
+				modFreqX = logda * parseInt(modFreqXInput.value);
+				modFreqY = logda * parseInt(modFreqYInput.value);
+				phi = parseInt(phiInput.value) - logda;
+			}
+
+			for (var i = 0; i <= pointCount; i++) {
+				
+				var angle = map_range(i, 0,pointCount, 0,Math.PI);
+				var x = Math.sin(angle * freqX + ((Math.PI/180)*phi) * Math.cos(angle * modFreqX));
+				var y = Math.sin(angle * freqY) * Math.cos(angle * modFreqY);
+
+				x = x * (canvWidth/2 -30);
+				y = y * (canvHeight/2 -30);
+
+				lissajousPoints.push({
+					x: x,
+					y: y
+				});
+			}
+			drawLissaj();
+		}
+		calcLissajPoints();
+
+		function drawLissaj(){
+			canvasCtx.lineWidth = lineWeight;
+
+			for(var i = 0; i < pointCount; i++){
+				for(var j = 0; j < pointCount; j++){
+
+					var p1 = lissajousPoints[i];
+					var p2 = lissajousPoints[j];
+
+					var d = Math.sqrt(Math.pow((p2.x-p1.x),2) + Math.pow((p2.y-p1.y),2));
+					var a = Math.pow(1/(d/connectionRadius+1), 6);
+
+					if(d <= connectionRadius){
+						canvasCtx.beginPath();
+						canvasCtx.moveTo(p1.x + canvWidth/2, p1.y + canvHeight/2);
+						canvasCtx.lineTo(p2.x  + canvWidth/2, p2.y + canvHeight/2);
+						canvasCtx.strokeStyle = 'rgba(0,0,0,' + a +')';
+						canvasCtx.stroke();
+					}
+				}
+			}
+		}
+
+
+		function map_range(value, low1, high1, low2, high2) {
+			return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
+		}
+
+
+		var stop = false;
+		var frameCount = 0;
+		var fps, fpsInterval, startTime, now, then, elapsed;
+
+		function startAnimating(fps){
+			fpsInterval = 1000/fps;
+			then = Date.now();
+			startTime = then;
+			animate();
+		}
+
+		function animate(){
+			if(stop){
+				return;
+			}
+			drawVisual = requestAnimationFrame(animate);
+
+			now = Date.now();
+			elapsed = now - then;
+
+			if(elapsed > fpsInterval){
+				then = now - (elapsed % fpsInterval);
+
+				calcLissajPoints();
+			}
+		}
+	}
