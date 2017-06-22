@@ -861,6 +861,9 @@ function tests(dataArray, bufferLength){
 		var nodeCount = xCount * yCount;
 		var nodes;
 		var attractor;
+		var attractor_MaxRamp = 0.2;
+		var attractNode;
+		var attractNode_MaxVelocity = 10;
 
 		function init(){
 
@@ -882,8 +885,13 @@ function tests(dataArray, bufferLength){
 			attractor = new Attractor(canvWidth/2, canvHeight/2);
 				attractor.radius = 200;
 				attractor.strength = -10;
-				// attractor.ramp =  Math.random()*2+0.1; //0.4;
-				// if(Math.floor(Math.random()*2) === 1) console.log('neg');
+				attractor.ramp = attractor_MaxRamp/2; //0.4
+
+			attractNode = new Node(canvWidth/2, canvHeight/2);
+				attractNode.setBoundary(0,0, canvWidth, canvHeight);
+				attractNode.setDamping(0);
+				attractNode.velocity.x = attractNode_MaxVelocity/2;
+				attractNode.velocity.y = attractNode_MaxVelocity/2;
 
 			startAnimating(10);
 		}	
@@ -896,14 +904,32 @@ function tests(dataArray, bufferLength){
 			canvasCtx.fillStyle = bgColor;
 			canvasCtx.fillRect(0,0, canvWidth,canvHeight);
 
-			canvasCtx.fillStyle = 'black';
 
-			//TODO: could use a node to drive the attractor position
-			//attractor.x = attractNode.x;
-			//attractor.y = attractNode.y;
+			// if(attractNode.velocity.x > attractNode_MaxVelocity) attractNode.velocity.x = attractNode_MaxVelocity;
+			// if(attractNode.velocity.x < attractNode_MaxVelocity *-1) attractNode.velocity.x = attractNode_MaxVelocity*-1;
+			// if(attractNode.velocity.y > attractNode_MaxVelocity) attractNode.velocity.y = attractNode_MaxVelocity;
+			// if(attractNode.velocity.y < attractNode_MaxVelocity *-1) attractNode.velocity.y = attractNode_MaxVelocity*-1;
 
-			attractor.ramp =  Math.random()*0.5; //0.4;
+			attractNode.velocity.x -= Math.random()*attractNode_MaxVelocity;
+			attractNode.velocity.y -= Math.random()*attractNode_MaxVelocity;
+			attractNode.velocity.x += Math.random()*attractNode_MaxVelocity;
+			attractNode.velocity.y += Math.random()*attractNode_MaxVelocity;
+
+			attractNode.update();
+			// canvasCtx.beginPath();
+			// canvasCtx.arc(attractNode.x, attractNode.y, 5, 0, Math.PI*2);
+			// canvasCtx.closePath();
+			// canvasCtx.fillStyle = 'red';
+			// canvasCtx.fill();
+
+			attractor.x = attractNode.x;
+			attractor.y = attractNode.y;
+
+			//TODO: Drive the shape of the attraction here
+			attractor.ramp =  Math.random()*attractor_MaxRamp; //0.4;
 			if(Math.floor(Math.random()*2) === 1) attractor.ramp*=-1;
+
+			canvasCtx.fillStyle = 'black';
 
 			for(var i = 0; i < nodes.length; i++){
 				
