@@ -879,12 +879,13 @@ function tests(dataArray, bufferLength){
 				}
 			}
 
-			attractor = new Attractor(canvWidth/2,canvHeight/2);
-				attractor.radius = 400;
+			attractor = new Attractor(canvWidth/2, canvHeight/2);
+				attractor.radius = 200;
 				attractor.strength = -10;
-				attractor.ramp = 0.4;
+				// attractor.ramp =  Math.random()*2+0.1; //0.4;
+				// if(Math.floor(Math.random()*2) === 1) console.log('neg');
 
-			draw();
+			startAnimating(10);
 		}	
 		init();
 
@@ -897,6 +898,13 @@ function tests(dataArray, bufferLength){
 
 			canvasCtx.fillStyle = 'black';
 
+			//TODO: could use a node to drive the attractor position
+			//attractor.x = attractNode.x;
+			//attractor.y = attractNode.y;
+
+			attractor.ramp =  Math.random()*0.5; //0.4;
+			if(Math.floor(Math.random()*2) === 1) attractor.ramp*=-1;
+
 			for(var i = 0; i < nodes.length; i++){
 				
 				attractor.attract(nodes[i]);
@@ -906,6 +914,34 @@ function tests(dataArray, bufferLength){
 				canvasCtx.arc(nodes[i].x, nodes[i].y, 2, 0, Math.PI*2);
 				canvasCtx.closePath();
 				canvasCtx.fill();
+			}
+		}
+
+
+		var stop = false;
+		var frameCount = 0;
+		var fps, fpsInterval, startTime, now, then, elapsed;
+
+		function startAnimating(fps){
+			fpsInterval = 1000/fps;
+			then = Date.now();
+			startTime = then;
+			animate();
+		}
+
+		function animate(){
+			if(stop){
+				return;
+			}
+			drawVisual = requestAnimationFrame(animate);
+
+			now = Date.now();
+			elapsed = now - then;
+
+			if(elapsed > fpsInterval){
+				then = now - (elapsed % fpsInterval);
+
+				draw();
 			}
 		}
 	}
