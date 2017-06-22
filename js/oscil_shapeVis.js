@@ -1555,6 +1555,9 @@ function lissajousWebs(dataArray, bufferLength){
 					var a = Math.pow(1/(d/connectionRadius+1), 6);
 
 					if(d <= connectionRadius){
+						// h = map_range(1-a, 0,1, minHueValue, maxHueValue) % 360;
+						// canvasCtx.strokeStyle = 'hsla('+ h +',50%,50%,' + a +')';
+
 						canvasCtx.beginPath();
 						canvasCtx.moveTo(p1.x + canvWidth/2, p1.y + canvHeight/2);
 						canvasCtx.lineTo(p2.x  + canvWidth/2, p2.y + canvHeight/2);

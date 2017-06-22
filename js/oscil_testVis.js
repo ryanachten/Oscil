@@ -656,6 +656,258 @@ function tests(dataArray, bufferLength){
 	}
 	// noiseAgent();
 
-	
-	// lissajousWebs();
+	function nodeTest(){
+
+		var Node = (function(x, y){
+
+			this.minX = 5;
+			this.minY = 5;
+			this.maxX = canvWidth-5;
+			this.maxY = canvHeight-5;
+			this.damping = 0.1;
+			this.x = x;
+			this.y = y;
+			this.velocity = {
+				x: null,
+				y: null
+			};
+
+			this.update = function(){
+
+				this.x += this.velocity.x;
+				this.y += this.velocity.y;
+
+				if(this.x < this.minX){
+					this.x = this.minX - (this.x - this.minX);
+					this.velocity.x *= -1;
+				}
+
+				if(this.x > this.maxX){
+					this.x = this.maxX - (this.x - this.maxX);
+					this.velocity.x *= -1;
+				}
+
+				if(this.y < this.minY){
+					this.y = this.minY - (this.y - this.minY);
+					this.velocity.y *= -1;
+				}
+
+				if(this.y > this.maxY){
+					this.y = this.maxY - (this.y - this.maxY);
+					this.velocity.y *= -1;
+				}
+
+				this.velocity.x *= (1-this.damping);
+				this.velocity.y *= (1-this.damping);
+			};
+		});
+
+		var nodeCount = 20;
+		var nodes;
+
+		function init(){
+
+			nodes = [];
+
+			for(var i = 0; i < nodeCount; i++){
+				var node = new Node(Math.random()*canvWidth, Math.random()*canvHeight);
+					node.velocity.x = Math.random()*3;
+						if(Math.floor(Math.random()*2) === 1) node.velocity.x *= -1;
+					node.velocity.y = Math.random()*3;
+						if(Math.floor(Math.random()*2) === 1) node.velocity.y *= -1;
+					node.damping = 0.01;
+
+				nodes.push(node);
+			}
+			startAnimating(30);
+		}
+		init();
+
+		function draw(){
+
+			canvasCtx.clearRect(0,0,canvWidth,canvHeight);
+			canvasCtx.fillStyle = bgColor;
+			canvasCtx.fillRect(0,0,canvWidth,canvHeight);
+
+			for(var i = 0; i < nodes.length; i++){				
+
+				nodes[i].update();
+
+				canvasCtx.beginPath();
+				canvasCtx.arc(nodes[i].x, nodes[i].y, 10, 0, Math.PI*2);
+				canvasCtx.closePath();
+
+				canvasCtx.fillStyle = 'black';
+				canvasCtx.fill();
+			}
+		}
+
+		var stop = false;
+		var frameCount = 0;
+		var fps, fpsInterval, startTime, now, then, elapsed;
+
+		function startAnimating(fps){
+			fpsInterval = 1000/fps;
+			then = Date.now();
+			startTime = then;
+			animate();
+		}
+
+		function animate(){
+			if(stop){
+				return;
+			}
+			drawVisual = requestAnimationFrame(animate);
+
+			now = Date.now();
+			elapsed = now - then;
+
+			if(elapsed > fpsInterval){
+				then = now - (elapsed % fpsInterval);
+
+				draw();
+			}
+		}
+
+	}
+	// nodeTest();
+
+	function attractorTest(){
+
+		var Attractor = (function(x, y){
+
+			this.x = x;
+			this.y = y;
+			this.radius = 200; //radius of impact
+			this.strength = 1; //+ for attraction, - for repulsion
+			this.ramp = 0.5; // form of function
+
+			this.attract = function(node){
+				var dx = this.x - node.x;
+				var dy = this.y - node.y;
+				var d = Math.sqrt(
+						Math.pow(dx, 2) + Math.pow(dy, 2)
+					);
+				if(d > 0 && d < this.radius){
+					//calc force
+					var s = d/this.radius;
+					var f = (1 / Math.pow(s, 0.5*this.ramp) -1);
+
+					//apply force
+					node.velocity.x += dx * f;
+					node.velocity.y += dy * f;
+				}
+			};
+		});
+
+		var Node = (function(x, y){
+
+			this.minX = 5;
+			this.minY = 5;
+			this.maxX = canvWidth-5;
+			this.maxY = canvHeight-5;
+			this.damping = 0.1;
+			this.x = x;
+			this.y = y;
+			this.velocity = {
+				x: null,
+				y: null
+			};
+
+			this.update = function(){
+
+				this.x += this.velocity.x;
+				this.y += this.velocity.y;
+
+				if(this.x < this.minX){
+					this.x = this.minX - (this.x - this.minX);
+					this.velocity.x *= -1;
+				}
+
+				if(this.x > this.maxX){
+					this.x = this.maxX - (this.x - this.maxX);
+					this.velocity.x *= -1;
+				}
+
+				if(this.y < this.minY){
+					this.y = this.minY - (this.y - this.minY);
+					this.velocity.y *= -1;
+				}
+
+				if(this.y > this.maxY){
+					this.y = this.maxY - (this.y - this.maxY);
+					this.velocity.y *= -1;
+				}
+
+				this.velocity.x *= (1-this.damping);
+				this.velocity.y *= (1-this.damping);
+			};
+
+			this.setBoundary = function(minX, minY, maxX, maxY){
+				this.minX = minX;
+				this.minY = minY;
+				this.maxX = maxX;
+				this.maxY = maxY;
+			};
+
+			this.setDamping = function(newDamping){
+				this.damping = newDamping;
+			};
+		});
+
+
+		var xCount = 100;
+		var yCount = 100;
+		var nodeCount = xCount * yCount;
+		var nodes;
+		var attractor;
+
+		function init(){
+
+			nodes = [];
+			var gridSizeX = canvWidth/xCount;
+			var gridSizeY = canvHeight/yCount;
+
+			for(var y = 0; y < yCount; y++){
+				for(var x = 0; x < xCount; x++){
+					var xPos = x*gridSizeX;
+					var yPos = y*gridSizeY;
+					var node = new Node(xPos, yPos);
+						node.setBoundary(0,0, canvWidth, canvHeight);
+						node.setDamping(0.8);
+					nodes.push(node);
+				}
+			}
+
+			attractor = new Attractor(canvWidth/2,canvHeight/2);
+				attractor.radius = 400;
+				attractor.strength = -10;
+				attractor.ramp = 0.4;
+
+			draw();
+		}	
+		init();
+
+
+		function draw(){
+
+			canvasCtx.clearRect(0,0, canvWidth,canvHeight);
+			canvasCtx.fillStyle = bgColor;
+			canvasCtx.fillRect(0,0, canvWidth,canvHeight);
+
+			canvasCtx.fillStyle = 'black';
+
+			for(var i = 0; i < nodes.length; i++){
+				
+				attractor.attract(nodes[i]);
+				nodes[i].update();
+				
+				canvasCtx.beginPath();
+				canvasCtx.arc(nodes[i].x, nodes[i].y, 2, 0, Math.PI*2);
+				canvasCtx.closePath();
+				canvasCtx.fill();
+			}
+		}
+	}
+	attractorTest();
 }
