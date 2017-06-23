@@ -1749,8 +1749,8 @@ function nodeAttraction(dataArray, bufferLength){
 			attractRampInput.id = 'attractRampInput';
 			attractRampInput.className = 'vis-setting';
 			attractRampInput.min = 0;
-			attractRampInput.max = 100;
-			attractRampInput.value = 20; //need to be /100 for 0.2
+			attractRampInput.max = 1000;
+			attractRampInput.value = 200; //need to be /100 for 0.2
 			var attractRampLabel = document.createElement('label');
 				attractRampLabel.htmlFor = 'attractRampInput';
 				attractRampLabel.innerHTML = 'Attraction Ramp';
@@ -1831,6 +1831,10 @@ function nodeAttraction(dataArray, bufferLength){
 
 		function draw(){
 
+			analyser.getByteFrequencyData(dataArray);
+			var da = dataArray[0];
+			console.log('da: ' + da);
+
 			canvasCtx.clearRect(0,0, canvWidth,canvHeight);
 			canvasCtx.fillStyle = bgColor;
 			canvasCtx.fillRect(0,0, canvWidth,canvHeight);
@@ -1838,7 +1842,7 @@ function nodeAttraction(dataArray, bufferLength){
 			attractor_Radius = attractRadiusInput.value;
 			attractor_Strength = attractStrengthInput.value;
 			attractNode_MaxVelocity = attractMaxVelocityInput.value;
-			attractor_MaxRamp = attractRampInput.value/100;
+			attractor_MaxRamp = da/attractRampInput.value;
 
 			attractor.strength = attractor_Strength;
 			attractor.radius = attractor_Radius;
@@ -1919,4 +1923,3 @@ function nodeAttraction(dataArray, bufferLength){
 			}
 		}
 	}
-	// attractorTest();
