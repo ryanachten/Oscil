@@ -1695,7 +1695,7 @@ function nodeAttraction(dataArray, bufferLength){
 			nodeDampingInput.className = 'vis-setting';
 			nodeDampingInput.min = 0;
 			nodeDampingInput.max = 100;
-			nodeDampingInput.value = 80; //need to be /100 for 0.8
+			nodeDampingInput.value = 40; //need to be /100 for 0.8
 			var nodeDampingLabel = document.createElement('label');
 				nodeDampingLabel.htmlFor = 'nodeDampingInput';
 				nodeDampingLabel.innerHTML = 'Node Damping';
@@ -1762,7 +1762,7 @@ function nodeAttraction(dataArray, bufferLength){
 			attractMaxVelocityInput.className = 'vis-setting';
 			attractMaxVelocityInput.min = 0;
 			attractMaxVelocityInput.max = 20;
-			attractMaxVelocityInput.value = 5;
+			attractMaxVelocityInput.value = 15;
 			var attractMaxVelocityLabel = document.createElement('label');
 				attractMaxVelocityLabel.htmlFor = 'attractRadiusInput';
 				attractMaxVelocityLabel.innerHTML = 'Attract Node Velocity';
@@ -1781,19 +1781,17 @@ function nodeAttraction(dataArray, bufferLength){
 		visSettings.appendChild(nodeDampingInput);
 
 
-		var xCount = 100;
-		var yCount = 100;
-		var nodeCount = xCount * yCount; //GUI
+		var xCount = canvWidth/10;
+		var yCount = canvHeight/10;
+		var nodeCount = xCount * yCount;
 		var nodes;
-		var node_Damping = nodeDampingInput.value/100; //GUI
+		var node_Damping = nodeDampingInput.value/100;
 		
 		var attractor;
-		var attractor_MaxRamp; //GUI - done
-		var attractor_Radius; //GUI - done
-		var attractor_Strength; //GUI - done
+		var attractor_MaxRamp, attractor_Radius, attractor_Strength;
 		
 		var attractNode;
-		var attractNode_MaxVelocity; //GUI - done
+		var attractNode_MaxVelocity;
 
 		function init(){
 
@@ -1833,7 +1831,6 @@ function nodeAttraction(dataArray, bufferLength){
 
 			analyser.getByteFrequencyData(dataArray);
 			var da = dataArray[0];
-			console.log('da: ' + da);
 
 			canvasCtx.clearRect(0,0, canvWidth,canvHeight);
 			canvasCtx.fillStyle = bgColor;
@@ -1847,7 +1844,7 @@ function nodeAttraction(dataArray, bufferLength){
 			attractor.strength = attractor_Strength;
 			attractor.radius = attractor_Radius;
 
-			//velocity cap (not being used)
+			//velocity cap
 			if(attractNode.velocity.x > attractNode_MaxVelocity) attractNode.velocity.x = attractNode_MaxVelocity;
 			if(attractNode.velocity.x < attractNode_MaxVelocity *-1) attractNode.velocity.x = attractNode_MaxVelocity*-1;
 			if(attractNode.velocity.y > attractNode_MaxVelocity) attractNode.velocity.y = attractNode_MaxVelocity;
@@ -1879,7 +1876,7 @@ function nodeAttraction(dataArray, bufferLength){
 			attractor.ramp = Math.random()*attractor_MaxRamp;
 			if(Math.floor(Math.random()*2) === 1) attractor.ramp*=-1;
 
-			canvasCtx.fillStyle = 'black';
+			
 
 			for(var i = 0; i < nodes.length; i++){
 				
@@ -1891,6 +1888,16 @@ function nodeAttraction(dataArray, bufferLength){
 				canvasCtx.beginPath();
 				canvasCtx.arc(nodes[i].x, nodes[i].y, 2, 0, Math.PI*2);
 				canvasCtx.closePath();
+
+				var rand = Math.floor(Math.random()*2);
+				if(i%5 === 0){
+					canvasCtx.fillStyle = 'hsl(282, 100%, 50%)';
+				}else if(i%3 === 0){
+					canvasCtx.fillStyle = 'hsl(332, 100%, 50%)';
+				}else{
+					canvasCtx.fillStyle = 'hsl(182, 100%, 50%)';
+				}
+
 				canvasCtx.fill();
 			}
 		}
