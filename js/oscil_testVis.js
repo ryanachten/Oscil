@@ -1197,6 +1197,105 @@ function tests(dataArray, bufferLength){
 			};
 		});
 
+		
+		//Runtime UI stuff
+		/*
+		var visSettings	= document.getElementById('vis-settings');
+			visSettings.style.display = 'block';
+
+		var nodeDampingInput = document.createElement('input');
+			nodeDampingInput.type = 'range';
+			nodeDampingInput.id = 'nodeDampingInput';
+			nodeDampingInput.className = 'vis-setting';
+			nodeDampingInput.min = 0;
+			nodeDampingInput.max = 100;
+			nodeDampingInput.value = 40; //need to be /100 for 0.8
+			var nodeDampingLabel = document.createElement('label');
+				nodeDampingLabel.htmlFor = 'nodeDampingInput';
+				nodeDampingLabel.innerHTML = 'Node Damping';
+				nodeDampingLabel.className = 'vis-setting';
+
+		var showAttractNodeDiv = document.createElement('div');
+			showAttractNodeDiv.className = 'vis-setting';
+			var showAttractNode = document.createElement('input');
+				showAttractNode.id = 'showAttractNode';
+				showAttractNode.type = 'checkbox';
+				showAttractNode.className = 'vis-setting switch-input';
+				showAttractNode.checked = false;
+			var showAttractNodePaddel = document.createElement('label');
+				showAttractNodePaddel.className = 'vis-setting switch-paddle';
+				showAttractNodePaddel.htmlFor = 'showAttractNode';
+			var showAttractNodeLabel = document.createElement('label');
+				showAttractNodeLabel.htmlFor = 'showAttractNode';
+				showAttractNodeLabel.innerHTML = 'Show Attractor';
+				showAttractNodeLabel.className = 'vis-setting';
+			
+		var attractRadiusInput = document.createElement('input');
+			attractRadiusInput.type = 'range';
+			attractRadiusInput.id = 'attractRadiusInput';
+			attractRadiusInput.className = 'vis-setting';
+			attractRadiusInput.min = 0;
+			attractRadiusInput.max = 500;
+			attractRadiusInput.value = 200;
+			var attractRadiusLabel = document.createElement('label');
+				attractRadiusLabel.htmlFor = 'attractRadiusInput';
+				attractRadiusLabel.innerHTML = 'Attraction Radius';
+				attractRadiusLabel.className = 'vis-setting';
+
+			showAttractNodeDiv.appendChild(showAttractNodeLabel);
+			showAttractNodeDiv.appendChild(showAttractNode)
+			showAttractNodeDiv.appendChild(showAttractNodePaddel);
+
+		var attractStrengthInput = document.createElement('input');
+			attractStrengthInput.type = 'range';
+			attractStrengthInput.id = 'attractStrengthInput';
+			attractStrengthInput.className = 'vis-setting';
+			attractStrengthInput.min = -50;
+			attractStrengthInput.max = 50;
+			attractStrengthInput.value = -10;
+			var attractStrengthLabel = document.createElement('label');
+				attractStrengthLabel.htmlFor = 'attractStrengthInput';
+				attractStrengthLabel.innerHTML = 'Attraction Strength';
+				attractStrengthLabel.className = 'vis-setting';
+
+		var attractRampInput = document.createElement('input');
+			attractRampInput.type = 'range';
+			attractRampInput.id = 'attractRampInput';
+			attractRampInput.className = 'vis-setting';
+			attractRampInput.min = 0;
+			attractRampInput.max = 1000;
+			attractRampInput.value = 200; //need to be /100 for 0.2
+			var attractRampLabel = document.createElement('label');
+				attractRampLabel.htmlFor = 'attractRampInput';
+				attractRampLabel.innerHTML = 'Attraction Ramp';
+				attractRampLabel.className = 'vis-setting';
+
+		var attractMaxVelocityInput = document.createElement('input');
+			attractMaxVelocityInput.type = 'range';
+			attractMaxVelocityInput.id = 'attractRadiusInput';
+			attractMaxVelocityInput.className = 'vis-setting';
+			attractMaxVelocityInput.min = 0;
+			attractMaxVelocityInput.max = 20;
+			attractMaxVelocityInput.value = 15;
+			var attractMaxVelocityLabel = document.createElement('label');
+				attractMaxVelocityLabel.htmlFor = 'attractRadiusInput';
+				attractMaxVelocityLabel.innerHTML = 'Attract Node Velocity';
+				attractMaxVelocityLabel.className = 'vis-setting';
+
+		visSettings.appendChild(showAttractNodeDiv);
+		visSettings.appendChild(attractRadiusLabel);
+		visSettings.appendChild(attractRadiusInput);
+		visSettings.appendChild(attractStrengthLabel);
+		visSettings.appendChild(attractStrengthInput);
+		visSettings.appendChild(attractRampLabel);
+		visSettings.appendChild(attractRampInput);
+		visSettings.appendChild(attractMaxVelocityLabel);
+		visSettings.appendChild(attractMaxVelocityInput);
+		visSettings.appendChild(nodeDampingLabel);
+		visSettings.appendChild(nodeDampingInput);
+		*/
+
+
 		var maxCount = 150;
 		var xCount = 130;
 		var yCount = 130;
@@ -1213,17 +1312,9 @@ function tests(dataArray, bufferLength){
 		var attractorStrength = 3;
 		var attractorRamp = 1;
 		var nodeDamping = 0.1;
-
-		// var invertBackground = false;
-		var lineWeight = 1;
-		var lineAlpha = 50;
-		var drawX = true;
-		var drawY = false;
-		var lockX = true;
-		var lockY = false;
-
-		var drawLines = true;
-		var drawCurves = false;
+		
+		var drawLines = false;
+		var drawCircles = true;
 
 		var attractor;
 		var nodes;
@@ -1265,12 +1356,6 @@ function tests(dataArray, bufferLength){
 			canvasCtx.fillStyle = bgColor;
 			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
-			//needed?
-			if(xCount !== oldXCount || yCount !== oldYCount || layerCount !== oldLayerCount){
-				oldXCount = xCount;
-				oldYCount = yCount;
-				oldLayerCount = layerCount;
-			} 
 
 			if(attractorSmooth){
 				attractor.mode = 'smooth';
@@ -1281,80 +1366,41 @@ function tests(dataArray, bufferLength){
 			}
 			
 			attractor.strength = Math.random()*10;
-			if(Math.floor(Math.random()*2) === 1){
-				attractor.strength *= -1;
-			}
-
+				if(Math.floor(Math.random()*2) === 1) attractor.strength *= -1;
 			attractor.radius = Math.random()*(canvWidth);
 
 			nodeDamping = Math.random()*0.8;
-			if(Math.floor(Math.random()*2) === 1){
-				nodeDamping *= -1;
-			}
+				if(Math.floor(Math.random()*2) === 1) nodeDamping *= -1;
 
 
-			// attractor.x = attractorNode.x //TODO - add attractor Node
-			// attractor.y = attractorNode.y //TODO - add attractor Node
-
-
-			//update attractor and nodes
-			//note, my method deviates from GenDes version
 			for (var i = 0; i < nodes.length; i++) {
 				nodes[i].setDamping(nodeDamping);
 				attractor.attract(nodes[i]);
 				nodes[i].update();
 			}
 
-			//draw lines
-			var lineDrawn = false;
+			if(drawLines){
+				var i = 0;
 
-			//draw x
-			if(drawX && xCount > 0){
-				// for (var i = 0; i < layerCount; i++) { //GenDes uses a reverse itterator here
-					// for (var x = 0; x < xCount; x++) { //GenDes uses yCount here wtf
-				// for (var y = 0; y < 1; y++) { 
-					// drawLine(nodes, xCount);
-					var i = 0;
-					// for(var i = 0; i < nodes.length-1; i++){
-					for(var y = 0; y < yCount; y++){
-						canvasCtx.beginPath()
-						for(var x = 0; x < xCount; x++){
-							canvasCtx.moveTo(nodes[i].x, nodes[i].y);
+				for(var y = 0; y < yCount; y++){
+					canvasCtx.beginPath()
+					for(var x = 0; x < xCount; x++){
+						canvasCtx.moveTo(nodes[i].x, nodes[i].y);
 
-							var theta = Math.atan2(canvHeight/2 - nodes[i].y, canvWidth/2 -nodes[i].x); //point towards centre
-							// canvasCtx.lineTo(nodes[i].x, nodes[i].y);
-							canvasCtx.lineTo((Math.cos(theta)*5) + nodes[i].x, (Math.sin(theta)*5) +nodes[i].y);
-							if(i+2 < nodes.length-1){
-								i++;
-							}// else{
-							// 	i = 0;
-							// }
-						}
-						canvasCtx.closePath();
-						canvasCtx.strokeStyle = 'black';
-						canvasCtx.stroke();
+						var theta = Math.atan2(canvHeight/2 - nodes[i].y, canvWidth/2 -nodes[i].x); //point towards centre
+						// var theta = Math.atan2(nodes[i+1].y - nodes[i].y, nodes[i+1].x -nodes[i].x); //point towards neighbour
+						canvasCtx.lineTo((Math.cos(theta)*5) + nodes[i].x, (Math.sin(theta)*5) +nodes[i].y);
+						
+						if(i+2 < nodes.length-1) i++;
 					}
-					
-				// }
-				lineDrawn = true;
-			}
-
-			//draw y
-			if(drawY && xCount > 0){
-				// for (var i = 0; i < layerCount; i++) { //GenDes uses a reverse itterator here
-					// for (var x = 0; x < xCount; x++) { //GenDes uses yCount here wtf
-				for (var x = 0; x < xCount; x++) {
-					for (var y = 0; y < yCount; y++) {
-						var points = [nodes[x], nodes[y]] 
-						drawLine(points, xCount);
-						canvasCtx.strokeStyle = 'black';
-						canvasCtx.stroke();
-					}
+					canvasCtx.closePath();
+					canvasCtx.strokeStyle = 'black';
+					canvasCtx.stroke();
 				}
 				lineDrawn = true;
 			}
 
-			if(!lineDrawn){
+			if(drawCircles){
 				for (var x = 0; x < nodes.length; x++) {
 					canvasCtx.beginPath();
 					canvasCtx.arc(nodes[x].x, nodes[x].y, 2, 0, Math.PI*2);
@@ -1363,35 +1409,6 @@ function tests(dataArray, bufferLength){
 				}
 			}
 		}
-
-		function drawLine(points, len){
-			var l1, l2, q0, q1, q2;
-
-			//first and last index to draw
-			var i1 = (points.length-1) /2 -len;
-			var i2 = (points.length-1) /2 +len;
-
-			//first point
-			// canvasCtx.beginPath();
-			// canvasCtx.moveTo(points[i1].x, points[i1].y);
-			// var q0 = 0.5;
-
-			// for (var i = i1+1; i <= i2; i++) {
-			// 	canvasCtx.lineTo(points[i].x, points[i].y);
-			// }
-
-			canvasCtx.beginPath();
-			// canvasCtx.moveTo(nodes[0].x, nodes[0].y);
-			var q0 = 0.5;
-
-			for (var i = i; i <= nodes.length; i++) {
-				canvasCtx.moveTo(nodes[i].x, nodes[i].y);
-				canvasCtx.lineTo(nodes[i+1].x, nodes[i+1].y);
-			}
-			canvasCtx.strokeStyle = 'black';
-			canvasCtx.stroke();
-		}
-
 
 		var stop = false;
 		var frameCount = 0;
