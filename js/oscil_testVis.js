@@ -1089,5 +1089,338 @@ function tests(dataArray, bufferLength){
 			}
 		}
 	}
-	attractorTest();
+	// attractorTest();
+
+	function attractorTool(){
+
+		var Attractor = (function(x, y){
+
+			this.x = x;
+			this.y = y;
+			this.radius = 200; //radius of impact
+			this.strength = 1; //+ for attraction, - for repulsion
+			this.ramp = 0.5; // form of function
+			this.mode = 'basic';
+
+			this.attract = function(node){
+				var dx = this.x - node.x;
+				var dy = this.y - node.y;
+				var d = Math.sqrt(
+						Math.pow(dx, 2) + Math.pow(dy, 2)
+					);
+				var f = 0;
+
+				switch(this.mode){
+					case 'basic':
+						if(d > 0 && d < this.radius){
+							//calc force
+							var s = d/this.radius;
+							f = (1 / Math.pow(s, 0.5*this.ramp) -1);
+							f = this.strength * f / this.radius;
+						}
+						break;
+					case 'smooth': // Fallthrough
+					case 'twirl':
+						if(d > 0 && d < this.radius){
+							var s = Math.pow(d/this.radius, 1/this.ramp);
+							f = s * 9 * this.strength * (1 / (s + 1) + ((s-3) /4)) /d;
+						}
+						break;
+					default:
+						f = null;
+				}
+				
+				//apply force
+				if(this.mode !== 'twirl'){
+					node.velocity.x += dx * f;
+					node.velocity.y += dy * f;
+				}
+				else{
+					node.velocity.x += dx * f;
+					node.velocity.y -= dy * f;
+				}
+			};
+		});
+
+		var Node = (function(x, y){
+
+			this.minX = 5;
+			this.minY = 5;
+			this.maxX = canvWidth-5;
+			this.maxY = canvHeight-5;
+			this.damping = 0.1;
+			this.x = x;
+			this.y = y;
+			this.velocity = {
+				x: null,
+				y: null
+			};
+
+			this.update = function(){
+
+				this.x += this.velocity.x;
+				this.y += this.velocity.y;
+
+				if(this.x < this.minX){
+					this.x = this.minX - (this.x - this.minX);
+					this.velocity.x *= -1;
+				}
+
+				if(this.x > this.maxX){
+					this.x = this.maxX - (this.x - this.maxX);
+					this.velocity.x *= -1;
+				}
+
+				if(this.y < this.minY){
+					this.y = this.minY - (this.y - this.minY);
+					this.velocity.y *= -1;
+				}
+
+				if(this.y > this.maxY){
+					this.y = this.maxY - (this.y - this.maxY);
+					this.velocity.y *= -1;
+				}
+
+				this.velocity.x *= (1-this.damping);
+				this.velocity.y *= (1-this.damping);
+			};
+
+			this.setBoundary = function(minX, minY, maxX, maxY){
+				this.minX = minX;
+				this.minY = minY;
+				this.maxX = maxX;
+				this.maxY = maxY;
+			};
+
+			this.setDamping = function(newDamping){
+				this.damping = newDamping;
+			};
+		});
+
+		var maxCount = 150;
+		var xCount = 130;
+		var yCount = 130;
+		var layerCount;
+		var oldLayerCount;
+		var oldXCount, oldXCount;
+		var gridStepX = canvWidth/xCount;
+		var gridStepY = canvHeight/yCount;
+		var oldGridStepX, oldGridStepY;
+
+		var attractorSmooth = false;
+		var attractorTwirl = true;
+		var attractorRadius = 100;
+		var attractorStrength = 3;
+		var attractorRamp = 1;
+		var nodeDamping = 0.1;
+
+		// var invertBackground = false;
+		var lineWeight = 1;
+		var lineAlpha = 50;
+		var drawX = true;
+		var drawY = false;
+		var lockX = true;
+		var lockY = false;
+
+		var drawLines = true;
+		var drawCurves = false;
+
+		var attractor;
+		var nodes;
+
+		function init(){
+
+			attractor = new Attractor(canvWidth/2, canvHeight/2);
+			attractor.mode = 'smooth';
+
+			nodes = [];
+			initGrid();
+			startAnimating(10);
+
+		}
+		init();
+
+		function initGrid(){
+
+			var xPos, yPos;
+			
+				for(var x = 0; x < xCount; x++){
+					for(var y = 0; y < yCount; y++){
+					xPos = gridStepX *x;
+					yPos = gridStepY *y;
+
+					var node = new Node(xPos, yPos);
+						node.velocity.x = 0; //??
+						node.velocity.y = 0; //??
+						node.damping = nodeDamping;
+
+					nodes.push(node);
+				}
+			}
+		}
+
+		function draw(){
+
+			canvasCtx.clearRect(0,0, canvWidth, canvHeight);
+			canvasCtx.fillStyle = bgColor;
+			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
+
+			//needed?
+			if(xCount !== oldXCount || yCount !== oldYCount || layerCount !== oldLayerCount){
+				oldXCount = xCount;
+				oldYCount = yCount;
+				oldLayerCount = layerCount;
+			} 
+
+			if(attractorSmooth){
+				attractor.mode = 'smooth';
+			}else if(attractorTwirl){
+				attractor.mode = 'twirl';
+			}else{
+				attractor.mode = 'basic';
+			}
+			
+			attractor.strength = Math.random()*10;
+			if(Math.floor(Math.random()*2) === 1){
+				attractor.strength *= -1;
+			}
+
+			attractor.radius = Math.random()*(canvWidth);
+
+			nodeDamping = Math.random()*0.8;
+			if(Math.floor(Math.random()*2) === 1){
+				nodeDamping *= -1;
+			}
+
+
+			// attractor.x = attractorNode.x //TODO - add attractor Node
+			// attractor.y = attractorNode.y //TODO - add attractor Node
+
+
+			//update attractor and nodes
+			//note, my method deviates from GenDes version
+			for (var i = 0; i < nodes.length; i++) {
+				nodes[i].setDamping(nodeDamping);
+				attractor.attract(nodes[i]);
+				nodes[i].update();
+			}
+
+			//draw lines
+			var lineDrawn = false;
+
+			//draw x
+			if(drawX && xCount > 0){
+				// for (var i = 0; i < layerCount; i++) { //GenDes uses a reverse itterator here
+					// for (var x = 0; x < xCount; x++) { //GenDes uses yCount here wtf
+				// for (var y = 0; y < 1; y++) { 
+					// drawLine(nodes, xCount);
+					var i = 0;
+					// for(var i = 0; i < nodes.length-1; i++){
+					for(var y = 0; y < yCount; y++){
+						canvasCtx.beginPath()
+						for(var x = 0; x < xCount; x++){
+							canvasCtx.moveTo(nodes[i].x, nodes[i].y);
+
+							var theta = Math.atan2(canvHeight/2 - nodes[i].y, canvWidth/2 -nodes[i].x); //point towards centre
+							// canvasCtx.lineTo(nodes[i].x, nodes[i].y);
+							canvasCtx.lineTo((Math.cos(theta)*5) + nodes[i].x, (Math.sin(theta)*5) +nodes[i].y);
+							if(i+2 < nodes.length-1){
+								i++;
+							}// else{
+							// 	i = 0;
+							// }
+						}
+						canvasCtx.closePath();
+						canvasCtx.strokeStyle = 'black';
+						canvasCtx.stroke();
+					}
+					
+				// }
+				lineDrawn = true;
+			}
+
+			//draw y
+			if(drawY && xCount > 0){
+				// for (var i = 0; i < layerCount; i++) { //GenDes uses a reverse itterator here
+					// for (var x = 0; x < xCount; x++) { //GenDes uses yCount here wtf
+				for (var x = 0; x < xCount; x++) {
+					for (var y = 0; y < yCount; y++) {
+						var points = [nodes[x], nodes[y]] 
+						drawLine(points, xCount);
+						canvasCtx.strokeStyle = 'black';
+						canvasCtx.stroke();
+					}
+				}
+				lineDrawn = true;
+			}
+
+			if(!lineDrawn){
+				for (var x = 0; x < nodes.length; x++) {
+					canvasCtx.beginPath();
+					canvasCtx.arc(nodes[x].x, nodes[x].y, 2, 0, Math.PI*2);
+					canvasCtx.fillStyle = 'black';
+					canvasCtx.fill();
+				}
+			}
+		}
+
+		function drawLine(points, len){
+			var l1, l2, q0, q1, q2;
+
+			//first and last index to draw
+			var i1 = (points.length-1) /2 -len;
+			var i2 = (points.length-1) /2 +len;
+
+			//first point
+			// canvasCtx.beginPath();
+			// canvasCtx.moveTo(points[i1].x, points[i1].y);
+			// var q0 = 0.5;
+
+			// for (var i = i1+1; i <= i2; i++) {
+			// 	canvasCtx.lineTo(points[i].x, points[i].y);
+			// }
+
+			canvasCtx.beginPath();
+			// canvasCtx.moveTo(nodes[0].x, nodes[0].y);
+			var q0 = 0.5;
+
+			for (var i = i; i <= nodes.length; i++) {
+				canvasCtx.moveTo(nodes[i].x, nodes[i].y);
+				canvasCtx.lineTo(nodes[i+1].x, nodes[i+1].y);
+			}
+			canvasCtx.strokeStyle = 'black';
+			canvasCtx.stroke();
+		}
+
+
+		var stop = false;
+		var frameCount = 0;
+		var fps, fpsInterval, startTime, now, then, elapsed;
+
+		function startAnimating(fps){
+			fpsInterval = 1000/fps;
+			then = Date.now();
+			startTime = then;
+			animate();
+		}
+
+
+		function animate(){
+
+			if(stop){
+				return;
+			}
+			drawVisual = requestAnimationFrame(animate);
+
+			now = Date.now();
+			elapsed = now - then;
+
+			if(elapsed > fpsInterval){
+				then = now - (elapsed % fpsInterval);
+
+				draw();
+			}
+		}
+	}
+	attractorTool();
 }
