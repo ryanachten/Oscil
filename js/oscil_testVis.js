@@ -1307,8 +1307,8 @@ function tests(dataArray, bufferLength){
 			attractStrengthInput.id = 'attractStrengthInput';
 			attractStrengthInput.className = 'vis-setting';
 			attractStrengthInput.min = 0;
-			attractStrengthInput.max = 100;
-			attractStrengthInput.value = 50;
+			attractStrengthInput.max = 200;
+			attractStrengthInput.value = 100;
 			var attractStrengthLabel = document.createElement('label');
 				attractStrengthLabel.htmlFor = 'attractStrengthInput';
 				attractStrengthLabel.innerHTML = 'Attraction Strength';
@@ -1446,7 +1446,7 @@ function tests(dataArray, bufferLength){
 			analyser.getByteFrequencyData(dataArray);
 			var da = dataArray[0];
 
-			attractor.strength = Math.random()*attractStrengthInput.value;
+			attractor.strength = Math.random()* (da * (attractStrengthInput.value/100));
 				if(Math.floor(Math.random()*2) === 1) attractor.strength *= -1;
 			attractor.radius = Math.random()* (da*attractRadiusInput.value);
 
