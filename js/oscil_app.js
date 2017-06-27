@@ -159,6 +159,9 @@ function visualise(visMode){
 	else if(visMode === 'NodeAttraction'){
 		nodeAttraction(dataArray, bufferLength);
 	}
+	else if(visMode === 'ChladniPlate'){
+		chladniPlate(dataArray, bufferLength);
+	}
 	else if(visMode === 'Test'){
 		tests(dataArray, bufferLength); //
 	}
