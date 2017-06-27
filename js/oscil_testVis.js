@@ -1198,8 +1198,7 @@ function tests(dataArray, bufferLength){
 		});
 
 		
-		//Runtime UI stuff
-		/*
+		//Runtime UI stuff		
 		var visSettings	= document.getElementById('vis-settings');
 			visSettings.style.display = 'block';
 
@@ -1209,50 +1208,107 @@ function tests(dataArray, bufferLength){
 			nodeDampingInput.className = 'vis-setting';
 			nodeDampingInput.min = 0;
 			nodeDampingInput.max = 100;
-			nodeDampingInput.value = 40; //need to be /100 for 0.8
+			nodeDampingInput.value = 10; //need to be /100 for 0.8
 			var nodeDampingLabel = document.createElement('label');
 				nodeDampingLabel.htmlFor = 'nodeDampingInput';
 				nodeDampingLabel.innerHTML = 'Node Damping';
 				nodeDampingLabel.className = 'vis-setting';
 
-		var showAttractNodeDiv = document.createElement('div');
-			showAttractNodeDiv.className = 'vis-setting';
-			var showAttractNode = document.createElement('input');
-				showAttractNode.id = 'showAttractNode';
-				showAttractNode.type = 'checkbox';
-				showAttractNode.className = 'vis-setting switch-input';
-				showAttractNode.checked = false;
-			var showAttractNodePaddel = document.createElement('label');
-				showAttractNodePaddel.className = 'vis-setting switch-paddle';
-				showAttractNodePaddel.htmlFor = 'showAttractNode';
-			var showAttractNodeLabel = document.createElement('label');
-				showAttractNodeLabel.htmlFor = 'showAttractNode';
-				showAttractNodeLabel.innerHTML = 'Show Attractor';
-				showAttractNodeLabel.className = 'vis-setting';
-			
+		var basicDiv = document.createElement('div');
+			basicDiv.className = 'vis-setting switch';
+			var basicModeInput = document.createElement('input');
+				basicModeInput.id = 'basicModeInput';
+				basicModeInput.type = 'radio';
+				basicModeInput.name = 'attractMode';
+				basicModeInput.className = 'vis-setting switch-input';
+			var basicModeLabel = document.createElement('label');
+				basicModeLabel.htmlFor = 'basicModeInput';
+				basicModeLabel.innerHTML = 'Basic Mode';
+				basicModeLabel.className = 'vis-setting';
+			var basicModePaddel = document.createElement('label');
+				basicModePaddel.className = 'vis-setting switch-paddle';
+				basicModePaddel.htmlFor = 'basicModeInput';
+		
+		var smoothDiv = document.createElement('div');
+			smoothDiv.className = 'vis-setting switch';
+			var smoothModeInput = document.createElement('input');
+				smoothModeInput.id = 'smoothModeInput';
+				smoothModeInput.type = 'radio';
+				smoothModeInput.name = 'attractMode';
+				smoothModeInput.className = 'vis-setting switch-input';
+				smoothModeInput.checked = true;
+			var smoothModeLabel = document.createElement('label');
+				smoothModeLabel.htmlFor = 'smoothModeInput';
+				smoothModeLabel.innerHTML = 'Smooth Mode';
+			var smoothModePaddel = document.createElement('label');
+				smoothModePaddel.className = 'vis-setting switch-paddle';
+				smoothModePaddel.htmlFor = 'smoothModeInput';
+
+		var twistDiv = document.createElement('div');
+			twistDiv.className = 'vis-setting switch';
+			var twistModeInput = document.createElement('input');
+				twistModeInput.id = 'twistModeInput';
+				twistModeInput.type = 'radio';
+				twistModeInput.name = 'attractMode';
+				twistModeInput.className = 'vis-setting switch-input';
+				// twistModeInput.checked = true;
+			var twistModeLabel = document.createElement('label');
+				twistModeLabel.htmlFor = 'twistModeInput';
+				twistModeLabel.innerHTML = 'Twist Mode';
+			var twistModePaddel = document.createElement('label');
+				twistModePaddel.className = 'vis-setting switch-paddle';
+				twistModePaddel.htmlFor = 'twistModeInput';	
+
+		var lineDiv = document.createElement('div');
+			lineDiv.className = 'vis-setting switch';
+			var lineModeInput = document.createElement('input');
+				lineModeInput.id = 'lineModeInput';
+				lineModeInput.type = 'radio';
+				lineModeInput.name = 'drawMode';
+				lineModeInput.className = 'vis-setting switch-input';
+				lineModeInput.checked = true;
+			var lineModeLabel = document.createElement('label');
+				lineModeLabel.htmlFor = 'lineModeInput';
+				lineModeLabel.innerHTML = 'Draw Lines';
+				lineModeLabel.className = 'vis-setting';
+			var lineModePaddel = document.createElement('label');
+				lineModePaddel.className = 'vis-setting switch-paddle';
+				lineModePaddel.htmlFor = 'lineModeInput';
+		
+		var circleDiv = document.createElement('div');
+			circleDiv.className = 'vis-setting switch';
+			var circleModeInput = document.createElement('input');
+				circleModeInput.id = 'circleModeInput';
+				circleModeInput.type = 'radio';
+				circleModeInput.name = 'drawMode';
+				circleModeInput.className = 'vis-setting switch-input';
+			var circleModeLabel = document.createElement('label');
+				circleModeLabel.htmlFor = 'circleModeInput';
+				circleModeLabel.innerHTML = 'Draw Circles';
+				circleModeLabel.className = 'vis-setting';
+			var circleModePaddel = document.createElement('label');
+				circleModePaddel.className = 'vis-setting switch-paddle';
+				circleModePaddel.htmlFor = 'circleModeInput';
+					
 		var attractRadiusInput = document.createElement('input');
 			attractRadiusInput.type = 'range';
 			attractRadiusInput.id = 'attractRadiusInput';
 			attractRadiusInput.className = 'vis-setting';
 			attractRadiusInput.min = 0;
-			attractRadiusInput.max = 500;
-			attractRadiusInput.value = 200;
+			attractRadiusInput.max = 20;
+			attractRadiusInput.value = attractRadiusInput.max/2;
 			var attractRadiusLabel = document.createElement('label');
 				attractRadiusLabel.htmlFor = 'attractRadiusInput';
 				attractRadiusLabel.innerHTML = 'Attraction Radius';
 				attractRadiusLabel.className = 'vis-setting';
-
-			showAttractNodeDiv.appendChild(showAttractNodeLabel);
-			showAttractNodeDiv.appendChild(showAttractNode)
-			showAttractNodeDiv.appendChild(showAttractNodePaddel);
-
+	
 		var attractStrengthInput = document.createElement('input');
 			attractStrengthInput.type = 'range';
 			attractStrengthInput.id = 'attractStrengthInput';
 			attractStrengthInput.className = 'vis-setting';
-			attractStrengthInput.min = -50;
-			attractStrengthInput.max = 50;
-			attractStrengthInput.value = -10;
+			attractStrengthInput.min = 0;
+			attractStrengthInput.max = 100;
+			attractStrengthInput.value = 50;
 			var attractStrengthLabel = document.createElement('label');
 				attractStrengthLabel.htmlFor = 'attractStrengthInput';
 				attractStrengthLabel.innerHTML = 'Attraction Strength';
@@ -1262,14 +1318,15 @@ function tests(dataArray, bufferLength){
 			attractRampInput.type = 'range';
 			attractRampInput.id = 'attractRampInput';
 			attractRampInput.className = 'vis-setting';
-			attractRampInput.min = 0;
-			attractRampInput.max = 1000;
-			attractRampInput.value = 200; //need to be /100 for 0.2
+			attractRampInput.min = 0.1;
+			attractRampInput.max = 5;
+			attractRampInput.value = 1; //need to be /100 for 0.2
 			var attractRampLabel = document.createElement('label');
 				attractRampLabel.htmlFor = 'attractRampInput';
 				attractRampLabel.innerHTML = 'Attraction Ramp';
 				attractRampLabel.className = 'vis-setting';
 
+/*
 		var attractMaxVelocityInput = document.createElement('input');
 			attractMaxVelocityInput.type = 'range';
 			attractMaxVelocityInput.id = 'attractRadiusInput';
@@ -1283,22 +1340,43 @@ function tests(dataArray, bufferLength){
 				attractMaxVelocityLabel.className = 'vis-setting';
 
 		visSettings.appendChild(showAttractNodeDiv);
+		visSettings.appendChild(attractMaxVelocityLabel);
+		visSettings.appendChild(attractMaxVelocityInput);
+		*/
+			basicDiv.appendChild(basicModeLabel);
+			basicDiv.appendChild(basicModeInput);
+			basicDiv.appendChild(basicModePaddel);
+			smoothDiv.appendChild(smoothModeLabel);
+			smoothDiv.appendChild(smoothModeInput);
+			smoothDiv.appendChild(smoothModePaddel);
+			twistDiv.appendChild(twistModeLabel);
+			twistDiv.appendChild(twistModeInput);
+			twistDiv.appendChild(twistModePaddel);
+		visSettings.appendChild(basicDiv);
+		visSettings.appendChild(smoothDiv);
+		visSettings.appendChild(twistDiv);
+		// 	circleDiv.appendChild(circleModeLabel);
+		// 	circleDiv.appendChild(circleModeInput);
+		// 	circleDiv.appendChild(circleModePaddel);
+		// 	lineDiv.appendChild(lineModeLabel);
+		// 	lineDiv.appendChild(lineModeInput);
+		// 	lineDiv.appendChild(lineModePaddel);
+		// visSettings.appendChild(circleDiv);
+		// visSettings.appendChild(lineDiv);
+		visSettings.appendChild(nodeDampingLabel);
+		visSettings.appendChild(nodeDampingInput);
 		visSettings.appendChild(attractRadiusLabel);
 		visSettings.appendChild(attractRadiusInput);
 		visSettings.appendChild(attractStrengthLabel);
 		visSettings.appendChild(attractStrengthInput);
 		visSettings.appendChild(attractRampLabel);
 		visSettings.appendChild(attractRampInput);
-		visSettings.appendChild(attractMaxVelocityLabel);
-		visSettings.appendChild(attractMaxVelocityInput);
-		visSettings.appendChild(nodeDampingLabel);
-		visSettings.appendChild(nodeDampingInput);
-		*/
+		
 
 
 		var maxCount = 150;
-		var xCount = 130;
-		var yCount = 130;
+		var xCount = 100;
+		var yCount = 100;
 		var layerCount;
 		var oldLayerCount;
 		var oldXCount, oldXCount;
@@ -1313,8 +1391,8 @@ function tests(dataArray, bufferLength){
 		var attractorRamp = 1;
 		var nodeDamping = 0.1;
 		
-		var drawLines = false;
-		var drawCircles = true;
+		var drawLines;
+		var drawCircles;
 
 		var attractor;
 		var nodes;
@@ -1322,11 +1400,11 @@ function tests(dataArray, bufferLength){
 		function init(){
 
 			attractor = new Attractor(canvWidth/2, canvHeight/2);
-			attractor.mode = 'smooth';
+			attractor.mode = 'twist';
 
 			nodes = [];
 			initGrid();
-			startAnimating(10);
+			startAnimating(30);
 
 		}
 		init();
@@ -1357,20 +1435,27 @@ function tests(dataArray, bufferLength){
 			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
 
-			if(attractorSmooth){
+			if(smoothModeInput.checked){
 				attractor.mode = 'smooth';
-			}else if(attractorTwirl){
+			}else if(twistModeInput.checked){
 				attractor.mode = 'twirl';
 			}else{
 				attractor.mode = 'basic';
 			}
 			
-			attractor.strength = Math.random()*10;
-				if(Math.floor(Math.random()*2) === 1) attractor.strength *= -1;
-			attractor.radius = Math.random()*(canvWidth);
+			analyser.getByteFrequencyData(dataArray);
+			var da = dataArray[0];
 
-			nodeDamping = Math.random()*0.8;
-				if(Math.floor(Math.random()*2) === 1) nodeDamping *= -1;
+			attractor.strength = Math.random()*attractStrengthInput.value;
+				if(Math.floor(Math.random()*2) === 1) attractor.strength *= -1;
+			attractor.radius = Math.random()* (da*attractRadiusInput.value);
+
+			attractor.ramp = Math.random()*attractRampInput.value;
+
+			// nodeDamping = Math.random()*0.8;
+			// 	if(Math.floor(Math.random()*2) === 1) nodeDamping *= -1;
+
+			nodeDamping = nodeDampingInput.value/100; //non-random
 
 
 			for (var i = 0; i < nodes.length; i++) {
@@ -1379,7 +1464,7 @@ function tests(dataArray, bufferLength){
 				nodes[i].update();
 			}
 
-			if(drawLines){
+			if(lineModeInput.checked){
 				var i = 0;
 
 				for(var y = 0; y < yCount; y++){
@@ -1400,7 +1485,7 @@ function tests(dataArray, bufferLength){
 				lineDrawn = true;
 			}
 
-			if(drawCircles){
+			if(circleModeInput.checked){
 				for (var x = 0; x < nodes.length; x++) {
 					canvasCtx.beginPath();
 					canvasCtx.arc(nodes[x].x, nodes[x].y, 2, 0, Math.PI*2);
