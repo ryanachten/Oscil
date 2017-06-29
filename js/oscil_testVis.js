@@ -658,52 +658,122 @@ function tests(dataArray, bufferLength){
 
 	function indiTest01(){
 
-		var requiredAssets = 3; //not the best approach
+		var requiredAssets = 5; //not the best approach
 								//	- subject to falability if not updated
 		var loadedAssets = 0;
 
-		var longDashSvg = new Image();
-		longDashSvg.src = 'img/Indi_Web_SVG_Optimised/Indi_WebSvg_Long_Dash.svg';
-		longDashSvg.onload = function(){
+		var rodDashSvg = new Image();
+		rodDashSvg.src = 'img/Indi_Web_SVG_Optimised/Indi_WebSvg_Long_Dash.svg';
+		rodDashSvg.onload = function(){
 			loadedAssets++;
 			init();			
 		};
 
-		var longDashOuterSvg = new Image();
-		longDashOuterSvg.src = 'img/Indi_Web_SVG_Optimised/Indi_WebSvg_Long_Outer.svg';
-		longDashOuterSvg.onload = function(){
+		var rodOuterSvg = new Image();
+		rodOuterSvg.src = 'img/Indi_Web_SVG_Optimised/Indi_WebSvg_Long_Outer.svg';
+		rodOuterSvg.onload = function(){
 			loadedAssets++;
 			init();			
 		};
 
-		var longDashInnerSvg = new Image();
-		longDashInnerSvg.src = 'img/Indi_Web_SVG_Optimised/Indi_WebSvg_Long_Inner.svg';
-		longDashInnerSvg.onload = function(){
+		var rodInnerSvg = new Image();
+		rodInnerSvg.src = 'img/Indi_Web_SVG_Optimised/Indi_WebSvg_Long_Inner.svg';
+		rodInnerSvg.onload = function(){
+			loadedAssets++;
+			init();
+		};
+
+		var dashOuterSvg = new Image();
+		dashOuterSvg.src = 'img/Indi_Web_SVG_Optimised/Indi_WebSvg_Short_Outer.svg';
+		dashOuterSvg.onload = function(){
+			loadedAssets++;
+			init();			
+		};
+
+		var dashInnerSvg = new Image();
+		dashInnerSvg.src = 'img/Indi_Web_SVG_Optimised/Indi_WebSvg_Short_Inner.svg';
+		dashInnerSvg.onload = function(){
+			loadedAssets++;
+			init();
+		};
+
+		var dotOuterSvg = new Image();
+		dotOuterSvg.src = 'img/Indi_Web_SVG_Optimised/Indi_WebSvg_Dot_Outer.svg';
+		dotOuterSvg.onload = function(){
+			loadedAssets++;
+			init();			
+		};
+
+		var dotInnerSvg = new Image();
+		dotInnerSvg.src = 'img/Indi_Web_SVG_Optimised/Indi_WebSvg_Dot_Inner.svg';
+		dotInnerSvg.onload = function(){
 			loadedAssets++;
 			init();
 		};
 
 
-		var LongDash = (function(){
-
-			this.test = 'test';
-
-			this.draw = function(xPos, yPos){
-				console.log('draw');
-				canvasCtx.drawImage(longDashSvg, xPos, yPos);	
-				canvasCtx.drawImage(longDashOuterSvg, xPos, yPos);
-				canvasCtx.drawImage(longDashInnerSvg, xPos, yPos+4);
-
+		var RodParticle = (function(){
+			this.width = 60;
+			this.height = 15;
+			this.draw = function(xPos, yPos, degrees){
+				canvasCtx.save();
+				canvasCtx.translate(xPos, yPos);
+				canvasCtx.rotate(degrees * Math.PI/180);
+				canvasCtx.drawImage(rodDashSvg, 0, 0);	
+				canvasCtx.drawImage(rodOuterSvg, 0, 0);
+				canvasCtx.drawImage(rodInnerSvg, 0, 4);
+				canvasCtx.restore();
 			};
-
 		});
+
+		var DashParticle = (function(){
+			this.width = 27;
+			this.height = 15;
+			this.draw = function(xPos, yPos, degrees){
+				canvasCtx.save();
+				canvasCtx.translate(xPos, yPos);
+				canvasCtx.rotate(degrees * Math.PI/180);	
+				canvasCtx.drawImage(dashOuterSvg, 0, 0);
+				canvasCtx.drawImage(dashInnerSvg, 0, 0.5);
+				canvasCtx.restore();
+			};
+		});
+
+		var DotParticle = (function(){
+			this.width = 15;
+			this.height = 15;
+			this.draw = function(xPos, yPos, degrees){
+				canvasCtx.save();
+				canvasCtx.translate(xPos, yPos);
+				canvasCtx.rotate(degrees * Math.PI/180);	
+				canvasCtx.drawImage(dotOuterSvg, 0, 0);
+				canvasCtx.drawImage(dotInnerSvg, 0, 0.5);
+				canvasCtx.restore();
+			};
+		});
+
+		var rodPart; 
+		var dashPart;
+		var dotPart;
+
 
 		function init(){
 			if(loadedAssets === requiredAssets){
-				
-				var longD = new LongDash();
-				longD.draw(50, 50);
+				rodPart = new RodParticle();
+				dashPart = new DashParticle();
+				dotPart = new DotParticle();
+
+				draw();
 			}
+		}
+
+		function draw(){
+			rodPart.draw(canvWidth/2, canvHeight/2, 0);
+			rodPart.draw(canvWidth/2, canvHeight/2 + rodPart.height, 0);
+			dashPart.draw(canvWidth/4, canvHeight/4, 0);
+			dashPart.draw(canvWidth/4, canvHeight/4 + dashPart.height, 0);
+			dotPart.draw(canvWidth*0.75, canvHeight*0.75, 0);
+			dotPart.draw(canvWidth*0.75 + dotPart.width, canvHeight*0.75, 0);
 		}		
 
 	}
