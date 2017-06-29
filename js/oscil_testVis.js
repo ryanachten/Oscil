@@ -656,4 +656,56 @@ function tests(dataArray, bufferLength){
 	}
 	// noiseAgent();
 
+	function indiTest01(){
+
+		var requiredAssets = 3; //not the best approach
+								//	- subject to falability if not updated
+		var loadedAssets = 0;
+
+		var longDashSvg = new Image();
+		longDashSvg.src = 'img/Indi_Web_SVG_Optimised/Indi_WebSvg_Long_Dash.svg';
+		longDashSvg.onload = function(){
+			loadedAssets++;
+			init();			
+		};
+
+		var longDashOuterSvg = new Image();
+		longDashOuterSvg.src = 'img/Indi_Web_SVG_Optimised/Indi_WebSvg_Long_Outer.svg';
+		longDashOuterSvg.onload = function(){
+			loadedAssets++;
+			init();			
+		};
+
+		var longDashInnerSvg = new Image();
+		longDashInnerSvg.src = 'img/Indi_Web_SVG_Optimised/Indi_WebSvg_Long_Inner.svg';
+		longDashInnerSvg.onload = function(){
+			loadedAssets++;
+			init();
+		};
+
+
+		var LongDash = (function(){
+
+			this.test = 'test';
+
+			this.draw = function(xPos, yPos){
+				console.log('draw');
+				canvasCtx.drawImage(longDashSvg, xPos, yPos);	
+				canvasCtx.drawImage(longDashOuterSvg, xPos, yPos);
+				canvasCtx.drawImage(longDashInnerSvg, xPos, yPos+4);
+
+			};
+
+		});
+
+		function init(){
+			if(loadedAssets === requiredAssets){
+				
+				var longD = new LongDash();
+				longD.draw(50, 50);
+			}
+		}		
+
+	}
+	indiTest01();
 }
