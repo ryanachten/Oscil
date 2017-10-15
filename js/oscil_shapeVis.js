@@ -31,7 +31,7 @@ function barGraph(dataArray, bufferLength){
 
 function waveForm(dataArray, bufferLength){
 
-	//analyser.fftSize = 1024; //defines Fast Fourier Transform rate 
+	//analyser.fftSize = 1024; //defines Fast Fourier Transform rate
 
 	canvasCtx.clearRect(0,0,canvWidth,canvHeight); //reset canvas for new vis
 
@@ -71,52 +71,57 @@ function waveForm(dataArray, bufferLength){
 function gradient(dataArray, bufferLength){
 
 	//Runtime UI stuff
+	var visGui = new dat.GUI();
+	var visGuiSettings = {
+		gradMode : 'radial'
+	};
+	visGui.add(visGuiSettings, 'gradMode', ['linear', 'radial']);
+
 	var visSettings	= document.getElementById('vis-settings');
-		visSettings.style.display = 'block';
+	  visSettings.style.display = 'block';
 
-		var linearDiv = document.createElement('div');
-			linearDiv.className = 'vis-setting switch';
-		var linearMode = document.createElement('input');
-			linearMode.id = 'linearMode';
-			linearMode.type = 'radio';
-			linearMode.name = 'gradMode';
-			linearMode.className = 'vis-setting switch-input';
-		var linearModeLabel = document.createElement('label');
-			linearModeLabel.htmlFor = 'linearMode';
-			linearModeLabel.innerHTML = 'Linear';
-			linearModeLabel.className = 'vis-setting';
-		var linearModePaddel = document.createElement('label');
-			linearModePaddel.className = 'vis-setting switch-paddle';
-			linearModePaddel.htmlFor = 'linearMode';
-		
-		var radialDiv = document.createElement('div');
-			radialDiv.className = 'vis-setting switch';
-		var radialMode = document.createElement('input');
-			radialMode.id = 'radialMode';
-			radialMode.type = 'radio';
-			radialMode.name = 'gradMode';
-			radialMode.className = 'vis-setting switch-input';
-			radialMode.checked = 'true';
-		var radialModePaddel = document.createElement('label');
-			radialModePaddel.className = 'vis-setting switch-paddle';
-			radialModePaddel.htmlFor = 'radialMode';
-		var radialModeLabel = document.createElement('label');
-			radialModeLabel.htmlFor = 'radialMode';
-			radialModeLabel.innerHTML = 'Radial';
-			radialModeLabel.className = 'vis-setting';
+	  var linearDiv = document.createElement('div');
+	    linearDiv.className = 'vis-setting switch';
+	  var linearMode = document.createElement('input');
+	    linearMode.id = 'linearMode';
+	    linearMode.type = 'radio';
+	    linearMode.name = 'gradMode';
+	    linearMode.className = 'vis-setting switch-input';
+	  var linearModeLabel = document.createElement('label');
+	    linearModeLabel.htmlFor = 'linearMode';
+	    linearModeLabel.innerHTML = 'Linear';
+	    linearModeLabel.className = 'vis-setting';
+	  var linearModePaddel = document.createElement('label');
+	    linearModePaddel.className = 'vis-setting switch-paddle';
+	    linearModePaddel.htmlFor = 'linearMode';
 
-		linearDiv.appendChild(linearModeLabel);
-		linearDiv.appendChild(linearMode);
-		linearDiv.appendChild(linearModePaddel);
-		radialDiv.appendChild(radialModeLabel);
-		radialDiv.appendChild(radialMode);
-		radialDiv.appendChild(radialModePaddel);
-		visSettings.appendChild(linearDiv);
-		visSettings.appendChild(radialDiv);
+	  var radialDiv = document.createElement('div');
+	    radialDiv.className = 'vis-setting switch';
+	  var radialMode = document.createElement('input');
+	    radialMode.id = 'radialMode';
+	    radialMode.type = 'radio';
+	    radialMode.name = 'gradMode';
+	    radialMode.className = 'vis-setting switch-input';
+	    radialMode.checked = 'true';
+	  var radialModePaddel = document.createElement('label');
+	    radialModePaddel.className = 'vis-setting switch-paddle';
+	    radialModePaddel.htmlFor = 'radialMode';
+	  var radialModeLabel = document.createElement('label');
+	    radialModeLabel.htmlFor = 'radialMode';
+	    radialModeLabel.innerHTML = 'Radial';
+	    radialModeLabel.className = 'vis-setting';
 
+	  linearDiv.appendChild(linearModeLabel);
+	  linearDiv.appendChild(linearMode);
+	  linearDiv.appendChild(linearModePaddel);
+	  radialDiv.appendChild(radialModeLabel);
+	  radialDiv.appendChild(radialMode);
+	  radialDiv.appendChild(radialModePaddel);
+	  visSettings.appendChild(linearDiv);
+	  visSettings.appendChild(radialDiv);
 
 	canvasCtx.clearRect(0,0,canvWidth,canvHeight);
-	
+
 	function draw(){
 		drawVisual = requestAnimationFrame(draw);
 		analyser.getByteFrequencyData(dataArray);
@@ -125,7 +130,7 @@ function gradient(dataArray, bufferLength){
 		var gradMode;
 		var grad;
 
-		if (linearMode.checked){
+		if (visGuiSettings.gradMode === "linear"){
 			//Linear
 			grad = canvasCtx.createLinearGradient(0,0, canvWidth, canvHeight);
 		}
@@ -135,7 +140,7 @@ function gradient(dataArray, bufferLength){
 				canvWidth/2,canvHeight/2, 0, //inner circle - can move this later
 				canvWidth/2, canvHeight/2,(canvWidth > canvHeight ? canvHeight : canvWidth)/2);	//outer circle
 		}
-		
+
 		// TODO: currently only works with FFT size of 256
 		// TODO: dataArray.length actually returns 'undefined' shouldn't be in the for loop
 		for(var i=0; i <bufferLength; i++){
@@ -158,7 +163,7 @@ function polyShapes(dataArray, bufferLength){
 	//Runtime UI stuff
 	var visSettings	= document.getElementById('vis-settings');
 		visSettings.style.display = 'block';
-		
+
 	var alphaInput = document.createElement('input');
 		alphaInput.type = 'range';
 		alphaInput.id = 'sampleCountInput';
@@ -257,10 +262,10 @@ function polyShapes(dataArray, bufferLength){
 			}else{
 				circleResolution = (Math.random() * 80) +2;
 			}
-			
+
 			if(radiusModeCheck.checked){
 				radAxis = (canvWidth > canvHeight) ? canvHeight/2 : canvWidth/2;
-				radius = radAxis/logda; 
+				radius = radAxis/logda;
 				if(radius > (radAxis-10)) radius = radAxis-10;
 			}else{
 				radius = (Math.random() * radAxis) +2;
@@ -339,7 +344,7 @@ function particles(dataArray, bufferLength){
 			particleCountInput.addEventListener("change", function(){
 				particleCount = parseInt(particleCountInput.value);
 				// console.log('particleCount: ' + particleCount);
-				clear();	
+				clear();
 				init();
 			});
 
@@ -378,7 +383,7 @@ function particles(dataArray, bufferLength){
 			this.y = Math.random()*canvHeight;
 
 			this.vx = Math.random()*10-2; //change
-			this.vy = Math.random()*10-2; //change		
+			this.vy = Math.random()*10-2; //change
 		}
 
 
@@ -388,15 +393,15 @@ function particles(dataArray, bufferLength){
 		}
 
 		function draw(){
-			clear();	
-			
+			clear();
+
 			analyser.getByteFrequencyData(dataArray);
 
 			for(var i = 0; i < bufferLength; i+=20) {
 				var da = dataArray[i];
 
 				for (var j = 0; j < particleCount; j++) {
-				
+
 					var p = particles[j];
 
 					canvasCtx.beginPath();
@@ -435,7 +440,7 @@ function particles(dataArray, bufferLength){
 
 			drawVisual = requestAnimationFrame(draw);
 		}
-		
+
 		draw();
 }
 
@@ -510,7 +515,7 @@ function dumbAgents(dataArray, bufferLength){
 			var stepSize = diameter*2;
 
 			var rand = Math.floor((Math.random()*8)+0);
-			
+
 			switch(rand){
 				case north:
 					canvasCtx.strokeStyle = 'hsl(140, 70%, 70%)';
@@ -662,7 +667,7 @@ function shapeAgents(dataArray, bufferLength){
 		clearInputLabel.htmlFor = 'clearInput';
 		clearInputLabel.innerHTML = 'Interval Clear';
 		clearInputLabel.className = 'vis-setting';
-	
+
 		resolutionDiv.appendChild(resolutionLabel);
 		resolutionDiv.appendChild(resolutionInput);
 	visSettings.appendChild(resolutionDiv);
@@ -755,12 +760,12 @@ function shapeAgents(dataArray, bufferLength){
 
 			if(filledInput.checked){
 				canvasCtx.fillStyle = 'hsl('+ logda*5+20 +',70%,70%)';
-				canvasCtx.fill();	
+				canvasCtx.fill();
 			}else{
 				canvasCtx.strokeStyle = 'hsl('+ logda*5+20 +',70%,70%)';
-				canvasCtx.stroke();	
+				canvasCtx.stroke();
 			}
-			
+
 		}
 	}
 
@@ -833,7 +838,7 @@ function brownianTree(dataArray, bufferLength){
 			maxRadLabel.htmlFor = 'maxRadInput';
 			maxRadLabel.innerHTML = 'Max Radius';
 			maxRadLabel.className = 'vis-setting';
-			
+
 			showRandDiv.appendChild(showRandInputLabel);
 			showRandDiv.appendChild(showRandInput);
 			showRandDiv.appendChild(showRandPaddel);
@@ -898,7 +903,7 @@ function brownianTree(dataArray, bufferLength){
 				canvasCtx.stroke();
 				canvasCtx.closePath();
 			}
-			
+
 
 			//align to closest circle
 			var angle = Math.atan2(newY-y[closestIndex], newX-x[closestIndex]);
@@ -921,7 +926,7 @@ function brownianTree(dataArray, bufferLength){
 		var fps, fpsInterval, startTime, now, then, elapsed;
 		var logda;
 
-		function startAnimating(){			
+		function startAnimating(){
 			then = Date.now();
 			startTime = then;
 			animate();
@@ -973,7 +978,7 @@ function concretePoetry(dataArray, bufferLength){
 		textAreaInput.className = 'vis-setting';
 		textAreaInput.placeholder = 'there is always soma, delicious soma, half a gramme for a half-holiday, a gramme for a week-end, two grammes for a trip to the gorgeous East, three for a dark eternity on the moon';
 		textAreaInput.addEventListener("change", function(){
-			init();			
+			init();
 		});
 	var textAreaLabel = document.createElement('label');
 		textAreaLabel.htmlFor = 'textAreaInput';
@@ -983,7 +988,7 @@ function concretePoetry(dataArray, bufferLength){
 	var caseDiv = document.createElement('form');
 			caseDiv.className = 'vis-setting';
 
-	var lowerCaseDiv = document.createElement('div');	
+	var lowerCaseDiv = document.createElement('div');
 			lowerCaseDiv.className = 'vis-setting switch';
 		var lowerCasemode = document.createElement('input');
 			lowerCasemode.id = 'lowerCasemode';
@@ -991,7 +996,7 @@ function concretePoetry(dataArray, bufferLength){
 			lowerCasemode.name = 'caseMode';
 			lowerCasemode.className = 'vis-setting switch-input';
 			lowerCasemode.addEventListener("change", function(){
-				init();			
+				init();
 			});
 		var lowerCasemodePaddel = document.createElement('label');
 			lowerCasemodePaddel.className = 'vis-setting switch-paddle';
@@ -1001,7 +1006,7 @@ function concretePoetry(dataArray, bufferLength){
 			lowerCasemodeLabel.innerHTML = 'Lowercase';
 			lowerCasemodeLabel.className = 'vis-setting';
 
-		var upperCaseDiv = document.createElement('div');	
+		var upperCaseDiv = document.createElement('div');
 			upperCaseDiv.className = 'vis-setting switch';
 		var upperCasemode = document.createElement('input');
 			upperCasemode.id = 'upperCasemode';
@@ -1010,7 +1015,7 @@ function concretePoetry(dataArray, bufferLength){
 			upperCasemode.checked = true;
 			upperCasemode.className = 'vis-setting switch-input';
 			upperCasemode.addEventListener("change", function(){
-				init();			
+				init();
 			});
 		var upperCasemodePaddel = document.createElement('label');
 			upperCasemodePaddel.className = 'vis-setting switch-paddle';
@@ -1020,7 +1025,7 @@ function concretePoetry(dataArray, bufferLength){
 			upperCasemodeLabel.innerHTML = 'Uppercase';
 			upperCasemodeLabel.className = 'vis-setting';
 
-		var caseOffDiv = document.createElement('div');	
+		var caseOffDiv = document.createElement('div');
 			caseOffDiv.className = 'vis-setting switch';
 		var caseOffmode = document.createElement('input');
 			caseOffmode.id = 'caseOffmode';
@@ -1028,7 +1033,7 @@ function concretePoetry(dataArray, bufferLength){
 			caseOffmode.name = 'caseMode';
 			caseOffmode.className = 'vis-setting switch-input';
 			caseOffmode.addEventListener("change", function(){
-				init();			
+				init();
 			});
 		var caseOffmodePaddel = document.createElement('label');
 			caseOffmodePaddel.className = 'vis-setting switch-paddle';
@@ -1071,12 +1076,12 @@ function concretePoetry(dataArray, bufferLength){
 		caseDiv.appendChild(caseOffDiv)
 	visSettings.appendChild(caseDiv);
 
-	
+
 
 	var textSample, typeFace, maxFontSize;
 	var xPos, yPos, endOfPage;
 	var i, fontSize;
-	
+
 	function init(){
 		if(textAreaInput.value.length > 0){
 			textSample = textAreaInput.value;
@@ -1088,12 +1093,12 @@ function concretePoetry(dataArray, bufferLength){
 		}else if(lowerCasemode.checked){
 			textSample = textSample.toLowerCase();
 		}
-		
+
 		typeFace = 'Arial';
 		maxFontSize = canvHeight/4;
 		i = fontSize = 0;
 
-		resetPage();	
+		resetPage();
 	}
 	init();
 
@@ -1136,7 +1141,7 @@ function concretePoetry(dataArray, bufferLength){
 
 		if(!endOfPage){
 			i++;
-			if(i >= textSample.length) i = 0;	
+			if(i >= textSample.length) i = 0;
 			drawVisual = setTimeout(addLetter, expda);
 		}
 		else{
@@ -1204,7 +1209,7 @@ function lissajousFigure(dataArray, bufferLength){
 			pointCountInput.max = 1000;
 			pointCountInput.value = 1000;
 			pointCountInput.addEventListener("change", function(){
-					init();			
+					init();
 				});
 		var pointCountLabel = document.createElement('label');
 			pointCountLabel.htmlFor = 'pointCountInput';
@@ -1243,7 +1248,7 @@ function lissajousFigure(dataArray, bufferLength){
 				modulatedCheck.className = 'vis-setting switch-input';
 				modulatedCheck.checked = false;
 				modulatedCheck.addEventListener("change", function(){
-					init();			
+					init();
 				});
 			var modulatedPaddel = document.createElement('label');
 				modulatedPaddel.className = 'vis-setting switch-paddle';
@@ -1344,7 +1349,7 @@ function lissajousFigure(dataArray, bufferLength){
 				}else{
 					x = Math.sin(angle*freqX + (Math.PI/180)*phi); //lissajous
 					y = Math.sin(angle*freqY); //lissajous
-				}			
+				}
 
 				x =  x * factorX + canvWidth/2;
 				y = y * factorY + canvHeight/2;
@@ -1437,7 +1442,7 @@ function lissajousWebs(dataArray, bufferLength){
 			pointCountInput.max = 1000;
 			pointCountInput.value = 1000;
 			pointCountInput.addEventListener("change", function(){
-					init();			
+					init();
 				});
 		var pointCountLabel = document.createElement('label');
 			pointCountLabel.htmlFor = 'pointCountInput';
@@ -1525,7 +1530,7 @@ function lissajousWebs(dataArray, bufferLength){
 			}
 
 			for (var i = 0; i <= pointCount; i++) {
-				
+
 				var angle = map_range(i, 0,pointCount, 0,Math.PI);
 				var x = Math.sin(angle * freqX + ((Math.PI/180)*phi) * Math.cos(angle * modFreqX));
 				var y = Math.sin(angle * freqY) * Math.cos(angle * modFreqY);
@@ -1715,7 +1720,7 @@ function nodeAttraction(dataArray, bufferLength){
 				showAttractNodeLabel.htmlFor = 'showAttractNode';
 				showAttractNodeLabel.innerHTML = 'Show Attractor';
 				showAttractNodeLabel.className = 'vis-setting';
-			
+
 		var attractRadiusInput = document.createElement('input');
 			attractRadiusInput.type = 'range';
 			attractRadiusInput.id = 'attractRadiusInput';
@@ -1786,10 +1791,10 @@ function nodeAttraction(dataArray, bufferLength){
 		var nodeCount = xCount * yCount;
 		var nodes;
 		var node_Damping = nodeDampingInput.value/100;
-		
+
 		var attractor;
 		var attractor_MaxRamp, attractor_Radius, attractor_Strength;
-		
+
 		var attractNode;
 		var attractNode_MaxVelocity;
 
@@ -1823,7 +1828,7 @@ function nodeAttraction(dataArray, bufferLength){
 				attractNode.velocity.y = attractMaxVelocityInput.value/2;
 
 			startAnimating(10);
-		}	
+		}
 		init();
 
 
@@ -1876,15 +1881,15 @@ function nodeAttraction(dataArray, bufferLength){
 			attractor.ramp = Math.random()*attractor_MaxRamp;
 			if(Math.floor(Math.random()*2) === 1) attractor.ramp*=-1;
 
-			
+
 
 			for(var i = 0; i < nodes.length; i++){
-				
+
 				node_Damping = nodeDampingInput.value/100;
 				nodes[i].setDamping(node_Damping);
 				attractor.attract(nodes[i]);
 				nodes[i].update();
-				
+
 				canvasCtx.beginPath();
 				canvasCtx.arc(nodes[i].x, nodes[i].y, 2, 0, Math.PI*2);
 				canvasCtx.closePath();
@@ -1969,7 +1974,7 @@ function chladniPlate(dataArray, bufferLength){
 					default:
 						f = null;
 				}
-				
+
 				//apply force
 				if(this.mode !== 'twirl'){
 					node.velocity.x += dx * f;
@@ -2037,8 +2042,8 @@ function chladniPlate(dataArray, bufferLength){
 			};
 		});
 
-		
-		//Runtime UI stuff		
+
+		//Runtime UI stuff
 		var visSettings	= document.getElementById('vis-settings');
 			visSettings.style.display = 'block';
 
@@ -2068,7 +2073,7 @@ function chladniPlate(dataArray, bufferLength){
 			var basicModePaddel = document.createElement('label');
 				basicModePaddel.className = 'vis-setting switch-paddle';
 				basicModePaddel.htmlFor = 'basicModeInput';
-		
+
 		var smoothDiv = document.createElement('div');
 			smoothDiv.className = 'vis-setting switch';
 			var smoothModeInput = document.createElement('input');
@@ -2097,7 +2102,7 @@ function chladniPlate(dataArray, bufferLength){
 				twistModeLabel.innerHTML = 'Twist Mode';
 			var twistModePaddel = document.createElement('label');
 				twistModePaddel.className = 'vis-setting switch-paddle';
-				twistModePaddel.htmlFor = 'twistModeInput';	
+				twistModePaddel.htmlFor = 'twistModeInput';
 
 		var lineDiv = document.createElement('div');
 			lineDiv.className = 'vis-setting switch';
@@ -2114,7 +2119,7 @@ function chladniPlate(dataArray, bufferLength){
 			var lineModePaddel = document.createElement('label');
 				lineModePaddel.className = 'vis-setting switch-paddle';
 				lineModePaddel.htmlFor = 'lineModeInput';
-		
+
 		var circleDiv = document.createElement('div');
 			circleDiv.className = 'vis-setting switch';
 			var circleModeInput = document.createElement('input');
@@ -2129,7 +2134,7 @@ function chladniPlate(dataArray, bufferLength){
 			var circleModePaddel = document.createElement('label');
 				circleModePaddel.className = 'vis-setting switch-paddle';
 				circleModePaddel.htmlFor = 'circleModeInput';
-					
+
 		var attractRadiusInput = document.createElement('input');
 			attractRadiusInput.type = 'range';
 			attractRadiusInput.id = 'attractRadiusInput';
@@ -2141,7 +2146,7 @@ function chladniPlate(dataArray, bufferLength){
 				attractRadiusLabel.htmlFor = 'attractRadiusInput';
 				attractRadiusLabel.innerHTML = 'Attraction Radius';
 				attractRadiusLabel.className = 'vis-setting';
-	
+
 		var attractStrengthInput = document.createElement('input');
 			attractStrengthInput.type = 'range';
 			attractStrengthInput.id = 'attractStrengthInput';
@@ -2212,7 +2217,7 @@ function chladniPlate(dataArray, bufferLength){
 		function initGrid(){
 
 			var xPos, yPos;
-			
+
 				for(var x = 0; x < xCount; x++){
 					for(var y = 0; y < yCount; y++){
 					xPos = gridStepX *x;
@@ -2241,7 +2246,7 @@ function chladniPlate(dataArray, bufferLength){
 			}else{
 				attractor.mode = 'basic';
 			}
-			
+
 			analyser.getByteFrequencyData(dataArray);
 			var da = dataArray[0];
 
@@ -2272,7 +2277,7 @@ function chladniPlate(dataArray, bufferLength){
 					var theta = Math.atan2(canvHeight/2 - nodes[i].y, canvWidth/2 -nodes[i].x); //point towards centre
 					// var theta = Math.atan2(nodes[i+1].y - nodes[i].y, nodes[i+1].x -nodes[i].x); //point towards neighbour
 					canvasCtx.lineTo((Math.cos(theta)*5) + nodes[i].x, (Math.sin(theta)*5) +nodes[i].y);
-					
+
 					if(i+2 < nodes.length-1) i++;
 				}
 				canvasCtx.closePath();
