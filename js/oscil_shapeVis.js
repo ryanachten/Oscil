@@ -503,94 +503,26 @@ function dumbAgents(dataArray, bufferLength){
 function shapeAgents(dataArray, bufferLength){
 
 	//Runtime UI stuff
-	var visSettings	= document.getElementById('vis-settings');
-		visSettings.style.display = 'block';
+	var visGui = new dat.GUI();
+	var visGuiSettings = {
+		resolution : 20,
+		initRadius : (canvWidth > canvHeight ? canvHeight : canvWidth) /8,
+		fillShape : false,
+		clearBg : false
+	};
+	visGui.add(visGuiSettings, 'resolution').min(3).max(100).onChange(init);
+	visGui.add(visGuiSettings, 'initRadius').min(10)
+		.max(canvWidth > canvHeight ? canvHeight : canvWidth/4)
+		.step(10).onChange(init);
+	visGui.add(visGuiSettings, 'fillShape');
+	visGui.add(visGuiSettings, 'clearBg');
 
-	var formResolution = 20;
-	var resolutionDiv = document.createElement('div');
-	var resolutionInput = document.createElement('input');
-		resolutionInput.id = 'resolutionInput';
-		resolutionInput.type = 'range';
-		resolutionInput.className = 'vis-setting';
-		resolutionInput.min = 3;
-		resolutionInput.max = 100;
-		resolutionInput.value = formResolution;
-		resolutionInput.addEventListener("change", function(){
-			formResolution = parseInt(resolutionInput.value);
-			init();
-		});
-	var resolutionLabel = document.createElement('label');
-		resolutionLabel.htmlFor = 'resolutionInput';
-		resolutionLabel.innerHTML = 'Resolution';
-		resolutionLabel.className = 'vis-setting';
-
-	var initRadius = (canvWidth > canvHeight ? canvHeight : canvWidth)/8;
-	var initRadiusDiv = document.createElement('div');
-	var initRadiusInput = document.createElement('input');
-		initRadiusInput.id = 'initRadiusInput';
-		initRadiusInput.type = 'range';
-		initRadiusInput.className = 'vis-setting';
-		initRadiusInput.min = 10;
-		initRadiusInput.max = (canvWidth > canvHeight ? canvHeight : canvWidth)/4;
-		initRadiusInput.step = 10;
-		initRadiusInput.value = initRadius;
-		initRadiusInput.addEventListener("change", function(){
-			initRadius = parseInt(initRadiusInput.value);
-			init();
-		});
-	var initRadiusLabel = document.createElement('label');
-		initRadiusLabel.htmlFor = 'initRadiusInput';
-		initRadiusLabel.innerHTML = 'Initial Radius';
-		initRadiusLabel.className = 'vis-setting';
-
-	var filledInput = document.createElement('input');
-	var filledDiv = document.createElement('div');
-		filledInput.id = 'filledInput';
-		filledInput.type = 'checkbox';
-		filledInput.className = 'vis-setting switch-input';
-		filledInput.checked = false;
-	var filledPaddel = document.createElement('label');
-		filledPaddel.className = 'vis-setting switch-paddle';
-		filledPaddel.htmlFor = 'filledInput';
-	var filledInputLabel = document.createElement('label');
-		filledInputLabel.htmlFor = 'filledInput';
-		filledInputLabel.innerHTML = 'Fill Shape';
-		filledInputLabel.className = 'vis-setting';
-
-	var clearInput = document.createElement('input');
-	var clearDiv = document.createElement('div');
-		clearInput.id = 'clearInput';
-		clearInput.type = 'checkbox';
-		clearInput.className = 'vis-setting switch-input';
-		clearInput.checked = false;
-	var clearPaddel = document.createElement('label');
-		clearPaddel.className = 'vis-setting switch-paddle';
-		clearPaddel.htmlFor = 'clearInput';
-	var clearInputLabel = document.createElement('label');
-		clearInputLabel.htmlFor = 'clearInput';
-		clearInputLabel.innerHTML = 'Interval Clear';
-		clearInputLabel.className = 'vis-setting';
-
-		resolutionDiv.appendChild(resolutionLabel);
-		resolutionDiv.appendChild(resolutionInput);
-	visSettings.appendChild(resolutionDiv);
-		initRadiusDiv.appendChild(initRadiusLabel);
-		initRadiusDiv.appendChild(initRadiusInput);
-	visSettings.appendChild(initRadiusDiv);
-		filledDiv.appendChild(filledInputLabel);
-		filledDiv.appendChild(filledInput);
-		filledDiv.appendChild(filledPaddel);
-	visSettings.appendChild(filledDiv);
-		clearDiv.appendChild(clearInputLabel);
-		clearDiv.appendChild(clearInput);
-		clearDiv.appendChild(clearPaddel);
-	visSettings.appendChild(clearDiv);
 
 	var stepSize = 2;
 	var centerStepSize = 0.01;
 	var centerX, centerY;
-	var x = [formResolution];
-	var y = [formResolution];
+	var x = [visGuiSettings.resolution];
+	var y = [visGuiSettings.resolution];
 	var logda = 3;
 
 
@@ -601,10 +533,10 @@ function shapeAgents(dataArray, bufferLength){
 
 		centerX = canvWidth/2;
 		centerY = canvHeight/2;
-		var angle = (360/formResolution) * (Math.PI / 180);
-		for(var i=0; i < formResolution; i++){
-			x[i] = Math.cos(angle*i) * initRadius;
-			y[i] = Math.sin(angle*i) * initRadius;
+		var angle = (360/visGuiSettings.resolution) * (Math.PI / 180);
+		for(var i=0; i < visGuiSettings.resolution; i++){
+			x[i] = Math.cos(angle*i) * visGuiSettings.initRadius;
+			y[i] = Math.sin(angle*i) * visGuiSettings.initRadius;
 		}
 	}
 	init();
@@ -621,7 +553,7 @@ function shapeAgents(dataArray, bufferLength){
 				logda = Math.floor(Math.log(da) / Math.log(2));
 			}
 
-			if(clearInput.checked){
+			if(visGuiSettings.clearBg){
 				canvasCtx.fillStyle = 'rgba(237, 230, 224, 1)';
 				canvasCtx.fillRect(0,0, canvWidth,canvHeight);
 			}
@@ -633,7 +565,7 @@ function shapeAgents(dataArray, bufferLength){
 			centerY += (randY-centerY) * centerStepSize;
 
 			//calc new points
-			for(var i=0; i < formResolution; i++){
+			for(var i=0; i < visGuiSettings.resolution; i++){
 				var stepRandX = (Math.random()*stepSize+(stepSize*-1));
 				stepRandX *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
 
@@ -652,7 +584,7 @@ function shapeAgents(dataArray, bufferLength){
 			}
 
 			canvasCtx.beginPath();
-			for(var i=0; i < formResolution; i++){
+			for(var i=0; i < visGuiSettings.resolution; i++){
 				canvasCtx.lineTo(x[i]+centerX, y[i]+centerY);
 			}
 			canvasCtx.closePath();
@@ -661,7 +593,7 @@ function shapeAgents(dataArray, bufferLength){
 			canvasCtx.lineWidth = logda+1;
 			canvasCtx.miterLimit = logda;
 
-			if(filledInput.checked){
+			if(visGuiSettings.fillShape){
 				canvasCtx.fillStyle = 'hsl('+ logda*5+20 +',70%,70%)';
 				canvasCtx.fill();
 			}else{
