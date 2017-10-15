@@ -27,7 +27,7 @@ function tests(dataArray, bufferLength){
 
 		var textMode = 'word'; //or 'letter'
 		var decorationMode = 'dash'; //or 'pattern'
-		
+
 		var letterIndex = 0;
 
 		function init(){
@@ -136,12 +136,12 @@ function tests(dataArray, bufferLength){
 					canvasCtx.joinStyle = 'mitre';
 					canvasCtx.mitreLength = Math.floor((Math.random()*10)+1);
 					break;
-				default : 
+				default :
 					canvasCtx.joinStyle = 'mitre';
 					canvasCtx.mitreLength = Math.floor((Math.random()*10)+1);
 			}
 		}
-				
+
 		function drawPatternStroke(){
 
 			// Dot Pattern
@@ -157,7 +157,7 @@ function tests(dataArray, bufferLength){
 				canvasCtx.strokeStyle = 'black';
 				contextPattern.stroke();
 			}
-			
+
 			//Cross Pattern
 			canvasCtx.lineWidth = 10;
 			canvasCtx.fillStyle = 'black';
@@ -178,7 +178,7 @@ function tests(dataArray, bufferLength){
 			canvasCtx.fillRect(40, 40, 100, 100);
 			canvasCtx.fill();
 		}
-		
+
 		var stop = false;
 		var frameCount = 0;
 		var fps, fpsInterval, startTime, now, then, elapsed;
@@ -265,13 +265,13 @@ function tests(dataArray, bufferLength){
 			};
 		};
 
-		
+
 		var graphSubD = 100;
 		var segmentLength = canvWidth/graphSubD;
 		var generator = new Simple1DNoise();
 		canvasCtx.beginPath();
 		for (var i = 0; i < graphSubD; i++) {
-			
+
 			var x = 1;
 			var y = generator.getVal(i);
 			console.log('y: ' + y);
@@ -280,7 +280,7 @@ function tests(dataArray, bufferLength){
 			// canvasCtx.fillStyle = 'black';
 			canvasCtx.lineTo(posX, posY);
 			// canvasCtx.arc(, 5, 0, Math.PI*2);
-			
+
 		}
 		canvasCtx.strokeStyle ='red';
 		canvasCtx.stroke();
@@ -292,7 +292,7 @@ function tests(dataArray, bufferLength){
 			console.log('y: ' + y);
 			var posX = segmentLength*i;
 			var posY = canvHeight*y;
-			canvasCtx.lineTo(posX, posY);			
+			canvasCtx.lineTo(posX, posY);
 		}
 		canvasCtx.strokeStyle ='black';
 		canvasCtx.stroke();
@@ -322,8 +322,8 @@ function tests(dataArray, bufferLength){
 			   49,192,214, 31,181,199,106,157,184, 84,204,176,115,121,50,45,127, 4,150,254,
 			   138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180
 			   ];
-			   for (var i=0; i < 256 ; i++) 
-			 p[256+i] = p[i] = permutation[i]; 
+			   for (var i=0; i < 256 ; i++)
+			 p[256+i] = p[i] = permutation[i];
 
 				  var X = Math.floor(x) & 255,                  // FIND UNIT CUBE THAT
 					  Y = Math.floor(y) & 255,                  // CONTAINS POINT.
@@ -353,7 +353,7 @@ function tests(dataArray, bufferLength){
 				  var u = h<8 ? x : y,                 // INTO 12 GRADIENT DIRECTIONS.
 						 v = h<4 ? y : h==12||h==14 ? x : z;
 				  return ((h&1) == 0 ? u : -u) + ((h&2) == 0 ? v : -v);
-			   } 
+			   }
 			   function scale(n) { return (1 + n)/2; }
 		}
 
@@ -364,7 +364,7 @@ function tests(dataArray, bufferLength){
 		r = g = b = Math.round( 255 * n );
 		*/
 
-		
+
 		var graphSubD = 200;
 		var segWidth = canvWidth/graphSubD;
 		var segHeight = canvHeight/graphSubD;
@@ -372,7 +372,7 @@ function tests(dataArray, bufferLength){
 
 		for (var i = 0; i < graphSubD; i++) {
 			for (var j = 0; j < graphSubD; j++) {
-								
+
 				var posX = segWidth*i;
 				var posY = segHeight*j;
 				var normX = (posX / canvWidth);
@@ -387,10 +387,10 @@ function tests(dataArray, bufferLength){
 				canvasCtx.rect(posX, posY, segWidth, segHeight);
 				// console.log('rgb('+ curCol +','+ curCol +','+ curCol +')');
 				canvasCtx.fillStyle = 'rgb('+ curCol +','+ curCol +','+ curCol +')';
-				canvasCtx.fill();	
+				canvasCtx.fill();
 				canvasCtx.closePath();
 
-				counter++;	
+				counter++;
 			}
 		}
 	}
@@ -409,7 +409,7 @@ function tests(dataArray, bufferLength){
 			noiseScaleInput.max = 1000;
 			noiseScaleInput.value = 500;
 			noiseScaleInput.addEventListener("change", function(){
-				init();			
+				init();
 			});
 		var noiseScaleLabel = document.createElement('label');
 			noiseScaleLabel.htmlFor = 'noiseScaleInput';
@@ -425,7 +425,7 @@ function tests(dataArray, bufferLength){
 			noiseStrengthInput.max = 200;
 			noiseStrengthInput.value = 10;
 			noiseStrengthInput.addEventListener("change", function(){
-				init();			
+				init();
 			});
 		var noiseStrengthLabel = document.createElement('label');
 			noiseStrengthLabel.htmlFor = 'noiseStrengthInput';
@@ -441,7 +441,7 @@ function tests(dataArray, bufferLength){
 			agentCountInput.max = 1000;
 			agentCountInput.value = 500;
 			agentCountInput.addEventListener("change", function(){
-				init();			
+				init();
 			});
 		var agentCountLabel = document.createElement('label');
 			agentCountLabel.htmlFor = 'agentCountInput';
@@ -464,7 +464,7 @@ function tests(dataArray, bufferLength){
 		canvasCtx.strokeStyle = 'black';
 		var agents;
 		var agentCount;
-		
+
 
 		PerlinNoise = new function() {
 
@@ -485,8 +485,8 @@ function tests(dataArray, bufferLength){
 			   49,192,214, 31,181,199,106,157,184, 84,204,176,115,121,50,45,127, 4,150,254,
 			   138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180
 			   ];
-			   for (var i=0; i < 256 ; i++) 
-			 p[256+i] = p[i] = permutation[i]; 
+			   for (var i=0; i < 256 ; i++)
+			 p[256+i] = p[i] = permutation[i];
 
 				  var X = Math.floor(x) & 255,                  // FIND UNIT CUBE THAT
 					  Y = Math.floor(y) & 255,                  // CONTAINS POINT.
@@ -516,7 +516,7 @@ function tests(dataArray, bufferLength){
 				  var u = h<8 ? x : y,                 // INTO 12 GRADIENT DIRECTIONS.
 						 v = h<4 ? y : h==12||h==14 ? x : z;
 				  return ((h&1) == 0 ? u : -u) + ((h&2) == 0 ? v : -v);
-			   } 
+			   }
 			   function scale(n) { return (1 + n)/2; }
 		}
 
@@ -533,18 +533,18 @@ function tests(dataArray, bufferLength){
 			this.update1 = function(){
 				var normX = this.pX / noiseScale; //canvWidth;
 				var normY = this.pY / noiseScale; //canvHeight;
-				
+
 				var n = PerlinNoise.noise( size*normX, size*normY, .8); //not sure how to apply noise scale here
 				this.angle = n*noiseStrength; //not sure?
 				this.pX += Math.cos(this.angle) * this.stepSize;
 				this.pY += Math.sin(this.angle) * this.stepSize;
 
-				if(	this.pX < -10) this.isOutside = true; 
-				if( this.pX > canvWidth+10) this.isOutside = true; 
-				if( this.pY < -10) this.isOutside = true; 
-				if( this.pY > canvHeight+10) this.isOutside = true; 
+				if(	this.pX < -10) this.isOutside = true;
+				if( this.pX > canvWidth+10) this.isOutside = true;
+				if( this.pY < -10) this.isOutside = true;
+				if( this.pY > canvHeight+10) this.isOutside = true;
 					 //not sure? also why -10?
-				
+
 				if(this.isOutside){
 					// console.log('isOutside');
 					this.pX = Math.random()*canvWidth;
@@ -561,7 +561,7 @@ function tests(dataArray, bufferLength){
 				this.pOldY = this.pY;
 				canvasCtx.stroke();
 
-				this.isOutside = false;			
+				this.isOutside = false;
 			};
 
 			this.update2 = function(){
@@ -570,15 +570,15 @@ function tests(dataArray, bufferLength){
 				var n = PerlinNoise.noise( size*normX, size*normY, .8); //not sure how to apply noise scale here
 				this.angle = n*24; //not sure why 24?
 				this.angle = (this.angle - Math.round(this.angle)) * noiseStrength;
-				
+
 				this.pX += Math.cos(this.angle) * this.stepSize;
 				this.pY += Math.sin(this.angle) * this.stepSize;
 
-				if(	this.pX < -10) this.isOutside = true; 
-				if( this.pX > canvWidth+10) this.isOutside = true; 
-				if( this.pY < -10) this.isOutside = true; 
-				if( this.pY > canvHeight+10) this.isOutside = true; 
-				
+				if(	this.pX < -10) this.isOutside = true;
+				if( this.pX > canvWidth+10) this.isOutside = true;
+				if( this.pY < -10) this.isOutside = true;
+				if( this.pY > canvHeight+10) this.isOutside = true;
+
 				if(this.isOutside){
 					// console.log('isOutside');
 					this.pX = Math.random()*canvWidth;
@@ -595,7 +595,7 @@ function tests(dataArray, bufferLength){
 				this.pOldY = this.pY;
 				canvasCtx.stroke();
 
-				this.isOutside = false;			
+				this.isOutside = false;
 			};
 		})();
 
@@ -623,7 +623,7 @@ function tests(dataArray, bufferLength){
 				agents[i].update1();
 
 			}
-			
+
 		}
 
 		//for controlling FPS
@@ -655,6 +655,4 @@ function tests(dataArray, bufferLength){
 		}
 	}
 	// noiseAgent();
-
-	
 }
