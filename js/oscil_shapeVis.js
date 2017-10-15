@@ -268,33 +268,15 @@ function polyShapes(dataArray, bufferLength){
 function particles(dataArray, bufferLength){
 
 		//Runtime UI stuff
-		var visSettings	= document.getElementById('vis-settings');
-			visSettings.style.display = 'block';
-
-		// var particleCount = 256;
-		var particleCount = 30;
-		var particleCountInput = document.createElement('input');
-			particleCountInput.id = 'particleCountInput';
-			particleCountInput.type = 'range';
-			particleCountInput.className = 'vis-setting';
-			particleCountInput.min = 5;
-			particleCountInput.max = 50;
-			particleCountInput.value = 30;
-			particleCountInput.addEventListener("change", function(){
-				particleCount = parseInt(particleCountInput.value);
-				// console.log('particleCount: ' + particleCount);
+		var visGui = new dat.GUI();
+		var visGuiSettings = {
+			particleCount : 30,
+		};
+		visGui.add(visGuiSettings, 'particleCount').min(5).max(50).onChange(
+			function(){
 				clear();
 				init();
 			});
-
-		var particleCountLabel = document.createElement('label');
-			particleCountLabel.htmlFor = 'particleCountInput';
-			particleCountLabel.innerHTML = 'Particle Count';
-			particleCountLabel.className = 'vis-setting';
-
-		visSettings.appendChild(particleCountLabel);
-		visSettings.appendChild(particleCountInput);
-
 
 		canvasCtx.globalCompositeOperation = 'source-over';
 
@@ -302,7 +284,7 @@ function particles(dataArray, bufferLength){
 		function init(){
 			particles = [];
 			partCounter = 0;
-			for (var i = 0; i < particleCount; i++) {
+			for (var i = 0; i < visGuiSettings.particleCount; i++) {
 				particles.push(new create_particle());
 				partCounter++;
 				console.log('partCounter: ' + partCounter);
@@ -315,7 +297,7 @@ function particles(dataArray, bufferLength){
 			var partMaxSize = 50;
 			var partMinSize = 10;
 			this.radius = Math.random()*(partMaxSize-partMinSize);
-			this.hue = 360/particleCount * (Math.random()*(particleCount-1));
+			this.hue = 360/visGuiSettings.particleCount * (Math.random()*(visGuiSettings.particleCount-1));
 			// console.log(hue);
 			this.colour = 'hsl(' + this.hue + ', 70%, 70%)';
 			this.x = Math.random()*canvWidth;
@@ -339,7 +321,7 @@ function particles(dataArray, bufferLength){
 			for(var i = 0; i < bufferLength; i+=20) {
 				var da = dataArray[i];
 
-				for (var j = 0; j < particleCount; j++) {
+				for (var j = 0; j < particles.length; j++) {
 
 					var p = particles[j];
 
@@ -375,7 +357,6 @@ function particles(dataArray, bufferLength){
 				// }
 				}
 			}
-
 
 			drawVisual = requestAnimationFrame(draw);
 		}
