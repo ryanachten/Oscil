@@ -161,78 +161,17 @@ function gradient(dataArray, bufferLength){
 function polyShapes(dataArray, bufferLength){
 
 	//Runtime UI stuff
-	var visSettings	= document.getElementById('vis-settings');
-		visSettings.style.display = 'block';
-
-	var alphaInput = document.createElement('input');
-		alphaInput.type = 'range';
-		alphaInput.id = 'sampleCountInput';
-		alphaInput.className = 'vis-setting';
-		alphaInput.min = 0;
-		alphaInput.max = 10;
-		alphaInput.value = 1;
-	var alphaLabel = document.createElement('label');
-		alphaLabel.htmlFor = 'alphaInput';
-		alphaLabel.innerHTML = 'Bg Alpha';
-		alphaLabel.className = 'vis-setting';
-
-	var radiusDiv = document.createElement('div');
-			radiusDiv.className = 'vis-setting';
-		var radiusModeCheck = document.createElement('input');
-			radiusModeCheck.id = 'radiusMode';
-			radiusModeCheck.type = 'checkbox';
-			radiusModeCheck.className = 'vis-setting switch-input';
-			radiusModeCheck.checked = true;
-		var radiusModePaddel = document.createElement('label');
-			radiusModePaddel.className = 'vis-setting switch-paddle';
-			radiusModePaddel.htmlFor = 'radiusMode';
-		var radiusModeLabel = document.createElement('label');
-			radiusModeLabel.htmlFor = 'radiusMode';
-			radiusModeLabel.innerHTML = 'Radius Mode';
-			radiusModeLabel.className = 'vis-setting';
-	var resolutionDiv = document.createElement('div');
-			radiusDiv.className = 'vis-setting';
-		var resolutionModeCheck = document.createElement('input');
-			resolutionModeCheck.id = 'resolutionMode';
-			resolutionModeCheck.type = 'checkbox';
-			resolutionModeCheck.className = 'vis-setting switch-input';
-			resolutionModeCheck.checked = false;
-		var resolutionModePaddel = document.createElement('label');
-			resolutionModePaddel.className = 'vis-setting switch-paddle';
-			resolutionModePaddel.htmlFor = 'resolutionMode';
-		var resolutionModeLabel = document.createElement('label');
-			resolutionModeLabel.htmlFor = 'resolutionMode';
-			resolutionModeLabel.innerHTML = 'Resolution Mode';
-			resolutionModeLabel.className = 'vis-setting';
-	var strokeDiv = document.createElement('div');
-			strokeDiv.className = 'vis-setting';
-		var strokeModeCheck = document.createElement('input');
-			strokeModeCheck.id = 'strokeMode';
-			strokeModeCheck.type = 'checkbox';
-			strokeModeCheck.className = 'vis-setting switch-input';
-			strokeModeCheck.checked = true;
-		var strokeModePaddel = document.createElement('label');
-			strokeModePaddel.className = 'vis-setting switch-paddle';
-			strokeModePaddel.htmlFor = 'strokeMode';
-		var strokeModeLabel = document.createElement('label');
-			strokeModeLabel.htmlFor = 'strokeMode';
-			strokeModeLabel.innerHTML = 'Stroke Mode';
-			strokeModeLabel.className = 'vis-setting';
-
-	visSettings.appendChild(alphaLabel);
-	visSettings.appendChild(alphaInput);
-	radiusDiv.appendChild(resolutionModeLabel);
-	radiusDiv.appendChild(resolutionModeCheck);
-	radiusDiv.appendChild(resolutionModePaddel);
-	resolutionDiv.appendChild(radiusModeLabel);
-	resolutionDiv.appendChild(radiusModeCheck)
-	resolutionDiv.appendChild(radiusModePaddel);
-	strokeDiv.appendChild(strokeModeLabel);
-	strokeDiv.appendChild(strokeModeCheck);
-	strokeDiv.appendChild(strokeModePaddel);
-	visSettings.appendChild(strokeDiv);
-	visSettings.appendChild(resolutionDiv);
-	visSettings.appendChild(radiusDiv);
+	var visGui = new dat.GUI();
+	var visGuiSettings = {
+		alpha : 1,
+		radiusMode : true,
+		resolutionMode : false,
+		strokeMode : true
+	};
+	visGui.add(visGuiSettings, 'alpha').min(0).max(10);
+	visGui.add(visGuiSettings, 'radiusMode');
+	visGui.add(visGuiSettings, 'resolutionMode');
+	visGui.add(visGuiSettings, 'strokeMode');
 
 
 	var circleResolution, radius, angle, radAxis;
@@ -256,14 +195,14 @@ function polyShapes(dataArray, bufferLength){
 		}
 
 		function drawPoly(logda){
-			if(resolutionModeCheck.checked){
+			if(visGuiSettings.resolutionMode){
 				circleResolution = logda*3;
 				if(circleResolution < 3) circleResolution = 3;
 			}else{
 				circleResolution = (Math.random() * 80) +2;
 			}
 
-			if(radiusModeCheck.checked){
+			if(visGuiSettings.radiusMode){
 				radAxis = (canvWidth > canvHeight) ? canvHeight/2 : canvWidth/2;
 				radius = radAxis/logda;
 				if(radius > (radAxis-10)) radius = radAxis-10;
@@ -273,7 +212,7 @@ function polyShapes(dataArray, bufferLength){
 
 			angle = Math.PI*2/circleResolution;
 
-			canvasCtx.fillStyle = 'rgba(237, 230, 224, '+ (alphaInput.value/10) +')';
+			canvasCtx.fillStyle = 'rgba(237, 230, 224, '+ (visGuiSettings.alpha/10) +')';
 			canvasCtx.fillRect(0,0, canvWidth,canvHeight);
 
 			canvasCtx.beginPath();
@@ -284,7 +223,7 @@ function polyShapes(dataArray, bufferLength){
 			}
 			canvasCtx.closePath();
 
-			if(strokeModeCheck.checked){
+			if(visGuiSettings.strokeMode){
 				canvasCtx.lineWidth = (logda * 5) + 3;
 				// canvasCtx.lineWidth = (Math.random() * 15) +4;
 				canvasCtx.strokeStyle = 'hsl('+ (360/logda +25)	+ ', 70%, 70%)';
