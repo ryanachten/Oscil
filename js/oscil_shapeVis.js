@@ -367,28 +367,11 @@ function particles(dataArray, bufferLength){
 function dumbAgents(dataArray, bufferLength){
 
 	//Runtime UI stuff
-	var visSettings	= document.getElementById('vis-settings');
-		visSettings.style.display = 'block';
-
-	var alpha = 0.2;
-	var alphaInput = document.createElement('input');
-		alphaInput.id = 'alphaInput';
-		alphaInput.type = 'range';
-		alphaInput.className = 'vis-setting';
-		alphaInput.min = 0;
-		alphaInput.max = 100;
-		alphaInput.value = 20;
-		alphaInput.addEventListener("change", function(){
-			alpha = parseInt(alphaInput.value)/100;
-		});
-
-	var alphaLabel = document.createElement('label');
-		alphaLabel.htmlFor = 'alphaInput';
-		alphaLabel.innerHTML = 'Bg Alpha';
-		alphaLabel.className = 'vis-setting';
-
-	visSettings.appendChild(alphaLabel);
-	visSettings.appendChild(alphaInput);
+	var visGui = new dat.GUI();
+	var visGuiSettings = {
+		alpha : 0.2
+	};
+	visGui.add(visGuiSettings, 'alpha').min(0).max(100);
 
 	var north = 0;
 	var northeast = 1;
@@ -419,7 +402,7 @@ function dumbAgents(dataArray, bufferLength){
 
 	function draw(){
 
-		canvasCtx.fillStyle = 'rgba(237, 230, 224, ' + alpha +')';
+		canvasCtx.fillStyle = 'rgba(237, 230, 224, ' + visGuiSettings.alpha +')';
 		canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
 		for(var i = 0; i < bufferLength; i+=30) {
