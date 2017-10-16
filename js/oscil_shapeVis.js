@@ -1214,106 +1214,28 @@ function nodeAttraction(dataArray, bufferLength){
 		});
 
 		//Runtime UI stuff
-		var visSettings	= document.getElementById('vis-settings');
-			visSettings.style.display = 'block';
-
-		var nodeDampingInput = document.createElement('input');
-			nodeDampingInput.type = 'range';
-			nodeDampingInput.id = 'nodeDampingInput';
-			nodeDampingInput.className = 'vis-setting';
-			nodeDampingInput.min = 0;
-			nodeDampingInput.max = 100;
-			nodeDampingInput.value = 40; //need to be /100 for 0.8
-			var nodeDampingLabel = document.createElement('label');
-				nodeDampingLabel.htmlFor = 'nodeDampingInput';
-				nodeDampingLabel.innerHTML = 'Node Damping';
-				nodeDampingLabel.className = 'vis-setting';
-
-		var showAttractNodeDiv = document.createElement('div');
-			showAttractNodeDiv.className = 'vis-setting';
-			var showAttractNode = document.createElement('input');
-				showAttractNode.id = 'showAttractNode';
-				showAttractNode.type = 'checkbox';
-				showAttractNode.className = 'vis-setting switch-input';
-				showAttractNode.checked = false;
-			var showAttractNodePaddel = document.createElement('label');
-				showAttractNodePaddel.className = 'vis-setting switch-paddle';
-				showAttractNodePaddel.htmlFor = 'showAttractNode';
-			var showAttractNodeLabel = document.createElement('label');
-				showAttractNodeLabel.htmlFor = 'showAttractNode';
-				showAttractNodeLabel.innerHTML = 'Show Attractor';
-				showAttractNodeLabel.className = 'vis-setting';
-
-		var attractRadiusInput = document.createElement('input');
-			attractRadiusInput.type = 'range';
-			attractRadiusInput.id = 'attractRadiusInput';
-			attractRadiusInput.className = 'vis-setting';
-			attractRadiusInput.min = 0;
-			attractRadiusInput.max = 500;
-			attractRadiusInput.value = 200;
-			var attractRadiusLabel = document.createElement('label');
-				attractRadiusLabel.htmlFor = 'attractRadiusInput';
-				attractRadiusLabel.innerHTML = 'Attraction Radius';
-				attractRadiusLabel.className = 'vis-setting';
-
-			showAttractNodeDiv.appendChild(showAttractNodeLabel);
-			showAttractNodeDiv.appendChild(showAttractNode)
-			showAttractNodeDiv.appendChild(showAttractNodePaddel);
-
-		var attractStrengthInput = document.createElement('input');
-			attractStrengthInput.type = 'range';
-			attractStrengthInput.id = 'attractStrengthInput';
-			attractStrengthInput.className = 'vis-setting';
-			attractStrengthInput.min = -50;
-			attractStrengthInput.max = 50;
-			attractStrengthInput.value = -10;
-			var attractStrengthLabel = document.createElement('label');
-				attractStrengthLabel.htmlFor = 'attractStrengthInput';
-				attractStrengthLabel.innerHTML = 'Attraction Strength';
-				attractStrengthLabel.className = 'vis-setting';
-
-		var attractRampInput = document.createElement('input');
-			attractRampInput.type = 'range';
-			attractRampInput.id = 'attractRampInput';
-			attractRampInput.className = 'vis-setting';
-			attractRampInput.min = 0;
-			attractRampInput.max = 1000;
-			attractRampInput.value = 200; //need to be /100 for 0.2
-			var attractRampLabel = document.createElement('label');
-				attractRampLabel.htmlFor = 'attractRampInput';
-				attractRampLabel.innerHTML = 'Attraction Ramp';
-				attractRampLabel.className = 'vis-setting';
-
-		var attractMaxVelocityInput = document.createElement('input');
-			attractMaxVelocityInput.type = 'range';
-			attractMaxVelocityInput.id = 'attractRadiusInput';
-			attractMaxVelocityInput.className = 'vis-setting';
-			attractMaxVelocityInput.min = 0;
-			attractMaxVelocityInput.max = 20;
-			attractMaxVelocityInput.value = 15;
-			var attractMaxVelocityLabel = document.createElement('label');
-				attractMaxVelocityLabel.htmlFor = 'attractRadiusInput';
-				attractMaxVelocityLabel.innerHTML = 'Attract Node Velocity';
-				attractMaxVelocityLabel.className = 'vis-setting';
-
-		visSettings.appendChild(showAttractNodeDiv);
-		visSettings.appendChild(attractRadiusLabel);
-		visSettings.appendChild(attractRadiusInput);
-		visSettings.appendChild(attractStrengthLabel);
-		visSettings.appendChild(attractStrengthInput);
-		visSettings.appendChild(attractRampLabel);
-		visSettings.appendChild(attractRampInput);
-		visSettings.appendChild(attractMaxVelocityLabel);
-		visSettings.appendChild(attractMaxVelocityInput);
-		visSettings.appendChild(nodeDampingLabel);
-		visSettings.appendChild(nodeDampingInput);
+		var visGui = new dat.GUI();
+		var visGuiSettings = {
+			nodeDamping : 40,
+			showAttractNode : false,
+			attractRadius : 200,
+			attractStrength : -10,
+			attractRamp : 200,
+			attractMaxVelocity : 15
+		};
+		visGui.add(visGuiSettings, 'nodeDamping').min(0).max(100);
+		visGui.add(visGuiSettings, 'showAttractNode');
+		visGui.add(visGuiSettings, 'attractRadius').min(0).max(500);
+		visGui.add(visGuiSettings, 'attractStrength').min(-50).max(50);
+		visGui.add(visGuiSettings, 'attractRamp').min(0).max(1000);
+		visGui.add(visGuiSettings, 'attractMaxVelocity').min(0).max(20);
 
 
 		var xCount = canvWidth/10;
 		var yCount = canvHeight/10;
 		var nodeCount = xCount * yCount;
 		var nodes;
-		var node_Damping = nodeDampingInput.value/100;
+		var node_Damping = visGuiSettings.nodeDamping/100;
 
 		var attractor;
 		var attractor_MaxRamp, attractor_Radius, attractor_Strength;
@@ -1339,16 +1261,16 @@ function nodeAttraction(dataArray, bufferLength){
 			}
 
 			attractor = new Attractor(canvWidth/2, canvHeight/2);
-				attractor.radius = attractRadiusInput.value;
-				attractor.strength = attractStrengthInput.value;
-				attractor.ramp = attractRampInput.value/100;
+				attractor.radius = visGuiSettings.attractRadius;
+				attractor.strength = visGuiSettings.attractStrength;
+				attractor.ramp = visGuiSettings.attractRamp/100;
 
 			attractNode = new Node(canvWidth/2, canvHeight/2);
 				attractNode.setBoundary(0,0, canvWidth, canvHeight);
 				attractNode.setDamping(0);
 
-				attractNode.velocity.x = attractMaxVelocityInput.value/2;
-				attractNode.velocity.y = attractMaxVelocityInput.value/2;
+				attractNode.velocity.x = visGuiSettings.attractMaxVelocity/2;
+				attractNode.velocity.y = visGuiSettings.attractMaxVelocity/2;
 
 			startAnimating(10);
 		}
@@ -1364,10 +1286,10 @@ function nodeAttraction(dataArray, bufferLength){
 			canvasCtx.fillStyle = bgColor;
 			canvasCtx.fillRect(0,0, canvWidth,canvHeight);
 
-			attractor_Radius = attractRadiusInput.value;
-			attractor_Strength = attractStrengthInput.value;
-			attractNode_MaxVelocity = attractMaxVelocityInput.value;
-			attractor_MaxRamp = da/attractRampInput.value;
+			attractor_Radius = visGuiSettings.attractRadius;
+			attractor_Strength = visGuiSettings.attractStrength;
+			attractNode_MaxVelocity = visGuiSettings.attractMaxVelocity;
+			attractor_MaxRamp = da/visGuiSettings.attractRamp;
 
 			attractor.strength = attractor_Strength;
 			attractor.radius = attractor_Radius;
@@ -1384,7 +1306,7 @@ function nodeAttraction(dataArray, bufferLength){
 			attractNode.velocity.y += Math.random()*attractNode_MaxVelocity;
 
 			attractNode.update();
-			if(showAttractNode.checked){
+			if(visGuiSettings.showAttractNode){
 				canvasCtx.beginPath();
 				canvasCtx.arc(attractNode.x, attractNode.y, 5, 0, Math.PI*2);
 				canvasCtx.closePath();
@@ -1404,11 +1326,9 @@ function nodeAttraction(dataArray, bufferLength){
 			attractor.ramp = Math.random()*attractor_MaxRamp;
 			if(Math.floor(Math.random()*2) === 1) attractor.ramp*=-1;
 
-
-
 			for(var i = 0; i < nodes.length; i++){
 
-				node_Damping = nodeDampingInput.value/100;
+				node_Damping = visGuiSettings.nodeDamping/100;
 				nodes[i].setDamping(node_Damping);
 				attractor.attract(nodes[i]);
 				nodes[i].update();
