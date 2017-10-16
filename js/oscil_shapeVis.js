@@ -868,7 +868,7 @@ function lissajousFigure(dataArray, bufferLength){
 			modFreqY : 40,
 			phi : 95,
 			pointCount : 1000,
-			modulated : true
+			modulated : false
 		};
 		visGui.add(visGuiSettings, 'pointCount').min(10).max(1000).onChange(init);
 		visGui.add(visGuiSettings, 'phi').min(1).max(360);
@@ -994,97 +994,21 @@ function lissajousFigure(dataArray, bufferLength){
 function lissajousWebs(dataArray, bufferLength){
 
 		//Runtime UI stuff
-		var visSettings	= document.getElementById('vis-settings');
-			visSettings.style.display = 'block';
-
-		var freqXInput = document.createElement('input');
-			freqXInput.type = 'range';
-			freqXInput.id = 'freqXInput';
-			freqXInput.className = 'vis-setting';
-			freqXInput.min = 1;
-			freqXInput.max = 20;
-			freqXInput.value = 10;
-		var freqXLabel = document.createElement('label');
-			freqXLabel.htmlFor = 'freqXInput';
-			freqXLabel.className = 'vis-setting';
-			freqXLabel.innerHTML = 'Freq X';
-
-		var freqYInput = document.createElement('input');
-			freqYInput.type = 'range';
-			freqYInput.id = 'freqYInput';
-			freqYInput.className = 'vis-setting';
-			freqYInput.min = 1;
-			freqYInput.max = 20;
-			freqYInput.value = 7;
-		var freqYLabel = document.createElement('label');
-			freqYLabel.htmlFor = 'freqYInput';
-			freqYLabel.className = 'vis-setting';
-			freqYLabel.innerHTML = 'Freq Y';
-
-		var phiInput = document.createElement('input');
-			phiInput.type = 'range';
-			phiInput.id = 'phiInput';
-			phiInput.className = 'vis-setting';
-			phiInput.min = 1;
-			phiInput.max = 720;
-			phiInput.value = 15;
-		var phiLabel = document.createElement('label');
-			phiLabel.htmlFor = 'phiInput';
-			phiLabel.className = 'vis-setting';
-			phiLabel.innerHTML = 'Phi';
-
-		var pointCountInput = document.createElement('input');
-			pointCountInput.type = 'range';
-			pointCountInput.id = 'pointCountInput';
-			pointCountInput.className = 'vis-setting';
-			pointCountInput.min = 10;
-			pointCountInput.max = 1000;
-			pointCountInput.value = 1000;
-			pointCountInput.addEventListener("change", function(){
-					init();
-				});
-		var pointCountLabel = document.createElement('label');
-			pointCountLabel.htmlFor = 'pointCountInput';
-			pointCountLabel.className = 'vis-setting';
-			pointCountLabel.innerHTML = 'Point Count';
-
-		var modFreqXInput = document.createElement('input');
-			modFreqXInput.type = 'range';
-			modFreqXInput.id = 'modFreqXInput';
-			modFreqXInput.className = 'vis-setting';
-			modFreqXInput.min = 1;
-			modFreqXInput.max = 20;
-			modFreqXInput.value = 3;
-		var modFreqXLabel = document.createElement('label');
-			modFreqXLabel.htmlFor = 'modFreqXInput';
-			modFreqXLabel.className = 'vis-setting';
-			modFreqXLabel.innerHTML = 'Mod Freq X';
-
-		var modFreqYInput = document.createElement('input');
-			modFreqYInput.type = 'range';
-			modFreqYInput.id = 'modFreqYInput';
-			modFreqYInput.className = 'vis-setting';
-			modFreqYInput.min = 1;
-			modFreqYInput.max = 20;
-			modFreqYInput.value = 2;
-		var modFreqYLabel = document.createElement('label');
-			modFreqYLabel.htmlFor = 'modFreqYInput';
-			modFreqYLabel.className = 'vis-setting';
-			modFreqYLabel.innerHTML = 'Mod Freq Y';
-
-		visSettings.appendChild(pointCountLabel);
-		visSettings.appendChild(pointCountInput);
-		visSettings.appendChild(phiLabel);
-		visSettings.appendChild(phiInput);
-		visSettings.appendChild(freqXLabel);
-		visSettings.appendChild(freqXInput);
-		visSettings.appendChild(freqYLabel);
-		visSettings.appendChild(freqYInput);
-
-		visSettings.appendChild(modFreqXLabel);
-		visSettings.appendChild(modFreqXInput);
-		visSettings.appendChild(modFreqYLabel);
-		visSettings.appendChild(modFreqYInput);
+		var visGui = new dat.GUI();
+		var visGuiSettings = {
+			freqX : 7,
+			freqY : 7,
+			modFreqX : 3,
+			modFreqY : 2,
+			phi : 15,
+			pointCount : 1000
+		};
+		visGui.add(visGuiSettings, 'pointCount').min(10).max(1000).onChange(init);
+		visGui.add(visGuiSettings, 'phi').min(1).max(720);
+		visGui.add(visGuiSettings, 'freqX').min(1).max(20);
+		visGui.add(visGuiSettings, 'freqY').min(1).max(20);
+		visGui.add(visGuiSettings, 'modFreqX').min(1).max(20);
+		visGui.add(visGuiSettings, 'modFreqY').min(1).max(20);
 
 		var pointCount = 1000;
 		var lissajousPoints;
@@ -1103,7 +1027,7 @@ function lissajousWebs(dataArray, bufferLength){
 
 		function init(){
 			canvasCtx.strokeStyle = 'black';
-			pointCount = parseInt(pointCountInput.value);
+			pointCount = visGuiSettings.pointCount;
 			startAnimating(10);
 		}
 		init();
@@ -1121,11 +1045,11 @@ function lissajousWebs(dataArray, bufferLength){
 			var da = dataArray[0];
 			var logda = (Math.log(da) / Math.log(2));
 			if(isFinite(logda) && logda !== 0){
-				freqX = logda * parseInt(freqXInput.value);
-				freqY = logda * parseInt(freqYInput.value);
-				modFreqX = logda * parseInt(modFreqXInput.value);
-				modFreqY = logda * parseInt(modFreqYInput.value);
-				phi = parseInt(phiInput.value) - logda;
+				freqX = logda * visGuiSettings.freqX;
+				freqY = logda * visGuiSettings.freqY;
+				modFreqX = logda * visGuiSettings.modFreqX;
+				modFreqY = logda * visGuiSettings.modFreqY;
+				phi = visGuiSettings.phi - logda;
 			}
 
 			for (var i = 0; i <= pointCount; i++) {
