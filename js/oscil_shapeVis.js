@@ -768,127 +768,29 @@ function brownianTree(dataArray, bufferLength){
 function concretePoetry(dataArray, bufferLength){
 
 	//Runtime UI stuff
-	var visSettings	= document.getElementById('vis-settings');
-		visSettings.style.display = 'block';
-
-	var textAreaInput = document.createElement('textarea');
-		textAreaInput.id = 'textAreaInput';
-		textAreaInput.className = 'vis-setting';
-		textAreaInput.placeholder = 'there is always soma, delicious soma, half a gramme for a half-holiday, a gramme for a week-end, two grammes for a trip to the gorgeous East, three for a dark eternity on the moon';
-		textAreaInput.addEventListener("change", function(){
-			init();
-		});
-	var textAreaLabel = document.createElement('label');
-		textAreaLabel.htmlFor = 'textAreaInput';
-		textAreaLabel.innerHTML = 'Text Sample';
-		textAreaLabel.className = 'vis-setting';
-
-	var caseDiv = document.createElement('form');
-			caseDiv.className = 'vis-setting';
-
-	var lowerCaseDiv = document.createElement('div');
-			lowerCaseDiv.className = 'vis-setting switch';
-		var lowerCasemode = document.createElement('input');
-			lowerCasemode.id = 'lowerCasemode';
-			lowerCasemode.type = 'radio';
-			lowerCasemode.name = 'caseMode';
-			lowerCasemode.className = 'vis-setting switch-input';
-			lowerCasemode.addEventListener("change", function(){
-				init();
-			});
-		var lowerCasemodePaddel = document.createElement('label');
-			lowerCasemodePaddel.className = 'vis-setting switch-paddle';
-			lowerCasemodePaddel.htmlFor = 'lowerCasemode';
-		var lowerCasemodeLabel = document.createElement('label');
-			lowerCasemodeLabel.htmlFor = 'lowerCasemode';
-			lowerCasemodeLabel.innerHTML = 'Lowercase';
-			lowerCasemodeLabel.className = 'vis-setting';
-
-		var upperCaseDiv = document.createElement('div');
-			upperCaseDiv.className = 'vis-setting switch';
-		var upperCasemode = document.createElement('input');
-			upperCasemode.id = 'upperCasemode';
-			upperCasemode.type = 'radio';
-			upperCasemode.name = 'caseMode';
-			upperCasemode.checked = true;
-			upperCasemode.className = 'vis-setting switch-input';
-			upperCasemode.addEventListener("change", function(){
-				init();
-			});
-		var upperCasemodePaddel = document.createElement('label');
-			upperCasemodePaddel.className = 'vis-setting switch-paddle';
-			upperCasemodePaddel.htmlFor = 'upperCasemode';
-		var upperCasemodeLabel = document.createElement('label');
-			upperCasemodeLabel.htmlFor = 'upperCasemode';
-			upperCasemodeLabel.innerHTML = 'Uppercase';
-			upperCasemodeLabel.className = 'vis-setting';
-
-		var caseOffDiv = document.createElement('div');
-			caseOffDiv.className = 'vis-setting switch';
-		var caseOffmode = document.createElement('input');
-			caseOffmode.id = 'caseOffmode';
-			caseOffmode.type = 'radio';
-			caseOffmode.name = 'caseMode';
-			caseOffmode.className = 'vis-setting switch-input';
-			caseOffmode.addEventListener("change", function(){
-				init();
-			});
-		var caseOffmodePaddel = document.createElement('label');
-			caseOffmodePaddel.className = 'vis-setting switch-paddle';
-			caseOffmodePaddel.htmlFor = 'caseOffmode';
-		var caseOffmodeLabel = document.createElement('label');
-			caseOffmodeLabel.htmlFor = 'caseOffmode';
-			caseOffmodeLabel.innerHTML = 'Off';
-			caseOffmodeLabel.className = 'vis-setting';
-
-		var leadingInput = document.createElement('input');
-			leadingInput.id = 'leadingInput';
-			leadingInput.type = 'range';
-			leadingInput.className = 'vis-setting';
-			leadingInput.min = 10;
-			leadingInput.max = (canvHeight/4)*2;
-			leadingInput.value = 100;
-		var leadingLabel = document.createElement('label');
-			leadingLabel.htmlFor = 'leadingInput';
-			leadingLabel.innerHTML = 'Line Height';
-			leadingLabel.className = 'vis-setting';
-
-
-	visSettings.appendChild(textAreaLabel);
-	visSettings.appendChild(textAreaInput);
-
-	visSettings.appendChild(leadingLabel);
-	visSettings.appendChild(leadingInput);
-
-			lowerCaseDiv.appendChild(lowerCasemodeLabel);
-			lowerCaseDiv.appendChild(lowerCasemode);
-			lowerCaseDiv.appendChild(lowerCasemodePaddel);
-		caseDiv.appendChild(lowerCaseDiv)
-			upperCaseDiv.appendChild(upperCasemodeLabel);
-			upperCaseDiv.appendChild(upperCasemode);
-			upperCaseDiv.appendChild(upperCasemodePaddel);
-		caseDiv.appendChild(upperCaseDiv)
-			caseOffDiv.appendChild(caseOffmodeLabel);
-			caseOffDiv.appendChild(caseOffmode);
-			caseOffDiv.appendChild(caseOffmodePaddel);
-		caseDiv.appendChild(caseOffDiv)
-	visSettings.appendChild(caseDiv);
-
-
+	var visGui = new dat.GUI();
+	var visGuiSettings = {
+		textInput : 'there is always soma, delicious soma, half a gramme for a half-holiday, a gramme for a week-end, two grammes for a trip to the gorgeous East, three for a dark eternity on the moon',
+		case : 'upper',
+		leading : 100
+	};
+	visGui.add(visGuiSettings, 'textInput').onChange(init);
+	visGui.add(visGuiSettings, 'case', ['lower', 'upper', 'off']).onChange(init);
+	visGui.add(visGuiSettings, 'leading').min(10).max((canvHeight/4)*2);
 
 	var textSample, typeFace, maxFontSize;
 	var xPos, yPos, endOfPage;
 	var i, fontSize;
 
 	function init(){
-		if(textAreaInput.value.length > 0){
-			textSample = textAreaInput.value;
+		if(visGuiSettings.textInput.length > 0){
+			textSample = visGuiSettings.textInput;
 		}else{
-			textSample = textAreaInput.placeholder;
+			textSample = 'there is always soma, delicious soma, half a gramme for a half-holiday, a gramme for a week-end, two grammes for a trip to the gorgeous East, three for a dark eternity on the moon';
 		}
-		if(upperCasemode.checked){
+		if(visGuiSettings.case === 'upper'){
 			textSample = textSample.toUpperCase();
-		}else if(lowerCasemode.checked){
+		}else if(visGuiSettings.case === 'lower'){
 			textSample = textSample.toLowerCase();
 		}
 
@@ -921,16 +823,14 @@ function concretePoetry(dataArray, bufferLength){
 			logda = (Math.log(da) / Math.log(7))*-1;
 			expda = Math.floor(Math.exp(logda)*1000);
 		}
-		// console.log('logda: ' + logda);
-		// console.log(' ');
 
 		xPos += fontSize;
 		fontSize = Math.floor((Math.random()*maxFontSize+10));
 		if((xPos+maxFontSize/2) > canvWidth){
 			xPos = 0;
-			yPos += parseInt(leadingInput.value);;
+			yPos += visGuiSettings.leading;
 			if (yPos > canvHeight) {
-				console.log('Final letter: ' + textSample[i-1] + ' index: ' + i);
+				// console.log('Final letter: ' + textSample[i-1] + ' index: ' + i);
 				endOfPage = true;
 			};
 		}
@@ -960,119 +860,23 @@ function concretePoetry(dataArray, bufferLength){
 function lissajousFigure(dataArray, bufferLength){
 
 		//Runtime UI stuff
-		var visSettings	= document.getElementById('vis-settings');
-			visSettings.style.display = 'block';
-
-		var freqXInput = document.createElement('input');
-			freqXInput.type = 'range';
-			freqXInput.id = 'freqXInput';
-			freqXInput.className = 'vis-setting';
-			freqXInput.min = 1;
-			freqXInput.max = 70;
-			freqXInput.value = 40;
-		var freqXLabel = document.createElement('label');
-			freqXLabel.htmlFor = 'freqXInput';
-			freqXLabel.className = 'vis-setting';
-			freqXLabel.innerHTML = 'Freq X';
-
-		var freqYInput = document.createElement('input');
-			freqYInput.type = 'range';
-			freqYInput.id = 'freqYInput';
-			freqYInput.className = 'vis-setting';
-			freqYInput.min = 1;
-			freqYInput.max = 70;
-			freqYInput.value = 40;
-		var freqYLabel = document.createElement('label');
-			freqYLabel.htmlFor = 'freqYInput';
-			freqYLabel.className = 'vis-setting';
-			freqYLabel.innerHTML = 'Freq Y';
-
-		var phiInput = document.createElement('input');
-			phiInput.type = 'range';
-			phiInput.id = 'phiInput';
-			phiInput.className = 'vis-setting';
-			phiInput.min = 1;
-			phiInput.max = 360;
-			phiInput.value = 95;
-		var phiLabel = document.createElement('label');
-			phiLabel.htmlFor = 'phiInput';
-			phiLabel.className = 'vis-setting';
-			phiLabel.innerHTML = 'Phi';
-
-		var pointCountInput = document.createElement('input');
-			pointCountInput.type = 'range';
-			pointCountInput.id = 'pointCountInput';
-			pointCountInput.className = 'vis-setting';
-			pointCountInput.min = 10;
-			pointCountInput.max = 1000;
-			pointCountInput.value = 1000;
-			pointCountInput.addEventListener("change", function(){
-					init();
-				});
-		var pointCountLabel = document.createElement('label');
-			pointCountLabel.htmlFor = 'pointCountInput';
-			pointCountLabel.className = 'vis-setting';
-			pointCountLabel.innerHTML = 'Point Count';
-
-		var modFreqXInput = document.createElement('input');
-			modFreqXInput.type = 'range';
-			modFreqXInput.id = 'modFreqXInput';
-			modFreqXInput.className = 'vis-setting';
-			modFreqXInput.min = 1;
-			modFreqXInput.max = 70;
-			modFreqXInput.value = 40;
-		var modFreqXLabel = document.createElement('label');
-			modFreqXLabel.htmlFor = 'modFreqXInput';
-			modFreqXLabel.className = 'vis-setting';
-			modFreqXLabel.innerHTML = 'Mod Freq X';
-
-		var modFreqYInput = document.createElement('input');
-			modFreqYInput.type = 'range';
-			modFreqYInput.id = 'modFreqYInput';
-			modFreqYInput.className = 'vis-setting';
-			modFreqYInput.min = 1;
-			modFreqYInput.max = 70;
-			modFreqYInput.value = 40;
-		var modFreqYLabel = document.createElement('label');
-			modFreqYLabel.htmlFor = 'modFreqYInput';
-			modFreqYLabel.className = 'vis-setting';
-			modFreqYLabel.innerHTML = 'Mod Freq Y';
-
-		var modulatedDiv = document.createElement('div');
-				modulatedDiv.className = 'vis-setting';
-			var modulatedCheck = document.createElement('input');
-				modulatedCheck.id = 'modulatedCheck';
-				modulatedCheck.type = 'checkbox';
-				modulatedCheck.className = 'vis-setting switch-input';
-				modulatedCheck.checked = false;
-				modulatedCheck.addEventListener("change", function(){
-					init();
-				});
-			var modulatedPaddel = document.createElement('label');
-				modulatedPaddel.className = 'vis-setting switch-paddle';
-				modulatedPaddel.htmlFor = 'modulatedCheck';
-			var modulatedLabel = document.createElement('label');
-				modulatedLabel.htmlFor = 'modulatedCheck';
-				modulatedLabel.innerHTML = 'Modulated';
-				modulatedLabel.className = 'vis-setting';
-
-			modulatedDiv.appendChild(modulatedLabel);
-			modulatedDiv.appendChild(modulatedCheck);
-			modulatedDiv.appendChild(modulatedPaddel);
-		visSettings.appendChild(modulatedDiv);
-		visSettings.appendChild(pointCountLabel);
-		visSettings.appendChild(pointCountInput);
-		visSettings.appendChild(phiLabel);
-		visSettings.appendChild(phiInput);
-		visSettings.appendChild(freqXLabel);
-		visSettings.appendChild(freqXInput);
-		visSettings.appendChild(freqYLabel);
-		visSettings.appendChild(freqYInput);
-
-		visSettings.appendChild(modFreqXLabel);
-		visSettings.appendChild(modFreqXInput);
-		visSettings.appendChild(modFreqYLabel);
-		visSettings.appendChild(modFreqYInput);
+		var visGui = new dat.GUI();
+		var visGuiSettings = {
+			freqX : 40,
+			freqY : 40,
+			modFreqX : 40,
+			modFreqY : 40,
+			phi : 95,
+			pointCount : 1000,
+			modulated : true
+		};
+		visGui.add(visGuiSettings, 'pointCount').min(10).max(1000).onChange(init);
+		visGui.add(visGuiSettings, 'phi').min(1).max(360);
+		visGui.add(visGuiSettings, 'freqX').min(1).max(70);
+		visGui.add(visGuiSettings, 'freqY').min(1).max(70);
+		visGui.add(visGuiSettings, 'modulated').onChange(init);
+		visGui.add(visGuiSettings, 'modFreqX').min(1).max(70);
+		visGui.add(visGuiSettings, 'modFreqY').min(1).max(70);
 
 		var pointCount;
 		var freqX, freqY;
@@ -1097,19 +901,16 @@ function lissajousFigure(dataArray, bufferLength){
 			canvasCtx.fillStyle = bgColor;
 			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
-			if(modulatedCheck.checked){
+			if(visGuiSettings.modulated){
 				modulated = true;
 			}else{
 				modulated = false;
 			}
 			canvasCtx.strokeStyle = 'black';
-			pointCount = parseInt(pointCountInput.value);
-			freqX = parseInt(freqXInput.value);
-			freqY = parseInt(freqYInput.value);
-			phi = parseInt(phiInput.value);
-			console.log('pointCount: ' + pointCount);
-			console.log('freqX: ' + freqX + ' freqY: ' + freqY);
-			console.log('phi: ' + phi);
+			pointCount = visGuiSettings.pointCount;
+			freqX = visGuiSettings.freqX;
+			freqY = visGuiSettings.freqY;
+			phi = visGuiSettings.phi;
 
 			startAnimating(15);
 		}
@@ -1126,11 +927,11 @@ function lissajousFigure(dataArray, bufferLength){
 			var da = dataArray[0];
 			var logda = (Math.log(da) / Math.log(2));
 			if(isFinite(logda) && logda !== 0){
-				freqX = logda * parseInt(freqXInput.value);
-				freqY = logda * parseInt(freqYInput.value);
-				modFreqX = logda * parseInt(modFreqXInput.value);
-				modFreqY = logda * parseInt(modFreqYInput.value);
-				phi = parseInt(phiInput.value) - logda;
+				freqX = logda * visGuiSettings.freqX;
+				freqY = logda * visGuiSettings.freqY;
+				modFreqX = logda * visGuiSettings.modFreqX;
+				modFreqY = logda * visGuiSettings.modFreqY;
+				phi = visGuiSettings.phi - logda;
 			}
 			// console.log('logda: ' + logda);
 			// console.log('freqX: ' + freqX + ' freqY: ' + freqY);
