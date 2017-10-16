@@ -638,50 +638,13 @@ function shapeAgents(dataArray, bufferLength){
 function brownianTree(dataArray, bufferLength){
 
 		//Runtime UI stuff
-		var visSettings	= document.getElementById('vis-settings');
-		visSettings.style.display = 'block';
-
-		var showRandInput = document.createElement('input');
-		var showRandDiv = document.createElement('div');
-			showRandInput.id = 'showRandInput';
-			showRandInput.type = 'checkbox';
-			showRandInput.className = 'vis-setting switch-input';
-			showRandInput.checked = true;
-			showRandInput.addEventListener("change", function(){
-				init();
-			});
-		var showRandPaddel = document.createElement('label');
-			showRandPaddel.className = 'vis-setting switch-paddle';
-			showRandPaddel.htmlFor = 'showRandInput';
-		var showRandInputLabel = document.createElement('label');
-			showRandInputLabel.htmlFor = 'showRandInput';
-			showRandInputLabel.innerHTML = 'Show Random Seeds';
-			showRandInputLabel.className = 'vis-setting';
-
-		var maxRadDiv = document.createElement('div');
-		var maxRadInput = document.createElement('input');
-			maxRadInput.id = 'maxRadInput';
-			maxRadInput.type = 'range';
-			maxRadInput.className = 'vis-setting';
-			maxRadInput.min = 0;
-			maxRadInput.max = 20;
-			maxRadInput.value = 5;
-			maxRadInput.addEventListener("change", function(){
-				init();
-			});
-		var maxRadLabel = document.createElement('label');
-			maxRadLabel.htmlFor = 'maxRadInput';
-			maxRadLabel.innerHTML = 'Max Radius';
-			maxRadLabel.className = 'vis-setting';
-
-			showRandDiv.appendChild(showRandInputLabel);
-			showRandDiv.appendChild(showRandInput);
-			showRandDiv.appendChild(showRandPaddel);
-		visSettings.appendChild(showRandDiv);
-			maxRadDiv.appendChild(maxRadLabel);
-			maxRadDiv.appendChild(maxRadInput);
-		visSettings.appendChild(maxRadDiv);
-
+		var visGui = new dat.GUI();
+		var visGuiSettings = {
+			showRandNode : true,
+			maxRadius : 5
+		};
+		visGui.add(visGuiSettings, 'showRandNode').onChange(init);
+		visGui.add(visGuiSettings, 'maxRadius').min(0).max(20).onChange(init);
 
 		var currentCount;
 		var x, y, r;
@@ -698,8 +661,8 @@ function brownianTree(dataArray, bufferLength){
 			x = [];
 			y = [];
 			r = []; //radius
-			maxRad = parseInt(maxRadInput.value);;
-			showRandomSeeds = showRandInput.checked;
+			maxRad = visGuiSettings.maxRadius;
+			showRandomSeeds = visGuiSettings.showRandNode;
 
 			x[0] = Math.random()*canvWidth;
 			y[0] = Math.random()*canvHeight;
