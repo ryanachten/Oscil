@@ -142,33 +142,21 @@ function refract(dataArray, bufferLength){
 
 function macroblocks(dataArray, bufferLength){
 
-
 		//Runtime UI stuff
-		var visSettings	= document.getElementById('vis-settings');
-			visSettings.style.display = 'block';
-
 		var sampleCount = 256;
-		var sampleCountInput = document.createElement('input');
-			sampleCountInput.id = 'sampleCountInput';
-			sampleCountInput.type = 'range';
-			sampleCountInput.className = 'vis-setting';
-			sampleCountInput.min = 3;
-			sampleCountInput.max = 12;
-			sampleCountInput.value = 9;
-			sampleCountInput.addEventListener("change", function(){
-				var n = parseInt(sampleCountInput.value);
+
+		var visGui = new dat.GUI();
+		var visGuiSettings = {
+			sampleCount : 8,
+			// TODO: add init function to allow changing url
+			// imgUrl : 'https://upload.wikimedia.org/wikipedia/commons/4/44/Jelly_cc11.jpg',
+		};
+		// visGui.add(visGuiSettings, 'imgUrl').onChange(init);
+		visGui.add(visGuiSettings, 'sampleCount').min(3).max(12).step(1)
+			.onChange(function(n){
 				sampleCount = Math.pow(2, n);
-				// console.log('sampleCount: ' + sampleCount);
-			});
-
-		var sampleCountLabel = document.createElement('label');
-			sampleCountLabel.htmlFor = 'sampleCountInput';
-			sampleCountLabel.innerHTML = 'Sample Count';
-			sampleCountLabel.className = 'vis-setting';
-
-		visSettings.appendChild(sampleCountLabel);
-		visSettings.appendChild(sampleCountInput);
-
+				console.log('sampleCount: ' + sampleCount);
+		});
 
 		var img = new Image();
 		img.src = 'https://upload.wikimedia.org/wikipedia/commons/4/44/Jelly_cc11.jpg' + '?' + new Date().getTime();
