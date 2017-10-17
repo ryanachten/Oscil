@@ -1,65 +1,19 @@
 function refract(dataArray, bufferLength){
 
 	//Runtime UI stuff
-	var visSettings	= document.getElementById('vis-settings');
-		visSettings.style.display = 'block';
-
-	var imgForm = document.createElement('div');
-		imgForm.className = 'vis-setting';
-	var imgUrlInput = document.createElement('input');
-		imgUrlInput.id = 'imgUrlInput';
-		imgUrlInput.type = 'text';
-		imgUrlInput.className = 'vis-setting';
-		imgUrlInput.placeholder = 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Various_Arecaceae.jpg/630px-Various_Arecaceae.jpg';
-		imgUrlInput.addEventListener("change", function(){
-			init();			
-		});
-	var imgUrlLabel = document.createElement('label');
-		imgUrlLabel.htmlFor = 'imgUrlInput';
-		imgUrlLabel.innerHTML = 'Img URL';
-		imgUrlLabel.className = 'vis-setting';
-
-	var fpsInput = document.createElement('input');
-		fpsInput.type = 'range';
-		fpsInput.id = 'fpsInput';
-		fpsInput.className = 'vis-setting';
-		fpsInput.min = 5;
-		fpsInput.max = 30;
-		fpsInput.value = 15;
-		fpsInput.addEventListener("change", function(){
-			init();			
-		});
-	var fpsLabel = document.createElement('label');
-		fpsLabel.htmlFor = 'fpsInput';
-		fpsLabel.innerHTML = 'FPS Rate';
-		fpsLabel.className = 'vis-setting';
-
-	var sampleRateInput = document.createElement('input');
-		sampleRateInput.type = 'range';
-		sampleRateInput.id = 'sampleRateInput';
-		sampleRateInput.className = 'vis-setting';
-		sampleRateInput.min = 10;
-		sampleRateInput.max = 50;
-		sampleRateInput.value = 30;
-		sampleRateInput.addEventListener("change", function(){
-			sampleRate = parseInt(sampleRateInput.value);		
-		});
-	var sampleRateLabel = document.createElement('label');
-		sampleRateLabel.htmlFor = 'sampleRateInput';
-		sampleRateLabel.innerHTML = 'Sample Rate';
-		sampleRateLabel.className = 'vis-setting';
-
-	imgForm.appendChild(imgUrlLabel);
-	imgForm.appendChild(imgUrlInput);
-	visSettings.appendChild(imgForm);
-	visSettings.appendChild(fpsLabel);
-	visSettings.appendChild(fpsInput);
-	visSettings.appendChild(sampleRateLabel);
-	visSettings.appendChild(sampleRateInput);
+	var visGui = new dat.GUI();
+	var visGuiSettings = {
+		imgUrl : 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Various_Arecaceae.jpg/630px-Various_Arecaceae.jpg',
+		fps : 15,
+		sampleRate : 30,
+	};
+	visGui.add(visGuiSettings, 'imgUrl').onChange(init);
+	visGui.add(visGuiSettings, 'fps').min(5).max(30);
+	visGui.add(visGuiSettings, 'sampleRate').min(10).max(50);
 
 	var img, tileCount;
 	var fpsRate;
-	var sampleRate = parseInt(sampleRateInput.value);
+	var sampleRate = visGuiSettings.sampleRate;
 
 	function init(){
 		canvasCtx.clearRect(0,0,canvWidth,canvHeight);
@@ -67,24 +21,18 @@ function refract(dataArray, bufferLength){
 		canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
 		img = new Image();
-		if(imgUrlInput.value.length > 0){
-			if(imgUrlInput.value.match(/\.(jpeg|jpg|gif|png)$/)){
+		if(visGuiSettings.imgUrl > 0){
+			if(visGuiSettings.imgUrl.match(/\.(jpeg|jpg|gif|png)$/)){
 				console.log('valid url (no img extension)');
-				img.src = imgUrlInput.value;
-				if($('#imgUrlInput').hasClass('is-invalid-input')){
-					$('#imgUrlInput').removeClass('is-invalid-input');
-				}
+				img.src = visGuiSettings.imgUrl;
 			}
 			else{
-				console.log('invalid url');
-				if(!$('#imgUrlInput').hasClass('is-invalid-input')){
-					$('#imgUrlInput').addClass('is-invalid-input');
-				}
-				img.src = imgUrlInput.placeholder;
+				alert('Sorry! Invalid img url');
+				img.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Various_Arecaceae.jpg/630px-Various_Arecaceae.jpg';
 			}
 		}
 		else{
-			img.src = imgUrlInput.placeholder;
+			img.src = visGuiSettings.imgUrl;
 		}
 
 		img.onerror = function(){
@@ -92,13 +40,11 @@ function refract(dataArray, bufferLength){
 
 			img.src = imgUrlInput.placeholder;
 
-			if(!$('#imgUrlInput').hasClass('is-invalid-input')){
-				$('#imgUrlInput').addClass('is-invalid-input');
-			}
+			alert('Sorry! Issue parsing image');
 		}
 
 		img.onload = function(){
-			startAnimating(fpsInput.value);
+			startAnimating(visGuiSettings.fps);
 		}
 	}
 	init();
@@ -125,7 +71,7 @@ function refract(dataArray, bufferLength){
 		}
 
 		function tileImg(tileCount){
-			
+
 			for (var i = 0; i < tileCount; i++) {
 				for (var j = 0; j < tileCount; j++){
 
@@ -194,7 +140,7 @@ function refract(dataArray, bufferLength){
 	}
 }
 
-function macroblocks(dataArray, bufferLength){		
+function macroblocks(dataArray, bufferLength){
 
 
 		//Runtime UI stuff
@@ -277,7 +223,7 @@ function macroblocks(dataArray, bufferLength){
 						}
 					}
 				}
-				channelNoise();		
+				channelNoise();
 			}
 
 			canvasCtx.putImageData(imgdata, 0,0);
@@ -306,7 +252,7 @@ function repeatPix(dataArray, bufferLength){
 		var repeatDiv = document.createElement('form');
 			repeatDiv.className = 'vis-setting';
 
-		var repeatXDiv = document.createElement('div');	
+		var repeatXDiv = document.createElement('div');
 			repeatXDiv.className = 'vis-setting switch';
 		var repeatXmode = document.createElement('input');
 			repeatXmode.id = 'repeatXmode';
@@ -321,7 +267,7 @@ function repeatPix(dataArray, bufferLength){
 			repeatXmodeLabel.innerHTML = 'Repeat X';
 			repeatXmodeLabel.className = 'vis-setting';
 
-		var repeatYDiv = document.createElement('div');	
+		var repeatYDiv = document.createElement('div');
 			repeatYDiv.className = 'vis-setting switch';
 		var repeatYmode = document.createElement('input');
 			repeatYmode.id = 'repeatYmode';
@@ -337,7 +283,7 @@ function repeatPix(dataArray, bufferLength){
 			repeatYmodeLabel.innerHTML = 'Repeat Y';
 			repeatYmodeLabel.className = 'vis-setting';
 
-		var repeatBothDiv = document.createElement('div');	
+		var repeatBothDiv = document.createElement('div');
 			repeatBothDiv.className = 'vis-setting switch';
 		var repeatBothmode = document.createElement('input');
 			repeatBothmode.id = 'repeatBothmode';
@@ -381,7 +327,7 @@ function repeatPix(dataArray, bufferLength){
 
 		//TODO: add ModHeight checkbox in GUI
 		//TODO: add offsetSampleRate slider in GUI
-		
+
 		var offsetSampleRate = 1000;
 
 
@@ -438,7 +384,7 @@ function repeatPix(dataArray, bufferLength){
 						}else{
 							sampleHeight = Math.abs(logda2);
 						}
-						 
+
 					var frstRow = canvasCtx.getImageData(0,sampleY, canvWidth, sampleHeight);
 					canvasCtx.clearRect(0,0, canvWidth, canvHeight);
 
@@ -465,7 +411,7 @@ function repeatPix(dataArray, bufferLength){
 						}else{
 							sampleWidth = Math.abs(logda2);
 						}
-						 
+
 					var frstCol = canvasCtx.getImageData(sampleX,0, sampleWidth, canvHeight);
 					canvasCtx.clearRect(0,0, canvWidth, canvHeight);
 
@@ -474,10 +420,10 @@ function repeatPix(dataArray, bufferLength){
 					}
 				}
 				if(repeatYmode.checked || repeatBothmode.checked){
-					repeatY();	
+					repeatY();
 				}
 				if(repeatXmode.checked || repeatBothmode.checked){
-					repeatX();	
+					repeatX();
 				}
 			}
 			drawVisual = requestAnimationFrame(draw);
@@ -525,22 +471,22 @@ function pixMix(dataArray, bufferLength){
 		var imgA = new Image();
 		imgA.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Jelly_cc11.jpg/800px-Jelly_cc11.jpg' + '?' + new Date().getTime();
 		imgA.setAttribute('crossOrigin', '');
-			
+
 
 		var imgB = new Image();
 		imgB.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Olindias_formosa1.jpg/800px-Olindias_formosa1.jpg' + '?' + new Date().getTime();
 		imgB.setAttribute('crossOrigin', '');
 
 		var imgAdata, imgBdata, mixData;
-		var dataA, dataB; 
+		var dataA, dataB;
 		var counter = 0;
 
 		imgA.onload = imgB.onload = function(){
 
-			canvas2Ctx.drawImage(imgA, 0,0, canv2Width,canv2Height);				
+			canvas2Ctx.drawImage(imgA, 0,0, canv2Width,canv2Height);
 			imgAdata = canvas2Ctx.getImageData(0,0, canv2Width,canv2Height);
 
-			canvas3Ctx.drawImage(imgB, 0,0, canv3Width,canv3Height);				
+			canvas3Ctx.drawImage(imgB, 0,0, canv3Width,canv3Height);
 			imgBdata = canvas3Ctx.getImageData(0,0, canv3Width,canv3Height);
 
 			startAnimating(5);
@@ -565,13 +511,13 @@ function pixMix(dataArray, bufferLength){
 
 				for (var i = 0; i < sampleSize; i++) { //i=width
 					for (var j = 0; j < sampleSize; j++) {
-						
+
 						var rand = Math.floor((Math.random()*2)+1);
 						var sampleRandMode = randMode.checked; //TODO: add into UI at runtime
 						var sampleRand = Math.floor((Math.random()*sampleSize)+0);
-						
+
 						if (rand%2 == 0) {
-							canvasCtx.putImageData(imgAdata, 0, 0, (sampleRandMode ? sampleRand : i)*tileWidth, 
+							canvasCtx.putImageData(imgAdata, 0, 0, (sampleRandMode ? sampleRand : i)*tileWidth,
 													j*tileHeight, tileWidth, tileHeight);
 						}else{
 							canvasCtx.putImageData(imgBdata, 0, 0, i*tileWidth,
@@ -662,14 +608,14 @@ function pixShuffle(dataArray, bufferLength){
 	var imgA = new Image();
 	imgA.src = imageAlink + '?' + new Date().getTime();
 	imgA.setAttribute('crossOrigin', '');
-		
+
 
 	var imgB = new Image();
 	imgB.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Olindias_formosa1.jpg/800px-Olindias_formosa1.jpg' + '?' + new Date().getTime();
 	imgB.setAttribute('crossOrigin', '');
 
 	var imgAdata, imgBdata, mixData;
-	var dataA, dataB; 
+	var dataA, dataB;
 	var counter = 0;
 
 	imgA.onload = imgB.onload = function(){
@@ -677,10 +623,10 @@ function pixShuffle(dataArray, bufferLength){
 	};
 
 	function init(){
-		canvas2Ctx.drawImage(imgA, 0,0, canv2Width,canv2Height);				
+		canvas2Ctx.drawImage(imgA, 0,0, canv2Width,canv2Height);
 		imgAdata = canvas2Ctx.getImageData(0,0, canv2Width,canv2Height);
 
-		canvas3Ctx.drawImage(imgB, 0,0, canv3Width,canv3Height);				
+		canvas3Ctx.drawImage(imgB, 0,0, canv3Width,canv3Height);
 		imgBdata = canvas3Ctx.getImageData(0,0, canv3Width,canv3Height);
 
 		startAnimating(5);
@@ -703,16 +649,16 @@ function pixShuffle(dataArray, bufferLength){
 
 			for (var i = 0; i < sampleSize; i++) { //i=width
 				for (var j = 0; j < sampleSize; j++) {
-					
+
 					var rand = Math.floor((Math.random()*4)+-2);
 
 					var sampleRand = Math.floor((Math.random()*sampleSize)+0);
-					
+
 					if (rand%2 == 0) {
-						canvasCtx.putImageData(imgAdata, rand*tileWidth, rand*tileHeight, i*tileWidth, 
+						canvasCtx.putImageData(imgAdata, rand*tileWidth, rand*tileHeight, i*tileWidth,
 												j*tileHeight, tileWidth, tileHeight);
 					}else{
-						canvasCtx.putImageData(imgBdata, rand*tileWidth, rand*tileHeight, i*tileWidth, 
+						canvasCtx.putImageData(imgBdata, rand*tileWidth, rand*tileHeight, i*tileWidth,
 												j*tileHeight, tileWidth, tileHeight);
 					}
 				}
@@ -759,7 +705,6 @@ function pixShuffle(dataArray, bufferLength){
 	}
 }
 
-
 function imgShuffle(dataArray, bufferLength){
 
 	//Runtime UI stuff
@@ -769,7 +714,7 @@ function imgShuffle(dataArray, bufferLength){
 	var imgModeDiv = document.createElement('form');
 			imgModeDiv.className = 'vis-setting';
 
-	var randomImgDiv = document.createElement('div');	
+	var randomImgDiv = document.createElement('div');
 			randomImgDiv.className = 'vis-setting switch';
 		var randomImgMode = document.createElement('input');
 			randomImgMode.id = 'randomImgMode';
@@ -777,7 +722,7 @@ function imgShuffle(dataArray, bufferLength){
 			randomImgMode.name = 'imgMode';
 			randomImgMode.className = 'vis-setting switch-input';
 			randomImgMode.addEventListener("change", function(){
-				init();			
+				init();
 			});
 		var randomImgModePaddel = document.createElement('label');
 			randomImgModePaddel.className = 'vis-setting switch-paddle';
@@ -787,7 +732,7 @@ function imgShuffle(dataArray, bufferLength){
 			randomImgModeLabel.innerHTML = 'Random Mode';
 			randomImgModeLabel.className = 'vis-setting';
 
-		var moveImgDiv = document.createElement('div');	
+		var moveImgDiv = document.createElement('div');
 			moveImgDiv.className = 'vis-setting switch';
 		var moveImgMode = document.createElement('input');
 			moveImgMode.id = 'moveImgMode';
@@ -796,7 +741,7 @@ function imgShuffle(dataArray, bufferLength){
 			moveImgMode.checked = true;
 			moveImgMode.className = 'vis-setting switch-input';
 			moveImgMode.addEventListener("change", function(){
-				init();			
+				init();
 			});
 		var moveImgModePaddel = document.createElement('label');
 			moveImgModePaddel.className = 'vis-setting switch-paddle';
@@ -814,7 +759,7 @@ function imgShuffle(dataArray, bufferLength){
 		subDivInput.max = 10;
 		subDivInput.value = 5;
 		subDivInput.addEventListener("change", function(){
-				init();			
+				init();
 			});
 	var subDivLabel = document.createElement('label');
 		subDivLabel.htmlFor = 'subDivInput';
@@ -828,7 +773,7 @@ function imgShuffle(dataArray, bufferLength){
 		tileCountInput.max = 70;
 		tileCountInput.value = 10;
 		tileCountInput.addEventListener("change", function(){
-				init();			
+				init();
 			});
 	var tileCountLabel = document.createElement('label');
 		tileCountLabel.htmlFor = 'tileCountInput';
@@ -849,7 +794,7 @@ function imgShuffle(dataArray, bufferLength){
 	visSettings.appendChild(tileCountLabel);
 	visSettings.appendChild(tileCountInput);
 
-	
+
 	var imgMode, tileCount;
 	var counter, initialised, tileCoords; //move mode vars
 	var sumDivisionLevel;
@@ -872,12 +817,12 @@ function imgShuffle(dataArray, bufferLength){
 			imgMode = 'move';
 			tileCount = parseInt(tileCountInput.value);
 		}
-		
+
 		sumDivisionLevel = (parseInt(subDivInput.value)/10)*100;
 		tileCoords = [];
-		initialised = false; 
-		counter = 0;		
-					
+		initialised = false;
+		counter = 0;
+
 		img = new Image();
 		img.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Various_Cactaceae.jpg/800px-Various_Cactaceae.jpg';
 		img.setAttribute('crossOrigin', '');
@@ -892,7 +837,7 @@ function imgShuffle(dataArray, bufferLength){
 	}
 	init();
 
-	var da; 
+	var da;
 	function draw(){
 
 		canvasCtx.clearRect(0,0,canvWidth, canvHeight);
@@ -940,15 +885,15 @@ function imgShuffle(dataArray, bufferLength){
 		var maxTileCount = Math.floor(da/sumDivisionLevel+2);
 		var minTileCount = Math.floor((da/sumDivisionLevel)/2+2);
 		accel = Math.floor((Math.random()*maxTileCount)+minTileCount);
-		// console.log('accel: ' + accel);		
-		
+		// console.log('accel: ' + accel);
+
 		for (var i = 0; i < tileCount; i++) {
 			for (var j = 0; j < tileCount; j++){
 
 				if(!initialised){
 					var randClipX = Math.floor(Math.random()*(img.width-imgWidth));
 					var randClipY = Math.floor(Math.random()*(img.height-imgHeight));
-					
+
 					var directionY = Math.floor(Math.random()*2);
 					if(directionY===0) directionY = -1;
 					var directionX = Math.floor(Math.random()*2);
@@ -957,11 +902,11 @@ function imgShuffle(dataArray, bufferLength){
 					var coords = { 	x: randClipX, y: randClipY,
 									directX: directionX, directY: directionY};
 					tileCoords.push(coords);
-				
+
 				}else{
 					randClipX = tileCoords[counter].x;
 					randClipY = tileCoords[counter].y;
-					
+
 					var newX = randClipX+=(accel*tileCoords[counter].directX);
 					var newY = randClipY+=(accel*tileCoords[counter].directY);
 					if(newX > img.width-imgWidth || newX < 0){
@@ -975,7 +920,7 @@ function imgShuffle(dataArray, bufferLength){
 
 					tileCoords[counter].x = newX;
 					tileCoords[counter].y = newY;
-					
+
 					if(counter+1 >= tileCoords.length){
 						counter = 0;
 					}else{
@@ -1027,7 +972,6 @@ function imgShuffle(dataArray, bufferLength){
 	}
 }
 
-
 function pixelPainting(dataArray, bufferLength){
 
 	//Runtime UI stuff
@@ -1037,7 +981,7 @@ function pixelPainting(dataArray, bufferLength){
 	var shapeModeDiv = document.createElement('form');
 			shapeModeDiv.className = 'vis-setting';
 
-	var ellipseDiv = document.createElement('div');	
+	var ellipseDiv = document.createElement('div');
 			ellipseDiv.className = 'vis-setting switch';
 		var ellipseModeInput = document.createElement('input');
 			ellipseModeInput.id = 'ellipseModeInput';
@@ -1046,7 +990,7 @@ function pixelPainting(dataArray, bufferLength){
 			ellipseModeInput.className = 'vis-setting switch-input';
 			ellipseModeInput.checked = true;
 			ellipseModeInput.addEventListener("change", function(){
-				init();			
+				init();
 			});
 		var ellipseModePaddel = document.createElement('label');
 			ellipseModePaddel.className = 'vis-setting switch-paddle';
@@ -1056,7 +1000,7 @@ function pixelPainting(dataArray, bufferLength){
 			ellipseModeLabel.innerHTML = 'Ellipse Mode';
 			ellipseModeLabel.className = 'vis-setting';
 
-		var lineModeDiv = document.createElement('div');	
+		var lineModeDiv = document.createElement('div');
 			lineModeDiv.className = 'vis-setting switch';
 		var lineInputMode = document.createElement('input');
 			lineInputMode.id = 'lineInputMode';
@@ -1064,7 +1008,7 @@ function pixelPainting(dataArray, bufferLength){
 			lineInputMode.name = 'shapeMode';
 			lineInputMode.className = 'vis-setting switch-input';
 			lineInputMode.addEventListener("change", function(){
-				init();			
+				init();
 			});
 		var lineModeModePaddel = document.createElement('label');
 			lineModeModePaddel.className = 'vis-setting switch-paddle';
@@ -1083,7 +1027,7 @@ function pixelPainting(dataArray, bufferLength){
 			randPerPixCheck.className = 'vis-setting switch-input';
 			randPerPixCheck.checked = true;
 			randPerPixCheck.addEventListener("change", function(){
-				init();			
+				init();
 			});
 		var randPerPixPaddel = document.createElement('label');
 			randPerPixPaddel.className = 'vis-setting switch-paddle';
@@ -1101,12 +1045,12 @@ function pixelPainting(dataArray, bufferLength){
 		sampleSizeInput.max = 60;
 		sampleSizeInput.value = 16;
 		sampleSizeInput.addEventListener("change", function(){
-				init();			
+				init();
 			});
 	var sampleSizeLabel = document.createElement('label');
 		sampleSizeLabel.htmlFor = 'sampleSizeInput';
 		sampleSizeLabel.className = 'vis-setting';
-		sampleSizeLabel.innerHTML = 'Sample Size';	
+		sampleSizeLabel.innerHTML = 'Sample Size';
 
 	var maxSizeInput = document.createElement('input');
 		maxSizeInput.type = 'range';
@@ -1116,7 +1060,7 @@ function pixelPainting(dataArray, bufferLength){
 		maxSizeInput.max = 30;
 		maxSizeInput.value = 5;
 		maxSizeInput.addEventListener("change", function(){
-				init();			
+				init();
 			});
 	var maxSizeLabel = document.createElement('label');
 		maxSizeLabel.htmlFor = 'maxSizeInput';
@@ -1131,12 +1075,12 @@ function pixelPainting(dataArray, bufferLength){
 		maxRandSizeInput.max = 50;
 		maxRandSizeInput.value = 20;
 		maxRandSizeInput.addEventListener("change", function(){
-				init();			
+				init();
 			});
 	var maxRandSizeLabel = document.createElement('label');
 		maxRandSizeLabel.htmlFor = 'maxRandSizeInput';
 		maxRandSizeLabel.className = 'vis-setting';
-		maxRandSizeLabel.innerHTML = 'Minimise Growth';	
+		maxRandSizeLabel.innerHTML = 'Minimise Growth';
 
 			lineModeDiv.appendChild(lineModeModeLabel);
 			lineModeDiv.appendChild(lineInputMode);
@@ -1170,7 +1114,7 @@ function pixelPainting(dataArray, bufferLength){
 	function removeCanv(){
 		if(document.getElementById('visual-select').value !== 'PixelPainting'){
 			console.log('Remove Canv2');
-			
+
 			// canvasCtx.clearRect(0,0, canvWidth, canvHeight);
 			// canvasCtx.fillStyle = bgColor;
 			// canvasCtx.fillRect(0,0, canvWidth, canvHeight);
@@ -1181,7 +1125,7 @@ function pixelPainting(dataArray, bufferLength){
 	}
 
 	document.getElementById('visual-select').addEventListener("change", removeCanv);
-	
+
 	var imgUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Antonio_de_Pereda_-_El_sue%C3%B1o_del_caballero_-_Google_Art_Project.jpg/640px-Antonio_de_Pereda_-_El_sue%C3%B1o_del_caballero_-_Google_Art_Project.jpg';
 	imgUrl += ('?' + new Date().getTime());
 	var img = new Image();
@@ -1226,7 +1170,7 @@ function pixelPainting(dataArray, bufferLength){
 				var data = imgData.data;
 				var avg = (data[0] + data[1] + data[2])/3;
 				var size = (avg/255)*maxSize+minSize;
-				
+
 				var shapeData = {	r: data[0],	g: data[1], b: data[2],
 									avg: avg,
 									size: size,
@@ -1252,23 +1196,23 @@ function pixelPainting(dataArray, bufferLength){
 		if(!randPerPixel){
 			sizeRand = Math.floor(Math.random()*(da/randMax)+(da/randMax)/2);
 		}
-		
+
 		for(var i = 0; i < shapeDataAr.length; i++){
-			
+
 			if(shapeMode === 'ellipse'){
 				ellipseMode(i);
 			}else{
 				lineMode(i);
 			}
 		}
-		
+
 		function ellipseMode(i){
 			if(randPerPixel){
 				sizeRand = Math.floor(Math.random()*(da/randMax)+(da/randMax)/2);
 			}
 			var tempSize = shapeDataAr[i].size + sizeRand;
 
-			canvasCtx.beginPath();				
+			canvasCtx.beginPath();
 			canvasCtx.arc(shapeDataAr[i].x+(tempSize),shapeDataAr[i].y+(tempSize),tempSize, 0, Math.PI*2);
 			canvasCtx.fillStyle ='rgb('+ shapeDataAr[i].r + ',' + shapeDataAr[i].g + ',' + shapeDataAr[i].b +')';
 			canvasCtx.fill();
@@ -1283,7 +1227,7 @@ function pixelPainting(dataArray, bufferLength){
 			canvasCtx.lineWidth = tempSize;
 			canvasCtx.beginPath();
 			canvasCtx.moveTo(shapeDataAr[i].x,shapeDataAr[i].y);
-			canvasCtx.lineTo(shapeDataAr[i].x+(tempSize*1.5),shapeDataAr[i].y+(tempSize*1.5));				
+			canvasCtx.lineTo(shapeDataAr[i].x+(tempSize*1.5),shapeDataAr[i].y+(tempSize*1.5));
 			canvasCtx.strokeStyle ='rgb('+ shapeDataAr[i].r + ',' + shapeDataAr[i].g + ',' + shapeDataAr[i].b +')';
 			canvasCtx.stroke();
 			canvasCtx.closePath();
@@ -1317,7 +1261,7 @@ function pixelPainting(dataArray, bufferLength){
 		}
 		if(document.getElementById('visual-select').value !== 'PixelPainting'){
 			console.log('Remove Canv2');
-			
+
 			canvasCtx.clearRect(0,0, canvWidth, canvHeight);
 			canvasCtx.fillStyle = bgColor;
 			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
