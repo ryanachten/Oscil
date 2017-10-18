@@ -418,7 +418,7 @@ function repeatPix(dataArray, bufferLength){
 					|| visGuiSettings.sampleMode === 'both'){
 					repeatY();
 				}
-				if(visGuiSettings.sampleMode === 'horizontal' 
+				if(visGuiSettings.sampleMode === 'horizontal'
 					|| visGuiSettings.sampleMode === 'both'){
 					repeatX();
 				}
@@ -427,26 +427,32 @@ function repeatPix(dataArray, bufferLength){
 		}
 }
 
+// TODO: fix or delete
 function pixMix(dataArray, bufferLength){
 
 		//Runtime UI stuff
+		var visGui = new dat.GUI();
+		var visGuiSettings = {
+			randomMode : false
+		}
+		visGui.add(visGuiSettings, 'randomMode');
+
 		var visSettings	= document.getElementById('vis-settings');
-		visSettings.style.display = 'block';
-		var randMode = document.createElement('input');
-		randMode.id = 'randMode';
-		randMode.type = 'checkbox';
-		randMode.className = 'vis-setting';
-		randMode.addEventListener("change", function(){
-			console.log('randMode: ' + randMode.checked);
-		});
-		var randLabel = document.createElement('label');
-		randLabel.htmlFor = 'randMode';
-		randLabel.innerHTML = 'Random Mode';
-		randLabel.className = 'vis-setting';
+			visSettings.style.display = 'block';
+			var randMode = document.createElement('input');
+			randMode.id = 'randMode';
+			randMode.type = 'checkbox';
+			randMode.className = 'vis-setting';
+			randMode.addEventListener("change", function(){
+				console.log('randMode: ' + randMode.checked);
+			});
+			var randLabel = document.createElement('label');
+			randLabel.htmlFor = 'randMode';
+			randLabel.innerHTML = 'Random Mode';
+			randLabel.className = 'vis-setting';
 
-		visSettings.appendChild(randLabel);
-		visSettings.appendChild(randMode);
-
+			visSettings.appendChild(randLabel);
+			visSettings.appendChild(randMode);
 
 		// canvasCtx.clearRect(0,0 , canvWidth, canvHeight);
 
@@ -510,7 +516,7 @@ function pixMix(dataArray, bufferLength){
 					for (var j = 0; j < sampleSize; j++) {
 
 						var rand = Math.floor((Math.random()*2)+1);
-						var sampleRandMode = randMode.checked; //TODO: add into UI at runtime
+						var sampleRandMode = visGuiSettings.randomMode; //TODO: add into UI at runtime
 						var sampleRand = Math.floor((Math.random()*sampleSize)+0);
 
 						if (rand%2 == 0) {
@@ -564,6 +570,7 @@ function pixMix(dataArray, bufferLength){
 		}
 }
 
+// TODO: fix or delete
 function pixShuffle(dataArray, bufferLength){
 
 	//Runtime UI stuff
@@ -705,92 +712,99 @@ function pixShuffle(dataArray, bufferLength){
 function imgShuffle(dataArray, bufferLength){
 
 	//Runtime UI stuff
+	var visGui = new dat.GUI();
+	var visGuiSettings = {
+		drawMode : 'move',
+		subdivisions : 5,
+	};
+	visGui.add(visGuiSettings, 'drawMode', ['random', 'move']).onChange(init);
+	visGui.add(visGuiSettings, 'subdivisions').min(1).max(10).onChange(init);
+
 	var visSettings	= document.getElementById('vis-settings');
 		visSettings.style.display = 'block';
 
-	var imgModeDiv = document.createElement('form');
-			imgModeDiv.className = 'vis-setting';
+		var imgModeDiv = document.createElement('form');
+				imgModeDiv.className = 'vis-setting';
 
-	var randomImgDiv = document.createElement('div');
-			randomImgDiv.className = 'vis-setting switch';
-		var randomImgMode = document.createElement('input');
-			randomImgMode.id = 'randomImgMode';
-			randomImgMode.type = 'radio';
-			randomImgMode.name = 'imgMode';
-			randomImgMode.className = 'vis-setting switch-input';
-			randomImgMode.addEventListener("change", function(){
-				init();
-			});
-		var randomImgModePaddel = document.createElement('label');
-			randomImgModePaddel.className = 'vis-setting switch-paddle';
-			randomImgModePaddel.htmlFor = 'randomImgMode';
-		var randomImgModeLabel = document.createElement('label');
-			randomImgModeLabel.htmlFor = 'randomImgMode';
-			randomImgModeLabel.innerHTML = 'Random Mode';
-			randomImgModeLabel.className = 'vis-setting';
+		var randomImgDiv = document.createElement('div');
+				randomImgDiv.className = 'vis-setting switch';
+			var randomImgMode = document.createElement('input');
+				randomImgMode.id = 'randomImgMode';
+				randomImgMode.type = 'radio';
+				randomImgMode.name = 'imgMode';
+				randomImgMode.className = 'vis-setting switch-input';
+				randomImgMode.addEventListener("change", function(){
+					init();
+				});
+			var randomImgModePaddel = document.createElement('label');
+				randomImgModePaddel.className = 'vis-setting switch-paddle';
+				randomImgModePaddel.htmlFor = 'randomImgMode';
+			var randomImgModeLabel = document.createElement('label');
+				randomImgModeLabel.htmlFor = 'randomImgMode';
+				randomImgModeLabel.innerHTML = 'Random Mode';
+				randomImgModeLabel.className = 'vis-setting';
 
-		var moveImgDiv = document.createElement('div');
-			moveImgDiv.className = 'vis-setting switch';
-		var moveImgMode = document.createElement('input');
-			moveImgMode.id = 'moveImgMode';
-			moveImgMode.type = 'radio';
-			moveImgMode.name = 'imgMode';
-			moveImgMode.checked = true;
-			moveImgMode.className = 'vis-setting switch-input';
-			moveImgMode.addEventListener("change", function(){
-				init();
-			});
-		var moveImgModePaddel = document.createElement('label');
-			moveImgModePaddel.className = 'vis-setting switch-paddle';
-			moveImgModePaddel.htmlFor = 'moveImgMode';
-		var moveImgModeLabel = document.createElement('label');
-			moveImgModeLabel.htmlFor = 'moveImgMode';
-			moveImgModeLabel.innerHTML = 'Move Mode';
-			moveImgModeLabel.className = 'vis-setting';
+			var moveImgDiv = document.createElement('div');
+				moveImgDiv.className = 'vis-setting switch';
+			var moveImgMode = document.createElement('input');
+				moveImgMode.id = 'moveImgMode';
+				moveImgMode.type = 'radio';
+				moveImgMode.name = 'imgMode';
+				moveImgMode.checked = true;
+				moveImgMode.className = 'vis-setting switch-input';
+				moveImgMode.addEventListener("change", function(){
+					init();
+				});
+			var moveImgModePaddel = document.createElement('label');
+				moveImgModePaddel.className = 'vis-setting switch-paddle';
+				moveImgModePaddel.htmlFor = 'moveImgMode';
+			var moveImgModeLabel = document.createElement('label');
+				moveImgModeLabel.htmlFor = 'moveImgMode';
+				moveImgModeLabel.innerHTML = 'Move Mode';
+				moveImgModeLabel.className = 'vis-setting';
 
-	var subDivInput = document.createElement('input');
-		subDivInput.type = 'range';
-		subDivInput.id = 'subDivInput';
-		subDivInput.className = 'vis-setting';
-		subDivInput.min = 1;
-		subDivInput.max = 10;
-		subDivInput.value = 5;
-		subDivInput.addEventListener("change", function(){
-				init();
-			});
-	var subDivLabel = document.createElement('label');
-		subDivLabel.htmlFor = 'subDivInput';
-		subDivLabel.className = 'vis-setting';
+		var subDivInput = document.createElement('input');
+			subDivInput.type = 'range';
+			subDivInput.id = 'subDivInput';
+			subDivInput.className = 'vis-setting';
+			subDivInput.min = 1;
+			subDivInput.max = 10;
+			subDivInput.value = 5;
+			subDivInput.addEventListener("change", function(){
+					init();
+				});
+		var subDivLabel = document.createElement('label');
+			subDivLabel.htmlFor = 'subDivInput';
+			subDivLabel.className = 'vis-setting';
 
-	var tileCountInput = document.createElement('input');
-		tileCountInput.type = 'range';
-		tileCountInput.id = 'tileCountInput';
-		tileCountInput.className = 'vis-setting';
-		tileCountInput.min = 4;
-		tileCountInput.max = 70;
-		tileCountInput.value = 10;
-		tileCountInput.addEventListener("change", function(){
-				init();
-			});
-	var tileCountLabel = document.createElement('label');
-		tileCountLabel.htmlFor = 'tileCountInput';
-		tileCountLabel.className = 'vis-setting';
-		tileCountLabel.innerHTML = 'Tile Count';
+		var tileCountInput = document.createElement('input');
+			tileCountInput.type = 'range';
+			tileCountInput.id = 'tileCountInput';
+			tileCountInput.className = 'vis-setting';
+			tileCountInput.min = 4;
+			tileCountInput.max = 70;
+			tileCountInput.value = 10;
+			tileCountInput.addEventListener("change", function(){
+					init();
+				});
+		var tileCountLabel = document.createElement('label');
+			tileCountLabel.htmlFor = 'tileCountInput';
+			tileCountLabel.className = 'vis-setting';
+			tileCountLabel.innerHTML = 'Tile Count';
 
-			randomImgDiv.appendChild(randomImgModeLabel);
-			randomImgDiv.appendChild(randomImgMode);
-			randomImgDiv.appendChild(randomImgModePaddel);
-		imgModeDiv.appendChild(randomImgDiv)
-			moveImgDiv.appendChild(moveImgModeLabel);
-			moveImgDiv.appendChild(moveImgMode);
-			moveImgDiv.appendChild(moveImgModePaddel);
-		imgModeDiv.appendChild(moveImgDiv)
-	visSettings.appendChild(imgModeDiv);
-	visSettings.appendChild(subDivLabel);
-	visSettings.appendChild(subDivInput);
-	visSettings.appendChild(tileCountLabel);
-	visSettings.appendChild(tileCountInput);
-
+				randomImgDiv.appendChild(randomImgModeLabel);
+				randomImgDiv.appendChild(randomImgMode);
+				randomImgDiv.appendChild(randomImgModePaddel);
+			imgModeDiv.appendChild(randomImgDiv)
+				moveImgDiv.appendChild(moveImgModeLabel);
+				moveImgDiv.appendChild(moveImgMode);
+				moveImgDiv.appendChild(moveImgModePaddel);
+			imgModeDiv.appendChild(moveImgDiv)
+		visSettings.appendChild(imgModeDiv);
+		visSettings.appendChild(subDivLabel);
+		visSettings.appendChild(subDivInput);
+		visSettings.appendChild(tileCountLabel);
+		visSettings.appendChild(tileCountInput);
 
 	var imgMode, tileCount;
 	var counter, initialised, tileCoords; //move mode vars
@@ -802,20 +816,13 @@ function imgShuffle(dataArray, bufferLength){
 		canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
 		tileCount = 10; //add to GUI
-		if(randomImgMode.checked){
-			subDivLabel.innerHTML = 'Tile Count';
-			tileCountInput.style.display = 'none';
-			tileCountLabel.style.display = 'none';
+		if(visGuiSettings.drawMode === 'random'){
 			imgMode = 'random';
-		}else if(moveImgMode.checked){
-			subDivLabel.innerHTML = 'Acceleration';
-			tileCountInput.style.display = 'block';
-			tileCountLabel.style.display = 'block';
+		}else if(visGuiSettings.drawMode === 'move'){
 			imgMode = 'move';
-			tileCount = parseInt(tileCountInput.value);
 		}
 
-		sumDivisionLevel = (parseInt(subDivInput.value)/10)*100;
+		sumDivisionLevel = (visGuiSettings.subdivisions/10)*100;
 		tileCoords = [];
 		initialised = false;
 		counter = 0;
