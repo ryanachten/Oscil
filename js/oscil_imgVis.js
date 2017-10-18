@@ -979,133 +979,146 @@ function imgShuffle(dataArray, bufferLength){
 function pixelPainting(dataArray, bufferLength){
 
 	//Runtime UI stuff
-	var visSettings	= document.getElementById('vis-settings');
-		visSettings.style.display = 'block';
+	var visGui = new dat.GUI();
+	var visGuiSettings = {
+		drawMode : 'ellipse',
+		randomMode : true,
+		sampleSize : 16,
+		maxSize : 5,
+		maxRandomSize : 20
+	};
+	visGui.add(visGuiSettings, 'drawMode', ['ellipse', 'line']).onChange(init);
+	visGui.add(visGuiSettings, 'randomMode').onChange(init);
+	visGui.add(visGuiSettings, 'sampleSize').min(12).max(60).onChange(init);
+	visGui.add(visGuiSettings, 'maxSize').min(2).max(30).onChange(init);
+	visGui.add(visGuiSettings, 'maxRandomSize').min(2).max(50).onChange(init);
 
-	var shapeModeDiv = document.createElement('form');
-			shapeModeDiv.className = 'vis-setting';
-
-	var ellipseDiv = document.createElement('div');
-			ellipseDiv.className = 'vis-setting switch';
-		var ellipseModeInput = document.createElement('input');
-			ellipseModeInput.id = 'ellipseModeInput';
-			ellipseModeInput.type = 'radio';
-			ellipseModeInput.name = 'shapeMode';
-			ellipseModeInput.className = 'vis-setting switch-input';
-			ellipseModeInput.checked = true;
-			ellipseModeInput.addEventListener("change", function(){
-				init();
-			});
-		var ellipseModePaddel = document.createElement('label');
-			ellipseModePaddel.className = 'vis-setting switch-paddle';
-			ellipseModePaddel.htmlFor = 'ellipseModeInput';
-		var ellipseModeLabel = document.createElement('label');
-			ellipseModeLabel.htmlFor = 'ellipseModeInput';
-			ellipseModeLabel.innerHTML = 'Ellipse Mode';
-			ellipseModeLabel.className = 'vis-setting';
-
-		var lineModeDiv = document.createElement('div');
-			lineModeDiv.className = 'vis-setting switch';
-		var lineInputMode = document.createElement('input');
-			lineInputMode.id = 'lineInputMode';
-			lineInputMode.type = 'radio';
-			lineInputMode.name = 'shapeMode';
-			lineInputMode.className = 'vis-setting switch-input';
-			lineInputMode.addEventListener("change", function(){
-				init();
-			});
-		var lineModeModePaddel = document.createElement('label');
-			lineModeModePaddel.className = 'vis-setting switch-paddle';
-			lineModeModePaddel.htmlFor = 'lineInputMode';
-		var lineModeModeLabel = document.createElement('label');
-			lineModeModeLabel.htmlFor = 'lineInputMode';
-			lineModeModeLabel.innerHTML = 'Line Mode';
-			lineModeModeLabel.className = 'vis-setting';
-
-
-	var randModeDiv = document.createElement('div');
-			randModeDiv.className = 'vis-setting';
-		var randPerPixCheck = document.createElement('input');
-			randPerPixCheck.id = 'randPerPixCheck';
-			randPerPixCheck.type = 'checkbox';
-			randPerPixCheck.className = 'vis-setting switch-input';
-			randPerPixCheck.checked = true;
-			randPerPixCheck.addEventListener("change", function(){
-				init();
-			});
-		var randPerPixPaddel = document.createElement('label');
-			randPerPixPaddel.className = 'vis-setting switch-paddle';
-			randPerPixPaddel.htmlFor = 'randPerPixCheck';
-		var randPerPixLabel = document.createElement('label');
-			randPerPixLabel.htmlFor = 'randPerPixCheck';
-			randPerPixLabel.innerHTML = 'Random Per Pix';
-			randPerPixLabel.className = 'vis-setting';
-
-	var sampleSizeInput = document.createElement('input');
-		sampleSizeInput.type = 'range';
-		sampleSizeInput.id = 'sampleSizeInput';
-		sampleSizeInput.className = 'vis-setting';
-		sampleSizeInput.min = 12;
-		sampleSizeInput.max = 60;
-		sampleSizeInput.value = 16;
-		sampleSizeInput.addEventListener("change", function(){
-				init();
-			});
-	var sampleSizeLabel = document.createElement('label');
-		sampleSizeLabel.htmlFor = 'sampleSizeInput';
-		sampleSizeLabel.className = 'vis-setting';
-		sampleSizeLabel.innerHTML = 'Sample Size';
-
-	var maxSizeInput = document.createElement('input');
-		maxSizeInput.type = 'range';
-		maxSizeInput.id = 'maxSizeInput';
-		maxSizeInput.className = 'vis-setting';
-		maxSizeInput.min = 2;
-		maxSizeInput.max = 30;
-		maxSizeInput.value = 5;
-		maxSizeInput.addEventListener("change", function(){
-				init();
-			});
-	var maxSizeLabel = document.createElement('label');
-		maxSizeLabel.htmlFor = 'maxSizeInput';
-		maxSizeLabel.className = 'vis-setting';
-		maxSizeLabel.innerHTML = 'Max Seed Size';
-
-	var maxRandSizeInput = document.createElement('input');
-		maxRandSizeInput.type = 'range';
-		maxRandSizeInput.id = 'maxRandSizeInput';
-		maxRandSizeInput.className = 'vis-setting';
-		maxRandSizeInput.min = 2;
-		maxRandSizeInput.max = 50;
-		maxRandSizeInput.value = 20;
-		maxRandSizeInput.addEventListener("change", function(){
-				init();
-			});
-	var maxRandSizeLabel = document.createElement('label');
-		maxRandSizeLabel.htmlFor = 'maxRandSizeInput';
-		maxRandSizeLabel.className = 'vis-setting';
-		maxRandSizeLabel.innerHTML = 'Minimise Growth';
-
-			lineModeDiv.appendChild(lineModeModeLabel);
-			lineModeDiv.appendChild(lineInputMode);
-			lineModeDiv.appendChild(lineModeModePaddel);
-		shapeModeDiv.appendChild(lineModeDiv);
-			ellipseDiv.appendChild(ellipseModeLabel);
-			ellipseDiv.appendChild(ellipseModeInput);
-			ellipseDiv.appendChild(ellipseModePaddel);
-		shapeModeDiv.appendChild(ellipseDiv);
-		randModeDiv.appendChild(randPerPixLabel);
-		randModeDiv.appendChild(randPerPixCheck);
-		randModeDiv.appendChild(randPerPixPaddel);
-	visSettings.appendChild(sampleSizeLabel);
-	visSettings.appendChild(sampleSizeInput);
-	visSettings.appendChild(maxSizeLabel);
-	visSettings.appendChild(maxSizeInput);
-	visSettings.appendChild(maxRandSizeLabel);
-	visSettings.appendChild(maxRandSizeInput);
-	visSettings.appendChild(shapeModeDiv);
-	visSettings.appendChild(randModeDiv);
-
+	// var visSettings	= document.getElementById('vis-settings');
+	// 		visSettings.style.display = 'block';
+	//
+	// 	var shapeModeDiv = document.createElement('form');
+	// 			shapeModeDiv.className = 'vis-setting';
+	//
+	// 	var ellipseDiv = document.createElement('div');
+	// 			ellipseDiv.className = 'vis-setting switch';
+	// 		var ellipseModeInput = document.createElement('input');
+	// 			ellipseModeInput.id = 'ellipseModeInput';
+	// 			ellipseModeInput.type = 'radio';
+	// 			ellipseModeInput.name = 'shapeMode';
+	// 			ellipseModeInput.className = 'vis-setting switch-input';
+	// 			ellipseModeInput.checked = true;
+	// 			ellipseModeInput.addEventListener("change", function(){
+	// 				init();
+	// 			});
+	// 		var ellipseModePaddel = document.createElement('label');
+	// 			ellipseModePaddel.className = 'vis-setting switch-paddle';
+	// 			ellipseModePaddel.htmlFor = 'ellipseModeInput';
+	// 		var ellipseModeLabel = document.createElement('label');
+	// 			ellipseModeLabel.htmlFor = 'ellipseModeInput';
+	// 			ellipseModeLabel.innerHTML = 'Ellipse Mode';
+	// 			ellipseModeLabel.className = 'vis-setting';
+	//
+	// 		var lineModeDiv = document.createElement('div');
+	// 			lineModeDiv.className = 'vis-setting switch';
+	// 		var lineInputMode = document.createElement('input');
+	// 			lineInputMode.id = 'lineInputMode';
+	// 			lineInputMode.type = 'radio';
+	// 			lineInputMode.name = 'shapeMode';
+	// 			lineInputMode.className = 'vis-setting switch-input';
+	// 			lineInputMode.addEventListener("change", function(){
+	// 				init();
+	// 			});
+	// 		var lineModeModePaddel = document.createElement('label');
+	// 			lineModeModePaddel.className = 'vis-setting switch-paddle';
+	// 			lineModeModePaddel.htmlFor = 'lineInputMode';
+	// 		var lineModeModeLabel = document.createElement('label');
+	// 			lineModeModeLabel.htmlFor = 'lineInputMode';
+	// 			lineModeModeLabel.innerHTML = 'Line Mode';
+	// 			lineModeModeLabel.className = 'vis-setting';
+	//
+	//
+	// 	var randModeDiv = document.createElement('div');
+	// 			randModeDiv.className = 'vis-setting';
+	// 		var randPerPixCheck = document.createElement('input');
+	// 			randPerPixCheck.id = 'randPerPixCheck';
+	// 			randPerPixCheck.type = 'checkbox';
+	// 			randPerPixCheck.className = 'vis-setting switch-input';
+	// 			randPerPixCheck.checked = true;
+	// 			randPerPixCheck.addEventListener("change", function(){
+	// 				init();
+	// 			});
+	// 		var randPerPixPaddel = document.createElement('label');
+	// 			randPerPixPaddel.className = 'vis-setting switch-paddle';
+	// 			randPerPixPaddel.htmlFor = 'randPerPixCheck';
+	// 		var randPerPixLabel = document.createElement('label');
+	// 			randPerPixLabel.htmlFor = 'randPerPixCheck';
+	// 			randPerPixLabel.innerHTML = 'Random Per Pix';
+	// 			randPerPixLabel.className = 'vis-setting';
+	//
+	// 	var sampleSizeInput = document.createElement('input');
+	// 		sampleSizeInput.type = 'range';
+	// 		sampleSizeInput.id = 'sampleSizeInput';
+	// 		sampleSizeInput.className = 'vis-setting';
+	// 		sampleSizeInput.min = 12;
+	// 		sampleSizeInput.max = 60;
+	// 		sampleSizeInput.value = 16;
+	// 		sampleSizeInput.addEventListener("change", function(){
+	// 				init();
+	// 			});
+	// 	var sampleSizeLabel = document.createElement('label');
+	// 		sampleSizeLabel.htmlFor = 'sampleSizeInput';
+	// 		sampleSizeLabel.className = 'vis-setting';
+	// 		sampleSizeLabel.innerHTML = 'Sample Size';
+	//
+	// 	var maxSizeInput = document.createElement('input');
+	// 		maxSizeInput.type = 'range';
+	// 		maxSizeInput.id = 'maxSizeInput';
+	// 		maxSizeInput.className = 'vis-setting';
+	// 		maxSizeInput.min = 2;
+	// 		maxSizeInput.max = 30;
+	// 		maxSizeInput.value = 5;
+	// 		maxSizeInput.addEventListener("change", function(){
+	// 				init();
+	// 			});
+	// 	var maxSizeLabel = document.createElement('label');
+	// 		maxSizeLabel.htmlFor = 'maxSizeInput';
+	// 		maxSizeLabel.className = 'vis-setting';
+	// 		maxSizeLabel.innerHTML = 'Max Seed Size';
+	//
+	// 	var maxRandSizeInput = document.createElement('input');
+	// 		maxRandSizeInput.type = 'range';
+	// 		maxRandSizeInput.id = 'maxRandSizeInput';
+	// 		maxRandSizeInput.className = 'vis-setting';
+	// 		maxRandSizeInput.min = 2;
+	// 		maxRandSizeInput.max = 50;
+	// 		maxRandSizeInput.value = 20;
+	// 		maxRandSizeInput.addEventListener("change", function(){
+	// 				init();
+	// 			});
+	// 	var maxRandSizeLabel = document.createElement('label');
+	// 		maxRandSizeLabel.htmlFor = 'maxRandSizeInput';
+	// 		maxRandSizeLabel.className = 'vis-setting';
+	// 		maxRandSizeLabel.innerHTML = 'Minimise Growth';
+	//
+	// 			lineModeDiv.appendChild(lineModeModeLabel);
+	// 			lineModeDiv.appendChild(lineInputMode);
+	// 			lineModeDiv.appendChild(lineModeModePaddel);
+	// 		shapeModeDiv.appendChild(lineModeDiv);
+	// 			ellipseDiv.appendChild(ellipseModeLabel);
+	// 			ellipseDiv.appendChild(ellipseModeInput);
+	// 			ellipseDiv.appendChild(ellipseModePaddel);
+	// 		shapeModeDiv.appendChild(ellipseDiv);
+	// 		randModeDiv.appendChild(randPerPixLabel);
+	// 		randModeDiv.appendChild(randPerPixCheck);
+	// 		randModeDiv.appendChild(randPerPixPaddel);
+	// 	visSettings.appendChild(sampleSizeLabel);
+	// 	visSettings.appendChild(sampleSizeInput);
+	// 	visSettings.appendChild(maxSizeLabel);
+	// 	visSettings.appendChild(maxSizeInput);
+	// 	visSettings.appendChild(maxRandSizeLabel);
+	// 	visSettings.appendChild(maxRandSizeInput);
+	// 	visSettings.appendChild(shapeModeDiv);
+	// 	visSettings.appendChild(randModeDiv);
 
 	var canvas2 = document.createElement('canvas');
 		canvas2.id = 'canvas2';
@@ -1155,18 +1168,18 @@ function pixelPainting(dataArray, bufferLength){
 		canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
 		shapeDataAr = [];
-		var sampleCount = parseInt(sampleSizeInput.value);
-		maxSize = parseInt(maxSizeInput.value);
+		var sampleCount = visGuiSettings.sampleSize;
+		maxSize = visGuiSettings.maxSize;
 		minSize = 0;
-		randMax = parseInt(maxRandSizeInput.value);
-		if(ellipseModeInput.checked){
+		randMax = visGuiSettings.maxRandomSize;
+		if(visGuiSettings.drawMode === 'ellipse'){
 			shapeMode = 'ellipse';
 		}
 		else{
 			shapeMode = 'line';
 		}
 		randPerPixel = false;
-		if(randPerPixCheck.checked) randPerPixel = true;
+		if(visGuiSettings.randomMode) randPerPixel = true;
 
 		for (var i = 0; i < canvWidth; i+=sampleCount) {
 			for (var j = 0; j < canvHeight; j+=sampleCount) {
