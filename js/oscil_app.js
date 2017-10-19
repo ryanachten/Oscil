@@ -1,10 +1,6 @@
-$(document).foundation();
-
 var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 var analyser = audioCtx.createAnalyser();
 
-
-//Smoothing / calibration settings - these should all be sliders
 var audioGui = new dat.GUI({ autoPlace: false });
 audioGui.domElement.id = 'audiodat-gui';
 $('#audio-options').append(audioGui.domElement);
@@ -31,28 +27,6 @@ audioGui.add(audioGuiSettings, 'smoothing').min(0).max(100).onChange(
 	function(){
 		analyser.smoothingTimeConstant = audioGuiSettings.smoothing/100;
 	});
-
-//
-// var fftInput = document.getElementById("fft-input");
-// fftInput.onchange = function(){
-// 	window.cancelAnimationFrame(drawVisual);
-// 	visualise(visualisationMode.value);
-// }
-//
-// var minDb = document.getElementById("min-db-input");
-// minDb.onchange = function(){
-// 	analyser.minDecibels = minDb.value;
-// }
-// var maxDb = document.getElementById("max-db-input");
-// maxDb.onchange = function(){
-// 	analyser.maxDecibels = maxDb.value;
-// }
-//
-// var smoothingRange = document.getElementById("smoothing-input");
-// smoothingRange.onchange = function(){
-// 	// console.log("val: " + smoothingRange.value);
-// 	analyser.smoothingTimeConstant = smoothingRange.value/100;
-// }
 
 
 var visualisationMode = document.querySelector('#visual-select');
