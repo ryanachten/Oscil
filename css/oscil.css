@@ -70,3 +70,11 @@ input:checked~.switch-paddle{
 .switch{
 	height: 3rem;
 }
+
+/* Dat Gui Overrodes */
+.dg.main {
+  margin: 0 auto;
+}
+.dg.main .close-button.close-bottom {
+    position: relative;
+}

@@ -71,54 +71,12 @@ function waveForm(dataArray, bufferLength){
 function gradient(dataArray, bufferLength){
 
 	//Runtime UI stuff
-	var visGui = new dat.GUI();
+	var visGui = new dat.GUI({ autoPlace: false });
+	$('#visual-options').append(visGui.domElement);
 	var visGuiSettings = {
 		gradMode : 'radial'
 	};
 	visGui.add(visGuiSettings, 'gradMode', ['linear', 'radial']);
-
-	var visSettings	= document.getElementById('vis-settings');
-	  visSettings.style.display = 'block';
-
-	  var linearDiv = document.createElement('div');
-	    linearDiv.className = 'vis-setting switch';
-	  var linearMode = document.createElement('input');
-	    linearMode.id = 'linearMode';
-	    linearMode.type = 'radio';
-	    linearMode.name = 'gradMode';
-	    linearMode.className = 'vis-setting switch-input';
-	  var linearModeLabel = document.createElement('label');
-	    linearModeLabel.htmlFor = 'linearMode';
-	    linearModeLabel.innerHTML = 'Linear';
-	    linearModeLabel.className = 'vis-setting';
-	  var linearModePaddel = document.createElement('label');
-	    linearModePaddel.className = 'vis-setting switch-paddle';
-	    linearModePaddel.htmlFor = 'linearMode';
-
-	  var radialDiv = document.createElement('div');
-	    radialDiv.className = 'vis-setting switch';
-	  var radialMode = document.createElement('input');
-	    radialMode.id = 'radialMode';
-	    radialMode.type = 'radio';
-	    radialMode.name = 'gradMode';
-	    radialMode.className = 'vis-setting switch-input';
-	    radialMode.checked = 'true';
-	  var radialModePaddel = document.createElement('label');
-	    radialModePaddel.className = 'vis-setting switch-paddle';
-	    radialModePaddel.htmlFor = 'radialMode';
-	  var radialModeLabel = document.createElement('label');
-	    radialModeLabel.htmlFor = 'radialMode';
-	    radialModeLabel.innerHTML = 'Radial';
-	    radialModeLabel.className = 'vis-setting';
-
-	  linearDiv.appendChild(linearModeLabel);
-	  linearDiv.appendChild(linearMode);
-	  linearDiv.appendChild(linearModePaddel);
-	  radialDiv.appendChild(radialModeLabel);
-	  radialDiv.appendChild(radialMode);
-	  radialDiv.appendChild(radialModePaddel);
-	  visSettings.appendChild(linearDiv);
-	  visSettings.appendChild(radialDiv);
 
 	canvasCtx.clearRect(0,0,canvWidth,canvHeight);
 
@@ -161,7 +119,8 @@ function gradient(dataArray, bufferLength){
 function polyShapes(dataArray, bufferLength){
 
 	//Runtime UI stuff
-	var visGui = new dat.GUI();
+	var visGui = new dat.GUI({ autoPlace: false });
+	$('#visual-options').append(visGui.domElement);
 	var visGuiSettings = {
 		alpha : 1,
 		radiusMode : true,
@@ -268,7 +227,8 @@ function polyShapes(dataArray, bufferLength){
 function particles(dataArray, bufferLength){
 
 		//Runtime UI stuff
-		var visGui = new dat.GUI();
+		var visGui = new dat.GUI({ autoPlace: false });
+		$('#visual-options').append(visGui.domElement);
 		var visGuiSettings = {
 			particleCount : 30,
 		};
@@ -367,7 +327,8 @@ function particles(dataArray, bufferLength){
 function dumbAgents(dataArray, bufferLength){
 
 	//Runtime UI stuff
-	var visGui = new dat.GUI();
+	var visGui = new dat.GUI({ autoPlace: false });
+	$('#visual-options').append(visGui.domElement);
 	var visGuiSettings = {
 		alpha : 0.2
 	};
@@ -503,7 +464,8 @@ function dumbAgents(dataArray, bufferLength){
 function shapeAgents(dataArray, bufferLength){
 
 	//Runtime UI stuff
-	var visGui = new dat.GUI();
+	var visGui = new dat.GUI({ autoPlace: false });
+	$('#visual-options').append(visGui.domElement);
 	var visGuiSettings = {
 		resolution : 20,
 		initRadius : (canvWidth > canvHeight ? canvHeight : canvWidth) /8,
@@ -638,7 +600,8 @@ function shapeAgents(dataArray, bufferLength){
 function brownianTree(dataArray, bufferLength){
 
 		//Runtime UI stuff
-		var visGui = new dat.GUI();
+		var visGui = new dat.GUI({ autoPlace: false });
+		$('#visual-options').append(visGui.domElement);
 		var visGuiSettings = {
 			showRandNode : true,
 			maxRadius : 5
@@ -768,7 +731,8 @@ function brownianTree(dataArray, bufferLength){
 function concretePoetry(dataArray, bufferLength){
 
 	//Runtime UI stuff
-	var visGui = new dat.GUI();
+	var visGui = new dat.GUI({ autoPlace: false });
+	$('#visual-options').append(visGui.domElement);
 	var visGuiSettings = {
 		textInput : 'there is always soma, delicious soma, half a gramme for a half-holiday, a gramme for a week-end, two grammes for a trip to the gorgeous East, three for a dark eternity on the moon',
 		case : 'upper',
@@ -860,7 +824,8 @@ function concretePoetry(dataArray, bufferLength){
 function lissajousFigure(dataArray, bufferLength){
 
 		//Runtime UI stuff
-		var visGui = new dat.GUI();
+		var visGui = new dat.GUI({ autoPlace: false });
+		$('#visual-options').append(visGui.domElement);
 		var visGuiSettings = {
 			freqX : 40,
 			freqY : 40,
@@ -994,7 +959,8 @@ function lissajousFigure(dataArray, bufferLength){
 function lissajousWebs(dataArray, bufferLength){
 
 		//Runtime UI stuff
-		var visGui = new dat.GUI();
+		var visGui = new dat.GUI({ autoPlace: false });
+		$('#visual-options').append(visGui.domElement);
 		var visGuiSettings = {
 			freqX : 7,
 			freqY : 7,
@@ -1214,7 +1180,8 @@ function nodeAttraction(dataArray, bufferLength){
 		});
 
 		//Runtime UI stuff
-		var visGui = new dat.GUI();
+		var visGui = new dat.GUI({ autoPlace: false });
+		$('#visual-options').append(visGui.domElement);
 		var visGuiSettings = {
 			nodeDamping : 40,
 			showAttractNode : false,
@@ -1486,7 +1453,8 @@ function chladniPlate(dataArray, bufferLength){
 		});
 
 		//Runtime UI stuff
-		var visGui = new dat.GUI();
+		var visGui = new dat.GUI({ autoPlace: false });
+		$('#visual-options').append(visGui.domElement);
 		var visGuiSettings = {
 			nodeDamping : 10,
 			mode : 'smooth',

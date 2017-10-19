@@ -1,7 +1,8 @@
 function refract(dataArray, bufferLength){
 
 	//Runtime UI stuff
-	var visGui = new dat.GUI();
+	var visGui = new dat.GUI({ autoPlace: false });
+	$('#visual-options').append(visGui.domElement);
 	var visGuiSettings = {
 		imgUrl : 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Various_Arecaceae.jpg/630px-Various_Arecaceae.jpg',
 		fps : 15,
@@ -145,7 +146,8 @@ function macroblocks(dataArray, bufferLength){
 		//Runtime UI stuff
 		var sampleCount = 256;
 
-		var visGui = new dat.GUI();
+		var visGui = new dat.GUI({ autoPlace: false });
+		$('#visual-options').append(visGui.domElement);
 		var visGuiSettings = {
 			sampleCount : 8,
 			// TODO: add init function to allow changing url
@@ -222,7 +224,8 @@ function macroblocks(dataArray, bufferLength){
 function repeatPix(dataArray, bufferLength){
 
 		//Runtime UI stuff
-		var visGui = new dat.GUI();
+		var visGui = new dat.GUI({ autoPlace: false });
+		$('#visual-options').append(visGui.domElement);
 		var visGuiSettings = {
 			modifyWidth : false,
 			sampleMode : 'vertical',
@@ -431,7 +434,8 @@ function repeatPix(dataArray, bufferLength){
 function pixMix(dataArray, bufferLength){
 
 		//Runtime UI stuff
-		var visGui = new dat.GUI();
+		var visGui = new dat.GUI({ autoPlace: false });
+		$('#visual-options').append(visGui.domElement);
 		var visGuiSettings = {
 			randomMode : false
 		}
@@ -712,7 +716,8 @@ function pixShuffle(dataArray, bufferLength){
 function imgShuffle(dataArray, bufferLength){
 
 	//Runtime UI stuff
-	var visGui = new dat.GUI();
+	var visGui = new dat.GUI({ autoPlace: false });
+	$('#visual-options').append(visGui.domElement);
 	var visGuiSettings = {
 		drawMode : 'move',
 		subdivisions : 5,
@@ -979,7 +984,8 @@ function imgShuffle(dataArray, bufferLength){
 function pixelPainting(dataArray, bufferLength){
 
 	//Runtime UI stuff
-	var visGui = new dat.GUI();
+	var visGui = new dat.GUI({ autoPlace: false });
+	$('#visual-options').append(visGui.domElement)
 	var visGuiSettings = {
 		drawMode : 'ellipse',
 		randomMode : true,
