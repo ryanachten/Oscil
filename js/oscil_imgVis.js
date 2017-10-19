@@ -2,6 +2,7 @@ function refract(dataArray, bufferLength){
 
 	//Runtime UI stuff
 	var visGui = new dat.GUI({ autoPlace: false });
+	visGui.domElement.id = 'visdat-gui';
 	$('#visual-options').append(visGui.domElement);
 	var visGuiSettings = {
 		imgUrl : 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Various_Arecaceae.jpg/630px-Various_Arecaceae.jpg',
@@ -147,6 +148,7 @@ function macroblocks(dataArray, bufferLength){
 		var sampleCount = 256;
 
 		var visGui = new dat.GUI({ autoPlace: false });
+		visGui.domElement.id = 'visdat-gui';
 		$('#visual-options').append(visGui.domElement);
 		var visGuiSettings = {
 			sampleCount : 8,
@@ -225,6 +227,7 @@ function repeatPix(dataArray, bufferLength){
 
 		//Runtime UI stuff
 		var visGui = new dat.GUI({ autoPlace: false });
+		visGui.domElement.id = 'visdat-gui';
 		$('#visual-options').append(visGui.domElement);
 		var visGuiSettings = {
 			modifyWidth : false,
@@ -435,6 +438,7 @@ function pixMix(dataArray, bufferLength){
 
 		//Runtime UI stuff
 		var visGui = new dat.GUI({ autoPlace: false });
+		visGui.domElement.id = 'visdat-gui';
 		$('#visual-options').append(visGui.domElement);
 		var visGuiSettings = {
 			randomMode : false
@@ -717,6 +721,7 @@ function imgShuffle(dataArray, bufferLength){
 
 	//Runtime UI stuff
 	var visGui = new dat.GUI({ autoPlace: false });
+	visGui.domElement.id = 'visdat-gui';
 	$('#visual-options').append(visGui.domElement);
 	var visGuiSettings = {
 		drawMode : 'move',
@@ -985,6 +990,7 @@ function pixelPainting(dataArray, bufferLength){
 
 	//Runtime UI stuff
 	var visGui = new dat.GUI({ autoPlace: false });
+	visGui.domElement.id = 'visdat-gui';
 	$('#visual-options').append(visGui.domElement)
 	var visGuiSettings = {
 		drawMode : 'ellipse',

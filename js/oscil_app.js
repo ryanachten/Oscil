@@ -28,22 +28,14 @@ smoothingRange.onchange = function(){
 	analyser.smoothingTimeConstant = smoothingRange.value/100;
 }
 
-function removeVisualSettings(){
-	var visSettings	= document.getElementsByClassName('vis-setting');
-	if(visSettings.length == 0){
-		return;
-	}
-	$('.vis-setting').remove();
-}
 
 var visualisationMode = document.querySelector('#visual-select');
 visualisationMode.onchange = function(){
 	window.cancelAnimationFrame(drawVisual);
 	drawVisual = undefined;
-	
-	removeVisualSettings();
-	document.getElementById('vis-settings').style.display = 'none';
-	
+
+	$('#visdat-gui').remove();
+
 	visualise(visualisationMode.value);
 }
 
@@ -51,7 +43,7 @@ visualisationMode.onchange = function(){
 //Canvas Setup
 var bgColor = 'rgb(237, 230, 224)';
 var canvas = document.querySelector("#visualiser");
-	
+
 if(canvas.getContext){
 	canvas.width = $(window).width();
 	canvas.height = $(window).height();
@@ -61,7 +53,7 @@ if(canvas.getContext){
 	canvasCtx.fillStyle = bgColor;
 	canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
-	
+
 	var drawVisual;
 
 	//Microphone access
@@ -103,7 +95,7 @@ function visualise(visMode){
 
 	console.log(visMode);
 	if(visMode === 'BarGraph'){
-		barGraph(dataArray, bufferLength); 
+		barGraph(dataArray, bufferLength);
 	}
 	else if(visMode === 'WaveForm'){
 		waveForm(dataArray, bufferLength);

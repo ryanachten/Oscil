@@ -72,6 +72,7 @@ function gradient(dataArray, bufferLength){
 
 	//Runtime UI stuff
 	var visGui = new dat.GUI({ autoPlace: false });
+	visGui.domElement.id = 'visdat-gui';
 	$('#visual-options').append(visGui.domElement);
 	var visGuiSettings = {
 		gradMode : 'radial'
@@ -120,6 +121,7 @@ function polyShapes(dataArray, bufferLength){
 
 	//Runtime UI stuff
 	var visGui = new dat.GUI({ autoPlace: false });
+	visGui.domElement.id = 'visdat-gui';
 	$('#visual-options').append(visGui.domElement);
 	var visGuiSettings = {
 		alpha : 1,
@@ -228,6 +230,7 @@ function particles(dataArray, bufferLength){
 
 		//Runtime UI stuff
 		var visGui = new dat.GUI({ autoPlace: false });
+		visGui.domElement.id = 'visdat-gui';
 		$('#visual-options').append(visGui.domElement);
 		var visGuiSettings = {
 			particleCount : 30,
@@ -328,6 +331,7 @@ function dumbAgents(dataArray, bufferLength){
 
 	//Runtime UI stuff
 	var visGui = new dat.GUI({ autoPlace: false });
+	visGui.domElement.id = 'visdat-gui';
 	$('#visual-options').append(visGui.domElement);
 	var visGuiSettings = {
 		alpha : 0.2
@@ -465,6 +469,7 @@ function shapeAgents(dataArray, bufferLength){
 
 	//Runtime UI stuff
 	var visGui = new dat.GUI({ autoPlace: false });
+	visGui.domElement.id = 'visdat-gui';
 	$('#visual-options').append(visGui.domElement);
 	var visGuiSettings = {
 		resolution : 20,
@@ -601,6 +606,7 @@ function brownianTree(dataArray, bufferLength){
 
 		//Runtime UI stuff
 		var visGui = new dat.GUI({ autoPlace: false });
+		visGui.domElement.id = 'visdat-gui';
 		$('#visual-options').append(visGui.domElement);
 		var visGuiSettings = {
 			showRandNode : true,
@@ -732,6 +738,7 @@ function concretePoetry(dataArray, bufferLength){
 
 	//Runtime UI stuff
 	var visGui = new dat.GUI({ autoPlace: false });
+	visGui.domElement.id = 'visdat-gui';
 	$('#visual-options').append(visGui.domElement);
 	var visGuiSettings = {
 		textInput : 'there is always soma, delicious soma, half a gramme for a half-holiday, a gramme for a week-end, two grammes for a trip to the gorgeous East, three for a dark eternity on the moon',
@@ -825,6 +832,7 @@ function lissajousFigure(dataArray, bufferLength){
 
 		//Runtime UI stuff
 		var visGui = new dat.GUI({ autoPlace: false });
+		visGui.domElement.id = 'visdat-gui';
 		$('#visual-options').append(visGui.domElement);
 		var visGuiSettings = {
 			freqX : 40,
@@ -960,6 +968,7 @@ function lissajousWebs(dataArray, bufferLength){
 
 		//Runtime UI stuff
 		var visGui = new dat.GUI({ autoPlace: false });
+		visGui.domElement.id = 'visdat-gui';
 		$('#visual-options').append(visGui.domElement);
 		var visGuiSettings = {
 			freqX : 7,
@@ -1181,6 +1190,7 @@ function nodeAttraction(dataArray, bufferLength){
 
 		//Runtime UI stuff
 		var visGui = new dat.GUI({ autoPlace: false });
+		visGui.domElement.id = 'visdat-gui';
 		$('#visual-options').append(visGui.domElement);
 		var visGuiSettings = {
 			nodeDamping : 40,
@@ -1454,6 +1464,7 @@ function chladniPlate(dataArray, bufferLength){
 
 		//Runtime UI stuff
 		var visGui = new dat.GUI({ autoPlace: false });
+		visGui.domElement.id = 'visdat-gui';
 		$('#visual-options').append(visGui.domElement);
 		var visGuiSettings = {
 			nodeDamping : 10,
