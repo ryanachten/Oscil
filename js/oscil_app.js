@@ -5,28 +5,54 @@ var analyser = audioCtx.createAnalyser();
 
 
 //Smoothing / calibration settings - these should all be sliders
+var audioGui = new dat.GUI({ autoPlace: false });
+audioGui.domElement.id = 'audiodat-gui';
+$('#audio-options').append(audioGui.domElement);
+var audioGuiSettings = {
+	fftsize : 256,
+	minDb : -100,
+	maxDb : 20,
+	smoothing : 80
+};
+audioGui.add(audioGuiSettings, 'fftsize', [256]).onChange(
+	function(){
+		window.cancelAnimationFrame(drawVisual);
+		visualise(visualisationMode.value);
+	});
+audioGui.add(audioGuiSettings, 'minDb').min(-150).max(-50).onChange(
+	function(){
+		analyser.minDecibels = audioGuiSettings.minDb;
+	});
+audioGui.add(audioGuiSettings, 'maxDb').min(-80).max(20).onChange(
+	function(){
+		analyser.maxDecibels = audioGuiSettings.maxDb;
+	});
+audioGui.add(audioGuiSettings, 'smoothing').min(0).max(100).onChange(
+	function(){
+		analyser.smoothingTimeConstant = audioGuiSettings.smoothing/100;
+	});
 
-var fftInput = document.getElementById("fft-input");
-fftInput.onchange = function(){
-	window.cancelAnimationFrame(drawVisual);
-	visualise(visualisationMode.value);
-}
-
-var minDb = document.getElementById("min-db-input");
-minDb.onchange = function(){
-	analyser.minDecibels = minDb.value;
-}
-var maxDb = document.getElementById("max-db-input");
-maxDb.onchange = function(){
-	analyser.maxDecibels = maxDb.value;
-}
-
-
-var smoothingRange = document.getElementById("smoothing-input");
-smoothingRange.onchange = function(){
-	// console.log("val: " + smoothingRange.value);
-	analyser.smoothingTimeConstant = smoothingRange.value/100;
-}
+//
+// var fftInput = document.getElementById("fft-input");
+// fftInput.onchange = function(){
+// 	window.cancelAnimationFrame(drawVisual);
+// 	visualise(visualisationMode.value);
+// }
+//
+// var minDb = document.getElementById("min-db-input");
+// minDb.onchange = function(){
+// 	analyser.minDecibels = minDb.value;
+// }
+// var maxDb = document.getElementById("max-db-input");
+// maxDb.onchange = function(){
+// 	analyser.maxDecibels = maxDb.value;
+// }
+//
+// var smoothingRange = document.getElementById("smoothing-input");
+// smoothingRange.onchange = function(){
+// 	// console.log("val: " + smoothingRange.value);
+// 	analyser.smoothingTimeConstant = smoothingRange.value/100;
+// }
 
 
 var visualisationMode = document.querySelector('#visual-select');
@@ -89,7 +115,7 @@ function getBuffer(fftSize){
 
 function visualise(visMode){
 
-	var dataBuffer = getBuffer(fftInput.value);
+	var dataBuffer = getBuffer(audioGuiSettings.fftsize);
 	var bufferLength = dataBuffer.buffer;
 	var dataArray = dataBuffer.data;
 
@@ -167,8 +193,6 @@ function visOff(){
 	canvasCtx.fillStyle = bgColor;
 	canvasCtx.fillRect(0,0,canvWidth, canvHeight);
 }
-
-
 
 $(window).resize(function(){
 	canvas.width = $(window).width();

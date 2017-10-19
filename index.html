@@ -19,71 +19,41 @@
 		<div id="ui-panel">
 			<h1>Oscil</h1>
 			<hr>
-			<div data-closable>
-				<!-- <button class="close-button" aria-label="Close alert" type="button" data-close>
-			    <span aria-hidden="false">&times;</span>
-			  </button> -->
-				<ul class="tabs" data-tabs id="settings-tabs">
-					<li class="tabs-title is-active"><a href="#visual-options" aria-selected="true">Visual</a></li>
-					<li class="tabs-title"><a href="#audio-options">Audio</a></li>
-				</ul>
-				<div class="tabs-content" data-tabs-content="settings-tabs">
-					<div class="ui-section tabs-panel is-active" id="visual-options">
-						<h2>Visualisation:</h2>
-						<select id="visual-select" class="input-field" name="visual">
-							<option value="Test">Test</option>
-							<option value="WaveForm">SineWave</option>
-							<option value="BarGraph">BarGraph</option>
-							<option value="Gradient" selected>Gradient</option>
-							<option value="PolyShapes">PolyShapes</option>
-							<option value="Refract">Refract</option>
-							<option value="Particles">Particles</option>
-							<option value="Macroblocks">Macroblocks</option>
-							<option value="RepeatPix">RepeatPix</option>
-		<!-- 					<option value="PixMix">PixMix</option>
-							<option value="PixShuffle" >PixShuffle</option> -->
-							<option value="DumbAgents">DumbAgents</option>
-							<option value="ShapeAgents">ShapeAgents</option>
-							<option value="BrownianTree">BrownianTree</option>
-							<option value="ConcretePoetry">ConcretePoetry</option>
-							<option value="ImgShuffle">ImgShuffle</option>
-							<option value="PixelPainting">PixelPainting</option>
-							<option value="LissajousFigure">LissajousFigures</option>
-							<option value="LissajousWebs">LissajousWebs
-							</option>
-							<option value="NodeAttraction">NodeAttraction
-							</option>
-							<option value="ChladniPlate">ChladniPlate
-							</option>
-							<option value="Off">Off</option>
-						</select>
-						<div id="vis-settings" class="ui-section">
-							<h3 id="vissettings-header">Visual Settings:</h3>
-						</div>
-					</div>
-					<div class="ui-section tabs-panel" id="audio-options">
-						<h2>Settings:</h2>
-						<div>
-							<label for="fft-input">Fft Size</label>
-							<select id="fft-input" class="input-field" name="fft">
-								<option value="256" selected>256</option>
-								<!-- <option value="1024">1024</option> -->
-								 <!-- <option value="2048">2048</option> -->
-								 <!-- <option value="4096">4096</option> -->
-							</select>
-						</div>
-						<div>
-							<label for="smoothing-input">Smoothing</label>
-							<input id="smoothing-input" class="input-field" type="range" min="0" max="100" value="80" >
-						</div>
-						<div>
-							<label for="min-db-input">Min Db</label>
-							<input id="min-db-input" class="input-field" type="range" min="-150" max="-50" value="-100" >
-							<label for="max-db-input">Max Db</label>
-							<input id="max-db-input" class="input-field" type="range" min="-80" max="20" value="-30" >
-						</div>
-					</div>
+			<div class="ui-section tabs-panel is-active" id="visual-options">
+				<h2>Visualisation:</h2>
+				<select id="visual-select" class="input-field" name="visual">
+					<option value="Test">Test</option>
+					<option value="WaveForm">SineWave</option>
+					<option value="BarGraph">BarGraph</option>
+					<option value="Gradient" selected>Gradient</option>
+					<option value="PolyShapes">PolyShapes</option>
+					<option value="Refract">Refract</option>
+					<option value="Particles">Particles</option>
+					<option value="Macroblocks">Macroblocks</option>
+					<option value="RepeatPix">RepeatPix</option>
+<!-- 					<option value="PixMix">PixMix</option>
+					<option value="PixShuffle" >PixShuffle</option> -->
+					<option value="DumbAgents">DumbAgents</option>
+					<option value="ShapeAgents">ShapeAgents</option>
+					<option value="BrownianTree">BrownianTree</option>
+					<option value="ConcretePoetry">ConcretePoetry</option>
+					<option value="ImgShuffle">ImgShuffle</option>
+					<option value="PixelPainting">PixelPainting</option>
+					<option value="LissajousFigure">LissajousFigures</option>
+					<option value="LissajousWebs">LissajousWebs
+					</option>
+					<option value="NodeAttraction">NodeAttraction
+					</option>
+					<option value="ChladniPlate">ChladniPlate
+					</option>
+					<option value="Off">Off</option>
+				</select>
+				<div id="vis-settings" class="ui-section">
+					<h3 id="vissettings-header">Visual Settings:</h3>
 				</div>
+			</div>
+			<div class="ui-section tabs-panel" id="audio-options">
+				<h2>Settings:</h2>
 			</div>
 		</div>
 	</div>
