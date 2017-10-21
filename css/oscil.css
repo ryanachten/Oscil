@@ -38,12 +38,31 @@ h3{
 	padding: 15px;
 }
 
-#visual-selection{
+/* Visual type tabs */
+#visual-types{
+	margin: 20px 0;
+}
+.visual-type-toggle{
+	padding: 7px;
+	background-color: transparent;
+	font-size: 12px;
+	border: 1px solid black;
+	border-radius: 10px;
+}
+.visual-type-toggle.active{
+	background-color: #8bcdec;
+}
+.visual-selection{
+	display: none;
 	height: 140px;
 	overflow-y: scroll;
   box-shadow: 0 0 5px 0px #888888;
 }
+.visual-selection.active{
+	display: block;
+}
 
+/* Visual mode thumbnails */
 .visual-mode{
 	width: 150px;
 	height: 100px;

@@ -28,12 +28,30 @@ audioGui.add(audioGuiSettings, 'smoothing').min(0).max(100).onChange(
 		analyser.smoothingTimeConstant = audioGuiSettings.smoothing/100;
 	});
 
+$('.visual-type-toggle').click(function(e){
+	$('.visual-type-toggle.active').removeClass('active');
+	$('.visual-selection.active').removeClass('active');
+	$(this).addClass('active');
+	switch ($(this).data('type')) {
+		case 'shape':
+			$('#shape-visuals').addClass('active');
+			break;
+		case 'image':
+			$('#image-visuals').addClass('active');
+			break;
+		// case 'video':
+		// 	$('#shape-visuals').addClass('active');
+		// 	break;
+		default:
+			$('#shape-visuals').addClass('active');
+	}});
 
+// Visual thumbnail event
 $('.visual-mode').click(function(){
 	window.cancelAnimationFrame(drawVisual);
 	drawVisual = undefined;
-		$('#visdat-gui').remove();
-	$('.active').removeClass('active');
+	$('#visdat-gui').remove();
+	$('.visual-mode.active').removeClass('active');
 	$(this).addClass('active');
 	visualise( $(this).data('visual') );
 });

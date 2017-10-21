@@ -18,30 +18,38 @@
 			<hr>
 			<div class="ui-section">
 				<h2>Visualisation:</h2>
-				<div id="visual-selection">
+				<div id="visual-types">
+					<button data-type="shape" class="visual-type-toggle active">Shapes</button>
+					<button data-type="image" class="visual-type-toggle">Images</button>
+					<button data-type="video" class="visual-type-toggle">Video</button>
+				</div>
+				<div id="shape-visuals" class="visual-selection active">
 				  <div class="visual-mode active" data-visual="WaveForm" style="background-image:url(https://c2.staticflickr.com/4/3900/14784363445_fc54b8cb85_q.jpg);"><p>WaveForm</p></div>
 				  <div class="visual-mode" data-visual="BarGraph" style="background-image:url(https://c1.staticflickr.com/3/2912/14763226235_c97c9a4aba_q.jpg);"><p>BarGraph</p></div>
 				  <div class="visual-mode" data-visual="PolyShapes" style="background-image:url(https://c1.staticflickr.com/3/2908/14779363334_9301bdc5eb_q.jpg);"><p>PolyShapes</p></div>
-					<div class="visual-mode" data-visual="Refract" style="background-image:url(https://c2.staticflickr.com/6/5553/14763710395_b870d547ce_m.jpg);"><p>Refract</p></div>
 				  <div class="visual-mode" data-visual="Particles" style="background-image:url(https://c1.staticflickr.com/1/501/20506686861_c48dddabac_q.jpg);"><p>Particles</p></div>
-				  <div class="visual-mode" data-visual="Macroblocks" style="background-image:url(https://c1.staticflickr.com/3/2901/14753635394_87f63d7464_q.jpg);"><p>Macroblocks</p></div>
-					<div class="visual-mode" data-visual="RepeatPix" style="background-image:url(https://c2.staticflickr.com/4/3863/14577192530_190923db3c_q.jpg);"><p>RepeatPix</p></div>
 				  <div class="visual-mode" data-visual="ShapeAgents" style="background-image:url(https://c1.staticflickr.com/1/462/20432446642_d441f266b5_q.jpg);"><p>ShapeAgents</p></div>
 					<div class="visual-mode" data-visual="BrownianTree" style="background-image:url(https://c2.staticflickr.com/4/3848/14584335338_a6ca360f22_q.jpg);"><p>BrownianTree</p></div>
 				  <div class="visual-mode" data-visual="ConcretePoetry" style="background-image:url(https://c2.staticflickr.com/6/5555/14762774001_0a312d74ca_q.jpg);"><p>ConcretePoetry</p></div>
-				  <div class="visual-mode" data-visual="ImgShuffle" style="background-image:url(https://c2.staticflickr.com/4/3837/14765898692_2bab2ee739_q.jpg);"><p>ImgShuffle</p></div>
-					<div class="visual-mode" data-visual="PixelPainting" style="background-image:url(https://c2.staticflickr.com/4/3899/14742277911_f79a87222f_q.jpg);"><p>PixelPainting</p></div>
 				  <div class="visual-mode" data-visual="LissajousFigure" style="background-image:url(https://c1.staticflickr.com/1/565/20667874262_8e2d59381d_q.jpg);"><p>LissajousFigure</p></div>
 				  <div class="visual-mode" data-visual="LissajousWebs" style="background-image:url(https://c2.staticflickr.com/4/3881/14773907335_49efdd9819_q.jpg);"><p>LissajousWebs</p></div>
 					<div class="visual-mode" data-visual="NodeAttraction" style="background-image:url(https://c2.staticflickr.com/4/3890/14587030670_727b688651_q.jpg);"><p>NodeAttraction</p></div>
 				  <div class="visual-mode" data-visual="ChladniPlate" style="background-image:url(https://c1.staticflickr.com/3/2936/14764020945_8929458f57_q.jpg);"><p>ChladniPlate</p></div>
 				</div>
+
+				<div id="image-visuals" class="visual-selection">
+					<div class="visual-mode" data-visual="Refract" style="background-image:url(https://c2.staticflickr.com/6/5553/14763710395_b870d547ce_m.jpg);"><p>Refract</p></div>
+					<div class="visual-mode" data-visual="Macroblocks" style="background-image:url(https://c1.staticflickr.com/3/2901/14753635394_87f63d7464_q.jpg);"><p>Macroblocks</p></div>
+					<div class="visual-mode" data-visual="RepeatPix" style="background-image:url(https://c2.staticflickr.com/4/3863/14577192530_190923db3c_q.jpg);"><p>RepeatPix</p></div>
+					<div class="visual-mode" data-visual="ImgShuffle" style="background-image:url(https://c2.staticflickr.com/4/3837/14765898692_2bab2ee739_q.jpg);"><p>ImgShuffle</p></div>
+					<div class="visual-mode" data-visual="PixelPainting" style="background-image:url(https://c2.staticflickr.com/4/3899/14742277911_f79a87222f_q.jpg);"><p>PixelPainting</p></div>
+				</div>
 			</div>
 			<div class="ui-section" id="visual-options">
-				<h2>Visual:</h2>
+				<h2>Visual Options:</h2>
 			</div>
 			<div class="ui-section" id="audio-options">
-				<h2>Audio:</h2>
+				<h2>Audio Options:</h2>
 			</div>
 		</div>
 	</div>
