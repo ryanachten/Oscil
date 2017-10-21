@@ -39,9 +39,9 @@ $('.visual-type-toggle').click(function(e){
 		case 'image':
 			$('#image-visuals').addClass('active');
 			break;
-		// case 'video':
-		// 	$('#shape-visuals').addClass('active');
-		// 	break;
+		case 'video':
+			$('#video-visuals').addClass('active');
+			break;
 		default:
 			$('#shape-visuals').addClass('active');
 	}});
@@ -166,6 +166,9 @@ function visualise(visMode){
 	}
 	else if(visMode === 'ChladniPlate'){
 		chladniPlate(dataArray, bufferLength);
+	}
+	else if(visMode === 'VideoTest'){
+		videoTest(dataArray, bufferLength);
 	}
 	else if(visMode === 'Test'){
 		tests(dataArray, bufferLength); //

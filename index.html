@@ -3,6 +3,8 @@
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Oscil Test 01</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.16/p5.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.16/addons/p5.dom.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.5/dat.gui.min.js"></script>
 	<link href="https://fonts.googleapis.com/css?family=Nova+Mono|Roboto" rel="stylesheet">
@@ -43,6 +45,10 @@
 					<div class="visual-mode" data-visual="ImgShuffle" style="background-image:url(https://c2.staticflickr.com/4/3837/14765898692_2bab2ee739_q.jpg);"><p>ImgShuffle</p></div>
 					<div class="visual-mode" data-visual="PixelPainting" style="background-image:url(https://c2.staticflickr.com/4/3899/14742277911_f79a87222f_q.jpg);"><p>PixelPainting</p></div>
 				</div>
+
+				<div id="video-visuals" class="visual-selection">
+					<div class="visual-mode" data-visual="VideoTest" style="background-image:url(https://c2.staticflickr.com/6/5553/14763710395_b870d547ce_m.jpg);"><p>VideoTest</p></div>
+				</div>
 			</div>
 			<div class="ui-section" id="visual-options">
 				<h2>Visual Options:</h2>
@@ -56,6 +62,7 @@
 	<script src="js/testVisuals.js"></script>
 	<script src="js/shapeVisuals.js"></script>
 	<script src="js/imgVisuals.js"></script>
+	<script src="js/videoVisuals.js"></script>
 	<script src="js/app.js"></script>
 
 </body>
