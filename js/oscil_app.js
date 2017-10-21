@@ -38,18 +38,6 @@ $('.visual-mode').click(function(){
 	visualise( $(this).data('visual') );
 });
 
-
-// var visualisationMode = document.querySelector('#visual-select');
-// visualisationMode.onchange = function(){
-// 	window.cancelAnimationFrame(drawVisual);
-// 	drawVisual = undefined;
-//
-// 	$('#visdat-gui').remove();
-//
-// 	visualise(visualisationMode.value);
-// }
-
-
 //Canvas Setup
 var bgColor = 'rgb(237, 230, 224)';
 var canvas = document.querySelector("#visualiser");
@@ -133,9 +121,6 @@ function visualise(visMode){
 	}
 	else if(visMode === 'PixShuffle'){
 		pixShuffle(dataArray, bufferLength);
-	}
-	else if(visMode === 'DumbAgents'){
-		dumbAgents(dataArray, bufferLength);
 	}
 	else if(visMode === 'ShapeAgents'){
 		shapeAgents(dataArray, bufferLength);

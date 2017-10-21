@@ -655,4 +655,142 @@ function tests(dataArray, bufferLength){
 		}
 	}
 	// noiseAgent();
+
+	function dumbAgents(dataArray, bufferLength){
+
+		//Runtime UI stuff
+		var visGui = new dat.GUI({ autoPlace: false });
+		visGui.domElement.id = 'visdat-gui';
+		$('#visual-options').append(visGui.domElement);
+		var visGuiSettings = {
+			alpha : 0.2
+		};
+		visGui.add(visGuiSettings, 'alpha').min(0).max(100);
+
+		var north = 0;
+		var northeast = 1;
+		var east = 2;
+		var southeast = 3;
+		var south = 4;
+		var southwest = 5;
+		var west = 6;
+		var northwest = 7;
+
+		var posX, posY;
+
+		var logda;
+
+		function init(){
+			canvasCtx.clearRect(0,0,canvWidth,canvHeight);
+			canvasCtx.fillStyle = bgColor;
+			canvasCtx.fillRect(0,0,canvWidth,canvHeight);
+			canvasCtx.lineWidth = 1;
+
+			logda = 3;
+			posX = canvWidth/2;
+			posY = canvHeight/2;
+
+			startAnimating(5);
+		}
+		init();
+
+		function draw(){
+
+			canvasCtx.fillStyle = 'rgba(237, 230, 224, ' + visGuiSettings.alpha +')';
+			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
+
+			for(var i = 0; i < bufferLength; i+=30) {
+
+				analyser.getByteFrequencyData(dataArray);
+				var da = dataArray[i];
+
+				if (da !== 0){
+					logda = Math.floor(Math.log(da) / Math.log(1.1));
+					// console.log(logda);
+				}
+				var diameter = logda;
+				var stepSize = diameter*2;
+
+				var rand = Math.floor((Math.random()*8)+0);
+
+				switch(rand){
+					case north:
+						canvasCtx.strokeStyle = 'hsl(140, 70%, 70%)';
+						posY -= stepSize;
+						break;
+					case northeast:
+						canvasCtx.strokeStyle = 'hsl(180, 70%, 70%)';
+						posX += stepSize;
+						posY -= stepSize;
+						break;
+					case east:
+						posX += stepSize;
+						break;
+					case southeast:
+						canvasCtx.strokeStyle = 'hsl(220, 70%, 70%)';
+						posX += stepSize;
+						posY += stepSize;
+						break;
+					case south:
+						canvasCtx.strokeStyle = 'hsl(260, 70%, 70%)';
+						posY += stepSize;
+						break;
+					case southwest:
+						canvasCtx.strokeStyle = 'hsl(300, 70%, 70%)';
+						posX -= stepSize;
+						posY += stepSize;
+						break;
+					case west:
+						canvasCtx.strokeStyle = 'hsl(340, 70%, 70%)';
+						posX -= stepSize;
+						break;
+					case northwest:
+						canvasCtx.strokeStyle = 'hsl(20, 70%, 70%)';
+						posX -= stepSize;
+						posY -= stepSize;
+						break;
+					default:
+						break;
+				}
+
+				if(posX > canvWidth) posX = 0;
+				if(posX < 0) posX = canvWidth;
+				if(posY > canvHeight) posY = 0;
+				if(posY < 0) posY = canvHeight;
+
+				canvasCtx.beginPath();
+				canvasCtx.arc(posX+stepSize/2, posY+stepSize/2, diameter, 0, 2*Math.PI);
+				canvasCtx.stroke();
+			}
+		}
+
+		var stop = false;
+		var frameCount = 0;
+		var fps, fpsInterval, startTime, now, then, elapsed;
+
+		function startAnimating(fps){
+			fpsInterval = 1000/fps;
+			then = Date.now();
+			startTime = then;
+			animate();
+		}
+
+
+		function animate(){
+
+			if(stop){
+				return;
+			}
+			drawVisual = requestAnimationFrame(animate);
+
+			now = Date.now();
+			elapsed = now - then;
+
+			if(elapsed > fpsInterval){
+				then = now - (elapsed % fpsInterval);
+
+				draw();
+			}
+		}
+	}
 }
