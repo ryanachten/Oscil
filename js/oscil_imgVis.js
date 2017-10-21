@@ -5,11 +5,9 @@ function refract(dataArray, bufferLength){
 	visGui.domElement.id = 'visdat-gui';
 	$('#visual-options').append(visGui.domElement);
 	var visGuiSettings = {
-		imgUrl : 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Various_Arecaceae.jpg/630px-Various_Arecaceae.jpg',
 		fps : 15,
 		sampleRate : 30,
 	};
-	visGui.add(visGuiSettings, 'imgUrl').onChange(init);
 	visGui.add(visGuiSettings, 'fps').min(5).max(30);
 	visGui.add(visGuiSettings, 'sampleRate').min(10).max(50);
 
@@ -23,19 +21,8 @@ function refract(dataArray, bufferLength){
 		canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
 		img = new Image();
-		if(visGuiSettings.imgUrl > 0){
-			if(visGuiSettings.imgUrl.match(/\.(jpeg|jpg|gif|png)$/)){
-				console.log('valid url (no img extension)');
-				img.src = visGuiSettings.imgUrl;
-			}
-			else{
-				alert('Sorry! Invalid img url');
-				img.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Various_Arecaceae.jpg/630px-Various_Arecaceae.jpg';
-			}
-		}
-		else{
-			img.src = visGuiSettings.imgUrl;
-		}
+		img.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Various_Arecaceae.jpg/630px-Various_Arecaceae.jpg' + '?' + new Date().getTime();
+		img.setAttribute('crossOrigin', '');
 
 		img.onerror = function(){
 			console.log('image url w/ valid extension but content not image');
@@ -152,10 +139,7 @@ function macroblocks(dataArray, bufferLength){
 		$('#visual-options').append(visGui.domElement);
 		var visGuiSettings = {
 			sampleCount : 8,
-			// TODO: add init function to allow changing url
-			// imgUrl : 'https://upload.wikimedia.org/wikipedia/commons/4/44/Jelly_cc11.jpg',
 		};
-		// visGui.add(visGuiSettings, 'imgUrl').onChange(init);
 		visGui.add(visGuiSettings, 'sampleCount').min(3).max(12).step(1)
 			.onChange(function(n){
 				sampleCount = Math.pow(2, n);
@@ -236,89 +220,6 @@ function repeatPix(dataArray, bufferLength){
 		visGui.add(visGuiSettings, 'modifyWidth');
 		visGui.add(visGuiSettings, 'sampleMode', ['vertical', 'horizontal', 'both']);
 
-		// var visSettings	= document.getElementById('vis-settings');
-		// 	visSettings.style.display = 'block';
-		//
-		// 	var modSampleWidthMode = document.createElement('input');
-		// 		modSampleWidthMode.id = 'modSampleWidthMode';
-		// 		modSampleWidthMode.type = 'checkbox';
-		// 		modSampleWidthMode.className = 'vis-setting switch-input';
-		// 	var modSamplePaddel = document.createElement('label');
-		// 		modSamplePaddel.className = 'vis-setting switch-paddle';
-		// 		modSamplePaddel.htmlFor = 'modSampleWidthMode';
-		// 	var modSampleLabel = document.createElement('label');
-		// 		modSampleLabel.htmlFor = 'modSampleWidthMode';
-		// 		modSampleLabel.innerHTML = 'Sample Width Mode';
-		// 		modSampleLabel.className = 'vis-setting';
-		//
-		// 	var repeatDiv = document.createElement('form');
-		// 		repeatDiv.className = 'vis-setting';
-		//
-		// 	var repeatXDiv = document.createElement('div');
-		// 		repeatXDiv.className = 'vis-setting switch';
-		// 	var repeatXmode = document.createElement('input');
-		// 		repeatXmode.id = 'repeatXmode';
-		// 		repeatXmode.type = 'radio';
-		// 		repeatXmode.name = 'repeatMode';
-		// 		repeatXmode.className = 'vis-setting switch-input';
-		// 	var repeatXmodePaddel = document.createElement('label');
-		// 		repeatXmodePaddel.className = 'vis-setting switch-paddle';
-		// 		repeatXmodePaddel.htmlFor = 'repeatXmode';
-		// 	var repeatXmodeLabel = document.createElement('label');
-		// 		repeatXmodeLabel.htmlFor = 'repeatXmode';
-		// 		repeatXmodeLabel.innerHTML = 'Repeat X';
-		// 		repeatXmodeLabel.className = 'vis-setting';
-		//
-		// 	var repeatYDiv = document.createElement('div');
-		// 		repeatYDiv.className = 'vis-setting switch';
-		// 	var repeatYmode = document.createElement('input');
-		// 		repeatYmode.id = 'repeatYmode';
-		// 		repeatYmode.type = 'radio';
-		// 		repeatYmode.name = 'repeatMode';
-		// 		repeatYmode.checked = true;
-		// 		repeatYmode.className = 'vis-setting switch-input';
-		// 	var repeatYmodePaddel = document.createElement('label');
-		// 		repeatYmodePaddel.className = 'vis-setting switch-paddle';
-		// 		repeatYmodePaddel.htmlFor = 'repeatYmode';
-		// 	var repeatYmodeLabel = document.createElement('label');
-		// 		repeatYmodeLabel.htmlFor = 'repeatYmode';
-		// 		repeatYmodeLabel.innerHTML = 'Repeat Y';
-		// 		repeatYmodeLabel.className = 'vis-setting';
-		//
-		// 	var repeatBothDiv = document.createElement('div');
-		// 		repeatBothDiv.className = 'vis-setting switch';
-		// 	var repeatBothmode = document.createElement('input');
-		// 		repeatBothmode.id = 'repeatBothmode';
-		// 		repeatBothmode.type = 'radio';
-		// 		repeatBothmode.name = 'repeatMode';
-		// 		repeatBothmode.className = 'vis-setting switch-input';
-		// 	var repeatBothmodePaddel = document.createElement('label');
-		// 		repeatBothmodePaddel.className = 'vis-setting switch-paddle';
-		// 		repeatBothmodePaddel.htmlFor = 'repeatBothmode';
-		// 	var repeatBothmodeLabel = document.createElement('label');
-		// 		repeatBothmodeLabel.htmlFor = 'repeatBothmode';
-		// 		repeatBothmodeLabel.innerHTML = 'Both';
-		// 		repeatBothmodeLabel.className = 'vis-setting';
-		//
-		//
-		// 	visSettings.appendChild(modSampleLabel);
-		// 	visSettings.appendChild(modSampleWidthMode);
-		// 	visSettings.appendChild(modSamplePaddel);
-		//
-		// 			repeatXDiv.appendChild(repeatXmodeLabel);
-		// 			repeatXDiv.appendChild(repeatXmode);
-		// 			repeatXDiv.appendChild(repeatXmodePaddel);
-		// 		repeatDiv.appendChild(repeatXDiv)
-		// 			repeatYDiv.appendChild(repeatYmodeLabel);
-		// 			repeatYDiv.appendChild(repeatYmode);
-		// 			repeatYDiv.appendChild(repeatYmodePaddel);
-		// 		repeatDiv.appendChild(repeatYDiv)
-		// 		repeatBothDiv.appendChild(repeatBothmodeLabel);
-		// 			repeatBothDiv.appendChild(repeatBothmode);
-		// 			repeatBothDiv.appendChild(repeatBothmodePaddel);
-		// 		repeatDiv.appendChild(repeatBothDiv)
-		// 	visSettings.appendChild(repeatDiv);
-
 		var img = new Image();
 		img.src = 'https://upload.wikimedia.org/wikipedia/commons/4/44/Jelly_cc11.jpg' + '?' + new Date().getTime();
 		img.setAttribute('crossOrigin', '');
@@ -326,11 +227,7 @@ function repeatPix(dataArray, bufferLength){
 			draw();
 		};
 
-		//TODO: add ModHeight checkbox in GUI
-		//TODO: add offsetSampleRate slider in GUI
-
 		var offsetSampleRate = 1000;
-
 
 		var offsetY;
 		var offsetX;
