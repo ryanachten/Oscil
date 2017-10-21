@@ -810,17 +810,17 @@ function pixelPainting(dataArray, bufferLength){
 	function removeCanv(){
 		if($('.visual-mode.active').data('visual') !== 'PixelPainting'){
 			console.log('Remove Canv2');
-
-			// canvasCtx.clearRect(0,0, canvWidth, canvHeight);
-			// canvasCtx.fillStyle = bgColor;
-			// canvasCtx.fillRect(0,0, canvWidth, canvHeight);
-			// window.cancelAnimationFrame(drawVisual);
-			$("#canvas2" ).remove();//not working
-			document.getElementById('visual-select').removeEventListener("change", removeCanv);
+			canvasCtx.clearRect(0,0, canvWidth, canvHeight);
+			canvasCtx.fillStyle = bgColor;
+			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
+			window.cancelAnimationFrame(drawVisual);
+			// Removes secondary canvas
+			$('#canvas2').remove();
+			// Removes event listener
+			$('.visual-mode').off('click', removeCanv);
 		}
 	}
-
-	document.getElementById('visual-select').addEventListener("change", removeCanv);
+	$('.visual-mode').on('click', removeCanv);
 
 	var imgUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Antonio_de_Pereda_-_El_sue%C3%B1o_del_caballero_-_Google_Art_Project.jpg/640px-Antonio_de_Pereda_-_El_sue%C3%B1o_del_caballero_-_Google_Art_Project.jpg';
 	imgUrl += ('?' + new Date().getTime());
@@ -954,15 +954,6 @@ function pixelPainting(dataArray, bufferLength){
 			then = now - (elapsed % fpsInterval);
 
 			draw();
-		}
-		if($('.visual-mode.active').data('visual') !== 'PixelPainting'){
-			console.log('Remove Canv2');
-
-			canvasCtx.clearRect(0,0, canvWidth, canvHeight);
-			canvasCtx.fillStyle = bgColor;
-			canvasCtx.fillRect(0,0, canvWidth, canvHeight);
-			window.cancelAnimationFrame(drawVisual);
-			// TODO: still not working
 		}
 	}
 }
