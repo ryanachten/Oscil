@@ -38,17 +38,10 @@ h3{
 	padding: 15px;
 }
 
-/*.input-field{
-	border: none;
-	background-color: rgba(255,255,255,0.5);
-	font-size: 15px;
-	margin-right: 10px;
-    margin-bottom: 10px;
- }*/
-
 #visual-selection{
-	height: 150px;
+	height: 140px;
 	overflow-y: scroll;
+  box-shadow: 0 0 5px 0px #888888;
 }
 
 #visual-selection div{
@@ -58,9 +51,13 @@ h3{
 	display: block;
 	width: 150px;
 	height: 100px;
-	margin: 0px auto 20px auto;
+	margin: 20px auto 20px auto;
 	background-repeat: no-repeat;
 	background-position: center;
+}
+#visual-selection div:hover{
+	cursor: pointer;
+	border: 2px solid #8bcdec;
 }
 .visual-mode p{
 	display: inline-block;
@@ -68,9 +65,7 @@ h3{
 	width: 80%;
 	padding: 5px 0;
 	background-color: #ede6e0;
-	/*font-style: italic;*/
 	font-family: monospace;
-	/*font-weight: bold;*/
 	border: solid 1px black;
 }
 .visual-mode.active{
