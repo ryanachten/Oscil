@@ -29,15 +29,25 @@ audioGui.add(audioGuiSettings, 'smoothing').min(0).max(100).onChange(
 	});
 
 
-var visualisationMode = document.querySelector('#visual-select');
-visualisationMode.onchange = function(){
+$('.visual-mode').click(function(){
 	window.cancelAnimationFrame(drawVisual);
 	drawVisual = undefined;
+		$('#visdat-gui').remove();
+	$('.active').removeClass('active');
+	$(this).addClass('active');
+	visualise( $(this).data('visual') );
+});
 
-	$('#visdat-gui').remove();
 
-	visualise(visualisationMode.value);
-}
+// var visualisationMode = document.querySelector('#visual-select');
+// visualisationMode.onchange = function(){
+// 	window.cancelAnimationFrame(drawVisual);
+// 	drawVisual = undefined;
+//
+// 	$('#visdat-gui').remove();
+//
+// 	visualise(visualisationMode.value);
+// }
 
 
 //Canvas Setup
@@ -65,7 +75,7 @@ if(canvas.getContext){
 			source = audioCtx.createMediaStreamSource(stream);
 			source.connect(analyser);
 
-			visualise(visualisationMode.value);
+			visualise( $('.visual-mode.active').data('visual') );
 		  },
 
 		function(err) {

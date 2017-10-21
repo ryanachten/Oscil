@@ -135,7 +135,7 @@ function refract(dataArray, bufferLength){
 
 			draw();
 		}
-		if(document.getElementById('visual-select').value !== 'Refract'){
+		if($('.visual-mode.active').data('visual') !== 'Refract'){
 			console.log('clearMe');
 			window.cancelAnimationFrame(drawVisual);
 		}
@@ -873,7 +873,7 @@ function imgShuffle(dataArray, bufferLength){
 
 			draw();
 		}
-		if(document.getElementById('visual-select').value !== 'ImgShuffle'){
+		if($('.visual-mode.active').data('visual') !== 'ImgShuffle'){
 			console.log('clearMe');
 			window.cancelAnimationFrame(drawVisual);
 			canvasCtx.clearRect(0,0, canvWidth, canvHeight);
@@ -911,7 +911,7 @@ function pixelPainting(dataArray, bufferLength){
 		canvas2.style.display = 'none';
 
 	function removeCanv(){
-		if(document.getElementById('visual-select').value !== 'PixelPainting'){
+		if($('.visual-mode.active').data('visual') !== 'PixelPainting'){
 			console.log('Remove Canv2');
 
 			// canvasCtx.clearRect(0,0, canvWidth, canvHeight);
@@ -1058,7 +1058,7 @@ function pixelPainting(dataArray, bufferLength){
 
 			draw();
 		}
-		if(document.getElementById('visual-select').value !== 'PixelPainting'){
+		if($('.visual-mode.active').data('visual') !== 'PixelPainting'){
 			console.log('Remove Canv2');
 
 			canvasCtx.clearRect(0,0, canvWidth, canvHeight);
