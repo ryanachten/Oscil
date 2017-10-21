@@ -37,38 +37,45 @@ h3{
 	background-color: rgba(255,255,255,0.5);
 	padding: 15px;
 }
-#vis-settings{
-	display: none;
-}
 
-.input-field{
+/*.input-field{
 	border: none;
 	background-color: rgba(255,255,255,0.5);
-	/*margin-left: 10px;*/
 	font-size: 15px;
 	margin-right: 10px;
     margin-bottom: 10px;
- }
+ }*/
 
-#visual-select{
-	margin: none;
+#visual-selection{
+	height: 150px;
+	overflow-y: scroll;
 }
 
-/*Foundation Overrides*/
-.tabs-content{
-	background-color: rgba(0,0,0,0);
+#visual-selection div{
+	-webkit-appearance:none;
+  -moz-appearance:none;
+  appearance:none;
+	display: block;
+	width: 150px;
+	height: 100px;
+	margin: 0px auto 20px auto;
+	background-repeat: no-repeat;
+	background-position: center;
 }
-.tabs-title{
-	width: 50%;
+.visual-mode p{
+	display: inline-block;
+	vertical-align: middle;
+	width: 80%;
+	padding: 5px 0;
+	background-color: #ede6e0;
+	/*font-style: italic;*/
+	font-family: monospace;
+	/*font-weight: bold;*/
+	border: solid 1px black;
 }
-.tabs-title a{
-	color: #000000;
-}
-input:checked~.switch-paddle{
-	background-color: #afc3d3;
-}
-.switch{
-	height: 3rem;
+.visual-mode.active{
+	background-color: #8bcdec;
+	background-blend-mode: color-burn;
 }
 
 /* Dat Gui Overrodes */
