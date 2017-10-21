@@ -44,20 +44,20 @@ h3{
   box-shadow: 0 0 5px 0px #888888;
 }
 
-#visual-selection div{
-	-webkit-appearance:none;
-  -moz-appearance:none;
-  appearance:none;
-	display: block;
+.visual-mode{
 	width: 150px;
 	height: 100px;
 	margin: 20px auto 20px auto;
 	background-repeat: no-repeat;
 	background-position: center;
 }
-#visual-selection div:hover{
+.visual-mode:hover{
 	cursor: pointer;
 	border: 2px solid #8bcdec;
+}
+.visual-mode.active{
+	background-color: #8bcdec;
+	background-blend-mode: color-burn;
 }
 .visual-mode p{
 	display: inline-block;
@@ -67,10 +67,6 @@ h3{
 	background-color: #ede6e0;
 	font-family: monospace;
 	border: solid 1px black;
-}
-.visual-mode.active{
-	background-color: #8bcdec;
-	background-blend-mode: color-burn;
 }
 
 /* Dat Gui Overrodes */

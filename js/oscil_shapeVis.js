@@ -681,7 +681,7 @@ function concretePoetry(dataArray, bufferLength){
 			if(i >= textSample.length) i = 0;
 			drawVisual = setTimeout(addLetter, expda);
 		}
-		if(document.getElementById('visual-select').value !== 'ConcretePoetry'){
+		if($('.visual-mode.active').data('visual') !== 'ConcretePoetry'){
 			console.log('clearMe');
 			clearTimeout(drawVisual);
 
