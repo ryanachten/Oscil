@@ -697,7 +697,7 @@ function lissajousFigure(dataArray, bufferLength){
 		visGui.domElement.id = 'visdat-gui';
 		$('#visual-options').append(visGui.domElement);
 		var visGuiSettings = {
-			freqX : 40,
+			freqX : 70,
 			freqY : 40,
 			modFreqX : 40,
 			modFreqY : 40,
