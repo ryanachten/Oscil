@@ -167,8 +167,8 @@ function visualise(visMode){
 	else if(visMode === 'ChladniPlate'){
 		chladniPlate(dataArray, bufferLength);
 	}
-	else if(visMode === 'VideoTest'){
-		videoTest(dataArray, bufferLength);
+	else if(visMode === 'DrosteVideo'){
+		drosteVideo(dataArray, bufferLength);
 	}
 	else if(visMode === 'Test'){
 		tests(dataArray, bufferLength); //
