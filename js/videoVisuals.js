@@ -100,7 +100,7 @@ function muybridge(dataArray, bufferLength){
 
     var p5Init = function( p ) {
 
-      visGui.add(visGuiSettings, 'tileCount').min(2).max(20).step(1);//.onChange(p.setup);
+      visGui.add(visGuiSettings, 'tileCount').min(2).max(20).step(1);
 
       var video, total;
       var snapshots = [];
@@ -117,6 +117,7 @@ function muybridge(dataArray, bufferLength){
           video = p.createCapture( p.VIDEO );
           video.id = 'videoCapture';
           video.size(320, 240);
+          video.hide();
         }
 
         p.background(bgColor);
