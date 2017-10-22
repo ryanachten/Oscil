@@ -1,6 +1,17 @@
 function drosteVideo(dataArray, bufferLength){
 
   $('#visualiser').hide();
+
+  var visGui = new dat.GUI({ autoPlace: false });
+	visGui.domElement.id = 'visdat-gui';
+	$('#visual-options').append(visGui.domElement);
+	var visGuiSettings = {
+		positionMode : 'perlin',
+		perlinScale : 0.01,
+	};
+	visGui.add(visGuiSettings, 'positionMode', ['fixed', 'perlin', 'mouse']);
+	visGui.add(visGuiSettings, 'perlinScale').min(0.01).max(0.1);
+
   var p5Init = function( p ) {
 
     var video;
@@ -26,16 +37,25 @@ function drosteVideo(dataArray, bufferLength){
         var vHeight = p.map(da, 0, 1, 0, canvHeight);
       }
 
-      // Mouse control mode
-      // p.image(video, p.mouseX-vWidth/2, p.mouseY-vHeight/2, vWidth, vHeight);
+      // Fixed postion mode
+      if(visGuiSettings.positionMode === 'fixed'){
+        p.image(video, canvWidth/2-vWidth/2, canvHeight/2-vHeight/2, vWidth, vHeight);
+      }
 
-      // Noise mode
-      var noiseX = p.noise(xoff)*(canvWidth+vWidth);
-      var noiseY = p.noise(yoff)*(canvHeight+vHeight);
-      xoff+=0.05;
-      yoff+=0.05;
+      // Mouse position mode
+      else if(visGuiSettings.positionMode === 'mouse'){
+        p.image(video, p.mouseX-vWidth/2, p.mouseY-vHeight/2, vWidth, vHeight);
+      }
 
-      p.image(video, noiseX-vWidth, noiseY-vHeight, vWidth, vHeight);
+      // Noise position mode
+      else if(visGuiSettings.positionMode === 'perlin'){
+        var noiseX = p.noise(xoff)*(canvWidth+vWidth);
+        var noiseY = p.noise(yoff)*(canvHeight+vHeight);
+        xoff+=visGuiSettings.perlinScale;
+        yoff+=visGuiSettings.perlinScale;
+        p.image(video, noiseX-vWidth, noiseY-vHeight, vWidth, vHeight);
+      }
+
     };
   };
 
