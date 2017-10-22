@@ -170,6 +170,9 @@ function visualise(visMode){
 	else if(visMode === 'DrosteVideo'){
 		drosteVideo(dataArray, bufferLength);
 	}
+	else if(visMode === 'Muybridge'){
+		muybridge(dataArray, bufferLength);
+	}
 	else if(visMode === 'Test'){
 		tests(dataArray, bufferLength); //
 	}
