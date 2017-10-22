@@ -2,6 +2,18 @@ function drosteVideo(dataArray, bufferLength){
 
   $('#visualiser').hide();
 
+  function resetCanv(){
+		if($('.visual-mode.active').data('visual') !== 'DrosteVideo'){
+			console.log('Remove p5canv');
+			// Removes secondary canvas
+			$('#p5-canvas').remove();
+      $('#visualiser').show();
+			// Removes event listener
+			$('.visual-mode').off('click', resetCanv);
+		}
+	}
+	$('.visual-mode').on('click', resetCanv);
+
   var visGui = new dat.GUI({ autoPlace: false });
 	visGui.domElement.id = 'visdat-gui';
 	$('#visual-options').append(visGui.domElement);
