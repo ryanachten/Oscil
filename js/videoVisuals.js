@@ -1,14 +1,29 @@
+// Utility function for removing p5 video canvases
+function removeP5Canvas(newVisual){
+  console.log('Remove p5canv');
+  // Remove the p5 canvas
+  $('#p5-canvas').remove();
+  // Remove the video element
+  $('#videoCapture').remove();
+  switch (newVisual) {
+    // If the new visual is a p5video visual
+    // do not show the html canvas (event occurs) after transition
+    case 'DrosteVideo':
+    case 'Muybridge':
+      break;
+    default:
+      $('#visualiser').show();
+  }
+}
+
 function drosteVideo(dataArray, bufferLength){
 
   $('#visualiser').hide();
 
   function resetCanv(){
-		if($('.visual-mode.active').data('visual') !== 'DrosteVideo'){
-			console.log('Remove p5canv');
-			// Removes secondary canvas
-			$('#p5-canvas').remove();
-      $('#visualiser').show();
-			// Removes event listener
+    var newVis = $('.visual-mode.active').data('visual');
+		if( newVis !== 'DrosteVideo'){
+			removeP5Canvas(newVis);
 			$('.visual-mode').off('click', resetCanv);
 		}
 	}
@@ -33,6 +48,7 @@ function drosteVideo(dataArray, bufferLength){
       canvas.id('p5-canvas');
       p.background(bgColor);
       video = p.createCapture( p.VIDEO );
+      video.id('videoCapture');
       video.size(320, 240);
       video.hide();
     };
@@ -76,19 +92,14 @@ function drosteVideo(dataArray, bufferLength){
 
 function muybridge(dataArray, bufferLength){
 
-    $('#visualiser').hide();
-
     function resetCanv(){
-  		if($('.visual-mode.active').data('visual') !== 'DrosteVideo'){
-  			console.log('Remove p5canv');
-  			// Removes secondary canvas
-  			$('#p5-canvas').remove();
-        $('#visualiser').show();
-  			// Removes event listener
-  			$('.visual-mode').off('click', resetCanv);
-  		}
-  	}
-  	$('.visual-mode').on('click', resetCanv);
+      var newVis = $('.visual-mode.active').data('visual');
+      if( newVis !== 'Muybridge'){
+        removeP5Canvas(newVis);
+        $('.visual-mode').off('click', resetCanv);
+      }
+    }
+    $('.visual-mode').on('click', resetCanv);
 
     var visGui = new dat.GUI({ autoPlace: false });
   	visGui.domElement.id = 'visdat-gui';
@@ -106,11 +117,12 @@ function muybridge(dataArray, bufferLength){
       var prevTileCount = visGuiSettings.tileCount;
 
       p.setup = function() {
+        $('#visualiser').hide();
         var canvas = p.createCanvas(canvWidth, canvHeight);
         canvas.id('p5-canvas');
 
         video = p.createCapture( p.VIDEO );
-        video.id = 'videoCapture';
+        video.id('videoCapture');
         video.size(320, 240);
         video.hide();
 
