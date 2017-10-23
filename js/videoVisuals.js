@@ -96,11 +96,9 @@ function muybridge(dataArray, bufferLength){
   	var visGuiSettings = {
   		tileCount : 10,
   	};
-
+    visGui.add(visGuiSettings, 'tileCount').min(2).max(20).step(1);
 
     var p5Init = function( p ) {
-
-      visGui.add(visGuiSettings, 'tileCount').min(2).max(20).step(1);
 
       var video, total;
       var snapshots = [];
@@ -108,25 +106,24 @@ function muybridge(dataArray, bufferLength){
       var prevTileCount = visGuiSettings.tileCount;
 
       p.setup = function() {
-        if(!$('#p5-canvas').length){
-          var canvas = p.createCanvas(canvWidth, canvHeight);
-          canvas.id('p5-canvas');
-        }
+        var canvas = p.createCanvas(canvWidth, canvHeight);
+        canvas.id('p5-canvas');
 
-        if(!$('#videoCapture').length){
-          video = p.createCapture( p.VIDEO );
-          video.id = 'videoCapture';
-          video.size(320, 240);
-          video.hide();
-        }
+        video = p.createCapture( p.VIDEO );
+        video.id = 'videoCapture';
+        video.size(320, 240);
+        video.hide();
 
         p.background(bgColor);
       };
 
       p.draw = function() {
+        // If the current tileCount is not the same as GUI's
+        // reset the visualisation
         if(visGuiSettings.tileCount !== prevTileCount){
           snapshots = [];
           counter = 0;
+          i = 0;
           prevTileCount = visGuiSettings.tileCount;
         }
         // console.log(snapshots.length);
@@ -134,6 +131,7 @@ function muybridge(dataArray, bufferLength){
         var h = canvHeight / visGuiSettings.tileCount;
         var x = 0;
         var y = 0;
+        var i;
 
         // How many cells fit in the canvas
         total = p.floor(canvWidth / w) * p.floor(canvHeight / h);
@@ -144,8 +142,10 @@ function muybridge(dataArray, bufferLength){
           counter = 0;
         }
 
-        for (var i = 0; i < snapshots.length; i++) {
-          var index = (i + p.frameCount) % snapshots.length;
+        for (i = 0; i < snapshots.length; i++) {
+          // Use counter instead of p5's frameCount
+          // to allow for reset functionality
+          var index = (i + counter) % snapshots.length;
           p.image(snapshots[index], x, y, w, h);
           x = x + w;
           if (x >= canvWidth) {
