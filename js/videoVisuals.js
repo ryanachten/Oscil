@@ -1,15 +1,14 @@
 // Utility function for removing p5 video canvases
 function removeP5Canvas(newVisual){
-  console.log('Remove p5canv');
-  // Remove the p5 canvas
   $('#p5-canvas').remove();
-  // Remove the video element
   $('#videoCapture').remove();
   switch (newVisual) {
-    // If the new visual is a p5video visual
-    // do not show the html canvas (event occurs) after transition
+    // If the new visual is a p5video visual do not show the html canvas
+    //(event occurs after visual is loaded)
+    // p5 visuals whitelisted via cases, html canvas is default
     case 'DrosteVideo':
     case 'Muybridge':
+    case 'RippleTank':
       break;
     default:
       $('#visualiser').show();
@@ -170,3 +169,117 @@ function muybridge(dataArray, bufferLength){
 
     var myp5 = new p5(p5Init, 'container');
 }
+
+function rippleTank(dataArray, bufferLength){
+
+    $('#visualiser').hide();
+
+    function resetCanv(){
+      var newVis = $('.visual-mode.active').data('visual');
+      if( newVis !== 'RippleTank'){
+        removeP5Canvas(newVis);
+        $('.visual-mode').off('click', resetCanv);
+      }
+    }
+    $('.visual-mode').on('click', resetCanv);
+
+    var visGui = new dat.GUI({ autoPlace: false });
+  	visGui.domElement.id = 'visdat-gui';
+  	$('#visual-options').append(visGui.domElement);
+  	var visGuiSettings = {
+  		xReact : true,
+      yReact : true,
+      minCellSize : 1,
+      maxCellSize : 20,
+  	};
+    visGui.add(visGuiSettings, 'xReact');
+    visGui.add(visGuiSettings, 'yReact');
+    visGui.add(visGuiSettings, 'minCellSize').min(0).max(50);
+    visGui.add(visGuiSettings, 'maxCellSize').min(0).max(50);
+
+    var p5Init = function( p ) {
+
+      var video;
+      var vScale = 16
+
+      p.setup = function() {
+        var canvas = p.createCanvas(canvWidth, canvHeight);
+        canvas.id('p5-canvas');
+        p.pixelDensity(1); //for retina displays
+
+        video = p.createCapture(p.VIDEO);
+        video.id('videoCapture');
+        video.size(canvWidth/vScale, canvHeight/vScale);
+        video.hide();
+      };
+
+      p.draw = function() {
+        analyser.getByteFrequencyData(dataArray);
+        p.background(bgColor);
+
+        video.loadPixels();
+        p.loadPixels();
+
+        for (var y = 0; y < video.height; y++) {
+          for (var x = 0; x < video.width; x++) {
+            var index = (x + y * video.width) *4;
+            var r = video.pixels[index +0];
+            var g = video.pixels[index +1];
+            var b = video.pixels[index +2];
+
+            var cellSizeX, cellSizeY;
+            cellSizeY = cellSizeX = vScale;
+
+            if(visGuiSettings.xReact){
+              cellSizeX = p.map(dataArray[x], 0, 255, vScale*visGuiSettings.minCellSize, vScale*visGuiSettings.maxCellSize);
+            }
+            if(visGuiSettings.yReact){
+              cellSizeY = p.map(dataArray[x], 0, 255, vScale*visGuiSettings.minCellSize, vScale*visGuiSettings.maxCellSize);
+            }
+
+            p.noStroke();
+            p.fill(r, g, b);
+            p.rectMode(p.CENTER);
+            p.rect(x*vScale, y*vScale, cellSizeX, cellSizeY);
+          }
+        }
+      };
+    };
+
+    var myp5 = new p5(p5Init, 'container');
+}
+
+// Boilerplate p5 video
+/*
+function testVis(dataArray, bufferLength){
+
+    function resetCanv(){
+      var newVis = $('.visual-mode.active').data('visual');
+      if( newVis !== 'TestVis'){
+        removeP5Canvas(newVis);
+        $('.visual-mode').off('click', resetCanv);
+      }
+    }
+    $('.visual-mode').on('click', resetCanv);
+
+    // var visGui = new dat.GUI({ autoPlace: false });
+  	// visGui.domElement.id = 'visdat-gui';
+  	// $('#visual-options').append(visGui.domElement);
+  	// var visGuiSettings = {
+  	// 	tileCount : 10,
+  	// };
+    // visGui.add(visGuiSettings, 'tileCount').min(2).max(20).step(1);
+
+    var p5Init = function( p ) {
+
+      p.setup = function() {
+
+      };
+
+      p.draw = function() {
+
+      };
+    };
+
+    var myp5 = new p5(p5Init, 'container');
+}*/

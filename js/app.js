@@ -173,6 +173,9 @@ function visualise(visMode){
 	else if(visMode === 'Muybridge'){
 		muybridge(dataArray, bufferLength);
 	}
+	else if(visMode === 'RippleTank'){
+		rippleTank(dataArray, bufferLength);
+	}
 	else if(visMode === 'Test'){
 		tests(dataArray, bufferLength); //
 	}
