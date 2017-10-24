@@ -110,77 +110,35 @@ function visualise(visMode){
 	var dataArray = dataBuffer.data;
 
 	console.log(visMode);
-	if(visMode === 'BarGraph'){
-		barGraph(dataArray, bufferLength);
-	}
-	else if(visMode === 'WaveForm'){
-		waveForm(dataArray, bufferLength);
-	}
-	else if(visMode === 'Refract'){
-		refract(dataArray, bufferLength);
-	}
-	else if(visMode === 'Gradient'){
-		gradient(dataArray, bufferLength);
-	}
-	else if(visMode === 'PolyShapes'){
-		polyShapes(dataArray, bufferLength);
-	}
-	else if(visMode === 'Particles'){
-		particles(dataArray, bufferLength);
-	}
-	else if(visMode === 'Macroblocks'){
-		macroblocks(dataArray, bufferLength);
-	}
-	else if(visMode === 'RepeatPix'){
-		repeatPix(dataArray, bufferLength);
-	}
-	else if(visMode === 'PixMix'){
-		pixMix(dataArray, bufferLength);
-	}
-	else if(visMode === 'PixShuffle'){
-		pixShuffle(dataArray, bufferLength);
-	}
-	else if(visMode === 'ShapeAgents'){
-		shapeAgents(dataArray, bufferLength);
-	}
-	else if(visMode === 'BrownianTree'){
-		brownianTree(dataArray, bufferLength);
-	}
-	else if(visMode === 'ConcretePoetry'){
-		concretePoetry(dataArray, bufferLength);
-	}
-	else if(visMode === 'ImgShuffle'){
-		imgShuffle(dataArray, bufferLength);
-	}
-	else if(visMode === 'PixelPainting'){
-		pixelPainting(dataArray, bufferLength);
-	}
-	else if(visMode === 'LissajousFigure'){
-		lissajousFigure(dataArray, bufferLength);
-	}
-	else if(visMode === 'LissajousWebs'){
-		lissajousWebs(dataArray, bufferLength);
-	}
-	else if(visMode === 'NodeAttraction'){
-		nodeAttraction(dataArray, bufferLength);
-	}
-	else if(visMode === 'ChladniPlate'){
-		chladniPlate(dataArray, bufferLength);
-	}
-	else if(visMode === 'DrosteVideo'){
-		drosteVideo(dataArray, bufferLength);
-	}
-	else if(visMode === 'Muybridge'){
-		muybridge(dataArray, bufferLength);
-	}
-	else if(visMode === 'RippleTank'){
-		rippleTank(dataArray, bufferLength);
-	}
-	else if(visMode === 'Test'){
-		tests(dataArray, bufferLength); //
-	}
-	else if(visMode === 'Off'){
-		visOff();
+	switch (visMode) {
+		case 'BarGraph' : barGraph(dataArray, bufferLength); break;
+		case 'WaveForm' : waveForm(dataArray, bufferLength); break;
+		case 'Refract' : refract(dataArray, bufferLength); break;
+		case 'Gradient' : gradient(dataArray, bufferLength); break;
+		case 'PolyShapes' : polyShapes(dataArray, bufferLength); break;
+		case 'Particles' : particles(dataArray, bufferLength); break;
+		case 'Macroblocks' : macroblocks(dataArray, bufferLength); break;
+		case 'RepeatPix' : repeatPix(dataArray, bufferLength); break;
+
+		case 'PixMix' : pixMix(dataArray, bufferLength); break;
+		case 'PixShuffle' : pixShuffle(dataArray, bufferLength); break;
+		case 'ShapeAgents' : shapeAgents(dataArray, bufferLength); break;
+		case 'BrownianTree' : brownianTree(dataArray, bufferLength); break;
+		case 'ConcretePoetry' : concretePoetry(dataArray, bufferLength); break;
+		case 'ImgShuffle' : imgShuffle(dataArray, bufferLength); break;
+		case 'PixelPainting' : pixelPainting(dataArray, bufferLength); break;
+		case 'LissajousFigure' : lissajousFigure(dataArray, bufferLength); break;
+		case 'LissajousWebs' : lissajousWebs(dataArray, bufferLength); break;
+		case 'NodeAttraction' : nodeAttraction(dataArray, bufferLength); break;
+		case 'ChladniPlate' : chladniPlate(dataArray, bufferLength); break;
+		
+		case 'DrosteVideo' : drosteVideo(dataArray, bufferLength); break;
+		case 'Muybridge' : muybridge(dataArray, bufferLength); break;
+		case 'RippleTank' : rippleTank(dataArray, bufferLength); break;
+		case 'Test' : tests(dataArray, bufferLength); break;
+		case 'Off' : visOff(dataArray, bufferLength); break;
+		default:
+
 	}
 }
 
