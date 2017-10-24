@@ -131,10 +131,12 @@ function visualise(visMode){
 		case 'LissajousWebs' : lissajousWebs(dataArray, bufferLength); break;
 		case 'NodeAttraction' : nodeAttraction(dataArray, bufferLength); break;
 		case 'ChladniPlate' : chladniPlate(dataArray, bufferLength); break;
-		
+
 		case 'DrosteVideo' : drosteVideo(dataArray, bufferLength); break;
 		case 'Muybridge' : muybridge(dataArray, bufferLength); break;
 		case 'RippleTank' : rippleTank(dataArray, bufferLength); break;
+		case 'Tesserae' : tesserae(dataArray, bufferLength); break;
+
 		case 'Test' : tests(dataArray, bufferLength); break;
 		case 'Off' : visOff(dataArray, bufferLength); break;
 		default:

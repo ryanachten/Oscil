@@ -249,6 +249,88 @@ function rippleTank(dataArray, bufferLength){
     var myp5 = new p5(p5Init, 'container');
 }
 
+function tesserae(dataArray, bufferLength){
+
+    $('#visualiser').hide();
+
+    function resetCanv(){
+      var newVis = $('.visual-mode.active').data('visual');
+      if( newVis !== 'Tesserae'){
+        removeP5Canvas(newVis);
+        $('.visual-mode').off('click', resetCanv);
+      }
+    }
+    $('.visual-mode').on('click', resetCanv);
+
+    var visGui = new dat.GUI({ autoPlace: false });
+  	visGui.domElement.id = 'visdat-gui';
+  	$('#visual-options').append(visGui.domElement);
+  	var visGuiSettings = {
+  		threshold : 25,
+      minCellSize : 1,
+      maxCellSize : 90
+  	};
+    visGui.add(visGuiSettings, 'threshold').min(0).max(255);
+    visGui.add(visGuiSettings, 'minCellSize').min(0).max(200);
+    visGui.add(visGuiSettings, 'maxCellSize').min(0).max(200);
+
+    var p5Init = function( p ) {
+
+      var video;
+      var vScale = 16
+
+      p.setup = function() {
+        var canvas = p.createCanvas(canvWidth, canvHeight);
+        canvas.id('p5-canvas');
+        p.pixelDensity(1); //for retina displays
+
+        video = p.createCapture(p.VIDEO);
+        video.id('videoCapture');
+        video.size(canvWidth/vScale, canvHeight/vScale);
+        video.hide();
+      };
+
+
+      p.draw = function() {
+        p.background(bgColor);
+
+        video.loadPixels();
+        p.loadPixels();
+
+        var threshold = visGuiSettings.threshold;
+        analyser.getByteFrequencyData(dataArray);
+        // console.log(dataArray.length);
+
+        for (var y = 0; y < video.height; y++) {
+          for (var x = 0; x < video.width; x++) {
+            var index = (x + y * video.width) *4;
+            var r = video.pixels[index +0];
+            var g = video.pixels[index +1];
+            var b = video.pixels[index +2];
+
+            var bright = (r + g + b) /3;
+            var da = p.map(dataArray[p.floor(x/2)], 0, 255, 0, 1);
+            // console.log('da', da);
+
+            cellSize = p.map(bright, 0, 255, visGuiSettings.minCellSize,  da*visGuiSettings.maxCellSize);
+
+            p.noStroke();
+            if( bright > threshold ){
+              p.fill(r, g, b);
+            }
+            else{
+              p.fill(bgColor);
+            }
+            p.rectMode(p.CENTER);
+            p.rect(x*vScale, y*vScale, cellSize, cellSize);
+          }
+        }
+      };
+    };
+
+    var myp5 = new p5(p5Init, 'container');
+}
+
 // Boilerplate p5 video
 /*
 function testVis(dataArray, bufferLength){
