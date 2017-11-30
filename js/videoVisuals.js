@@ -9,6 +9,8 @@ function removeP5Canvas(newVisual){
     case 'DrosteVideo':
     case 'Muybridge':
     case 'RippleTank':
+    case 'Tesserae':
+    case 'ParticlePainting':
       break;
     default:
       $('#visualiser').show();
@@ -331,9 +333,130 @@ function tesserae(dataArray, bufferLength){
     var myp5 = new p5(p5Init, 'container');
 }
 
+function particlePainting(dataArray, bufferLength){
+
+  $('#visualiser').hide();
+
+    function resetCanv(){
+      var newVis = $('.visual-mode.active').data('visual');
+      if( newVis !== 'ParticlePainting'){
+        removeP5Canvas(newVis);
+        $('.visual-mode').off('click', resetCanv);
+      }
+    }
+    $('.visual-mode').on('click', resetCanv);
+
+    var visGui = new dat.GUI({ autoPlace: false });
+  	visGui.domElement.id = 'visdat-gui';
+  	$('#visual-options').append(visGui.domElement);
+  	var visGuiSettings = {
+      clearBg : false,
+  		paintAlpha : 127,
+      particleCount : 200,
+      maxParticleSize : 100,
+      minParticleSize : 10,
+  	};
+    visGui.add(visGuiSettings, 'clearBg');
+    visGui.add(visGuiSettings, 'paintAlpha').min(0).max(255);
+
+    visGui.add(visGuiSettings, 'maxParticleSize').min(30).max(200);
+    visGui.add(visGuiSettings, 'minParticleSize').min(0).max(100);
+
+    var p5Init = function( p ) {
+
+      var video;
+      var vScale = 16;
+
+      var particles;
+      visGui.add(visGuiSettings, 'particleCount').min(50).max(400).onChange(setupParticles);
+
+      function P5Particle(x, y){
+
+        this.x = x;
+        this.y = y;
+        this.r = p.random(4, 32);
+
+        this.update = function(){
+          this.x += p.random(-10, 10);
+          this.y += p.random(-10, 10);
+
+          this.x = p.constrain(this.x, 0, canvWidth);
+          this.y = p.constrain(this.y, 0, canvHeight);
+        }
+
+        this.show = function(){
+          p.noStroke();
+
+          var col = video.get(p.floor(this.x/vScale), p.floor(this.y/vScale));
+
+          p.fill(col[0], col[1], col[2], visGuiSettings.paintAlpha);
+          p.ellipse(this.x, this.y, this.r, this.r);
+        };
+
+      };
+
+      function setupParticles(){
+        console.log('setupParticles');
+        particles = [];
+        for (var i = 0; i < visGuiSettings.particleCount; i++) {
+          particles.push( new P5Particle(
+            p.random(0,canvWidth),
+            p.random(0,canvHeight)
+          ));
+        }
+        console.log('particles.length', particles.length);
+      }
+
+      p.setup = function() {
+
+        var canvas = p.createCanvas(canvWidth, canvHeight);
+        canvas.id('p5-canvas');
+        p.pixelDensity(1); //for retina displays
+
+        video = p.createCapture(p.VIDEO);
+        video.id('videoCapture');
+        video.size(canvWidth/vScale, canvHeight/vScale);
+        video.hide();
+
+        setupParticles();
+
+        p.background(bgColor);
+      };
+
+      p.draw = function() {
+
+        analyser.getByteFrequencyData(dataArray);
+        var da = dataArray[0];
+
+        if(visGuiSettings.clearBg){
+          p.background(bgColor);
+        }
+
+        video.loadPixels();
+        for (var i = 0; i < particles.length; i++) {
+
+          var daIndex = p.floor(
+            p.map(i, 0, particles.length, 0, dataArray.length)
+          );
+
+          var newSize = p.map(dataArray[daIndex], 0, 255, visGuiSettings.minParticleSize, visGuiSettings.maxParticleSize);
+          particles[i].r = newSize;
+
+          particles[i].update();
+          particles[i].show();
+        }
+
+      };
+    };
+
+    var myp5 = new p5(p5Init, 'container');
+}
+
 // Boilerplate p5 video
 /*
 function testVis(dataArray, bufferLength){
+
+  $('#visualiser').hide();
 
     function resetCanv(){
       var newVis = $('.visual-mode.active').data('visual');

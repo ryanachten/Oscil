@@ -136,6 +136,7 @@ function visualise(visMode){
 		case 'Muybridge' : muybridge(dataArray, bufferLength); break;
 		case 'RippleTank' : rippleTank(dataArray, bufferLength); break;
 		case 'Tesserae' : tesserae(dataArray, bufferLength); break;
+		case 'ParticlePainting' : particlePainting(dataArray, bufferLength); break;
 
 		case 'Test' : tests(dataArray, bufferLength); break;
 		case 'Off' : visOff(dataArray, bufferLength); break;
