@@ -11,6 +11,7 @@ function removeP5Canvas(newVisual){
     case 'RippleTank':
     case 'Tesserae':
     case 'ParticlePainting':
+    case 'SlitScan':
       break;
     default:
       $('#visualiser').show();
@@ -426,7 +427,6 @@ function particlePainting(dataArray, bufferLength){
       p.draw = function() {
 
         analyser.getByteFrequencyData(dataArray);
-        var da = dataArray[0];
 
         if(visGuiSettings.clearBg){
           p.background(bgColor);
@@ -446,6 +446,72 @@ function particlePainting(dataArray, bufferLength){
           particles[i].show();
         }
 
+      };
+    };
+
+    var myp5 = new p5(p5Init, 'container');
+}
+
+function slitScan(dataArray, bufferLength){
+
+  $('#visualiser').hide();
+
+    function resetCanv(){
+      var newVis = $('.visual-mode.active').data('visual');
+      if( newVis !== 'SlitScan'){
+        removeP5Canvas(newVis);
+        $('.visual-mode').off('click', resetCanv);
+      }
+    }
+    $('.visual-mode').on('click', resetCanv);
+
+    var visGui = new dat.GUI({ autoPlace: false });
+  	visGui.domElement.id = 'visdat-gui';
+  	$('#visual-options').append(visGui.domElement);
+  	var visGuiSettings = {
+  		maxWidth : 50,
+  	};
+
+    var p5Init = function( p ) {
+
+      var video;
+      var xPos = 0;
+      var soundIndex = 0;
+
+      p.setup = function() {
+
+        var canvas = p.createCanvas(canvWidth, canvHeight);
+        canvas.id('p5-canvas');
+        p.pixelDensity(1); //for retina displays
+
+        video = p.createCapture(p.VIDEO);
+        video.id('videoCapture');
+        video.size(320, 240);
+        video.hide();
+        visGui.add(visGuiSettings, 'maxWidth').min(0).max(video.width);
+
+        p.background(bgColor);
+
+      };
+
+      p.draw = function() {
+
+        analyser.getByteFrequencyData(dataArray);
+
+        var soundWidth = p.map(dataArray[0], 0, 255, 1, visGuiSettings.maxWidth);
+
+        video.loadPixels();
+        //(src, x, w, y, h, xD, wD, yD, hD)
+        p.copy(video, (video.width/2) - (soundWidth/2), 0, soundWidth, video.height,
+              xPos, 0, soundWidth, canvHeight);
+
+        // increase/reset xPos
+        xPos += soundWidth;
+        if( xPos > canvWidth) xPos = 0;
+
+        // increase/reset soundIndex
+        soundIndex++;
+        if(soundIndex > dataArray.length) soundIndex = 0;
       };
     };
 
