@@ -42,6 +42,9 @@ $('.visual-type-toggle').click(function(e){
 		case 'video':
 			$('#video-visuals').addClass('active');
 			break;
+		case 'threed':
+			$('#threed-visuals').addClass('active');
+			break;
 		default:
 			$('#shape-visuals').addClass('active');
 	}});
