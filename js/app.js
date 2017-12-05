@@ -111,6 +111,8 @@ function visualise(visMode){
 
 	console.log(visMode);
 	switch (visMode) {
+
+		// Shape Visuals
 		case 'BarGraph' : barGraph(dataArray, bufferLength); break;
 		case 'WaveForm' : waveForm(dataArray, bufferLength); break;
 		case 'Refract' : refract(dataArray, bufferLength); break;
@@ -120,6 +122,7 @@ function visualise(visMode){
 		case 'Macroblocks' : macroblocks(dataArray, bufferLength); break;
 		case 'RepeatPix' : repeatPix(dataArray, bufferLength); break;
 
+		// Image Visuals
 		case 'PixMix' : pixMix(dataArray, bufferLength); break;
 		case 'PixShuffle' : pixShuffle(dataArray, bufferLength); break;
 		case 'ShapeAgents' : shapeAgents(dataArray, bufferLength); break;
@@ -132,6 +135,7 @@ function visualise(visMode){
 		case 'NodeAttraction' : nodeAttraction(dataArray, bufferLength); break;
 		case 'ChladniPlate' : chladniPlate(dataArray, bufferLength); break;
 
+		// Video Visuals
 		case 'DrosteVideo' : drosteVideo(dataArray, bufferLength); break;
 		case 'Muybridge' : muybridge(dataArray, bufferLength); break;
 		case 'RippleTank' : rippleTank(dataArray, bufferLength); break;
@@ -139,6 +143,10 @@ function visualise(visMode){
 		case 'ParticlePainting' : particlePainting(dataArray, bufferLength);
 		case 'SlitScan' : slitScan(dataArray, bufferLength); break;
 
+		// 3D Visuals
+		case 'ThreedTest' : threedTest(dataArray, bufferLength); break;
+
+		// Utilities
 		case 'Test' : tests(dataArray, bufferLength); break;
 		case 'Off' : visOff(dataArray, bufferLength); break;
 		default:
