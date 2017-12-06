@@ -42,7 +42,7 @@ function threedTest(dataArray, bufferLength){
     pointLight.position.set(0, 1000, 1000);
     scene.add(pointLight);
 
-    var reactParticles = [];
+    // var reactParticles = [];
     function createReactParticle(){
       var reactParticle = new THREE.Object3D();
       reactParticle.name = 'reactParticle';
@@ -75,18 +75,16 @@ function threedTest(dataArray, bufferLength){
       return reactParticle;
     }
 
-    var reactParticles = [];
-
+    var reactParticles = new THREE.Object3D();
 
     var particleGridGeo = new THREE.DodecahedronGeometry(500, 0);
     for (var i = 0; i < particleGridGeo.vertices.length; i++) {
       var tempPart = createReactParticle();
       var tempPos = particleGridGeo.vertices[i];
       tempPart.position.set(tempPos.x, tempPos.y, tempPos.z);
-      reactParticles.push(tempPart);
-      scene.add(tempPart);
+      reactParticles.add(tempPart);
     }
-
+    scene.add(reactParticles);
 
     // Render Loop
     requestAnimationFrame(render);
@@ -96,9 +94,15 @@ function threedTest(dataArray, bufferLength){
       analyser.getByteFrequencyData(dataArray);
       var da = dataArray[0]/255 +0.01;
 
+      reactParticles.rotation.x += 0.01;
+      reactParticles.rotation.y += 0.01;
+      reactParticles.rotation.z += 0.01;
+
       function updateReactParticle(particle){
         var nucleus = particle.children[0];
         var sphereParticles = particle.children[1];
+
+        sphereParticles.scale.x = sphereParticles.scale.y = sphereParticles.scale.z = 1+da;
 
         for (var i = 0; i < sphereParticles.children.length; i++) {
           sphereParticles.children[i].scale.x = sphereParticles.children[i].scale.y = sphereParticles.children[i].scale.z = 1-da;
@@ -112,8 +116,8 @@ function threedTest(dataArray, bufferLength){
         nucleus.rotation.y += 0.01;
         nucleus.rotation.z += 0.01;
       }
-      for (var i = 0; i < reactParticles.length; i++) {
-          updateReactParticle(reactParticles[i]);
+      for (var i = 0; i < reactParticles.children.length; i++) {
+          updateReactParticle(reactParticles.children[i]);
       }
 
       renderer.render(scene, camera);
