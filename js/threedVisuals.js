@@ -2,6 +2,14 @@ function threedTest(dataArray, bufferLength){
 
     $('#visualiser').hide();
 
+    // Stats performance visualiser
+    var stats = new Stats();
+    console.log(stats.domElement);
+    stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
+    document.body.appendChild( stats.domElement );
+    stats.domElement.style.position = 'absolute';
+    stats.domElement.style.right = 0;
+
     // Renderer setup
     var renderer = new THREE.WebGLRenderer({ antialias: true });
     document.body.appendChild( renderer.domElement ); //add canvas to dom
@@ -42,7 +50,7 @@ function threedTest(dataArray, bufferLength){
     pointLight.position.set(0, 1000, 1000);
     scene.add(pointLight);
 
-    // var reactParticles = [];
+    // Geometry
     function createReactParticle(){
       var reactParticle = new THREE.Object3D();
       reactParticle.name = 'reactParticle';
@@ -50,9 +58,9 @@ function threedTest(dataArray, bufferLength){
       // Particle nucleus
       var nucleusGeo = new THREE.IcosahedronGeometry(50, 1);
       var nucleusMat = new THREE.MeshLambertMaterial(
-        { color: 0xef4773} );
-        // { color: 0xef4773, transparent: true, opacity: 0} );
+        { color: 0xef4773, emissive: 0xffffff, emissiveIntensity: 0} );
       var nucleusMesh = new THREE.Mesh(nucleusGeo, nucleusMat);
+
       reactParticle.add(nucleusMesh);
       nucleusMesh.name = 'nucleusMesh';
 
@@ -91,36 +99,45 @@ function threedTest(dataArray, bufferLength){
 
     function render(){
 
+      stats.begin();
+
       analyser.getByteFrequencyData(dataArray);
-      var da = dataArray[0]/255 +0.01;
 
       reactParticles.rotation.x += 0.01;
       reactParticles.rotation.y += 0.01;
       reactParticles.rotation.z += 0.01;
 
-      function updateReactParticle(particle){
+      function updateReactParticle(particle, curDa){
         var nucleus = particle.children[0];
         var sphereParticles = particle.children[1];
 
-        sphereParticles.scale.x = sphereParticles.scale.y = sphereParticles.scale.z = 1+da;
+        sphereParticles.scale.x = sphereParticles.scale.y = sphereParticles.scale.z = 1+curDa;
 
         for (var i = 0; i < sphereParticles.children.length; i++) {
-          sphereParticles.children[i].scale.x = sphereParticles.children[i].scale.y = sphereParticles.children[i].scale.z = 1-da;
+          sphereParticles.children[i].scale.x = sphereParticles.children[i].scale.y = sphereParticles.children[i].scale.z = 1-curDa;
         }
         sphereParticles.rotation.x -= 0.01;
         sphereParticles.rotation.y -= 0.01;
         sphereParticles.rotation.z -= 0.01;
 
-        nucleus.scale.x = nucleus.scale.y = nucleus.scale.z = da;
+        // console.log('nucleus', nucleus.material);
+        // nucleus.material.emissiveIntensity = da/2;
+
+        nucleus.scale.x = nucleus.scale.y = nucleus.scale.z = curDa;
         nucleus.rotation.x += 0.01;
         nucleus.rotation.y += 0.01;
         nucleus.rotation.z += 0.01;
       }
+
+      var indexIncrement = Math.floor(dataArray.length / reactParticles.children.length);
       for (var i = 0; i < reactParticles.children.length; i++) {
-          updateReactParticle(reactParticles.children[i]);
+        var da = dataArray[i*indexIncrement]/255 +0.01;
+        updateReactParticle(reactParticles.children[i], da);
       }
 
       renderer.render(scene, camera);
+
+      stats.end();
 
       requestAnimationFrame(render);
     }
