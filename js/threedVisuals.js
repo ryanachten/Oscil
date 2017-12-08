@@ -4,7 +4,6 @@ function threedTest(dataArray, bufferLength){
 
     // Stats performance visualiser
     var stats = new Stats();
-    console.log(stats.domElement);
     stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
     document.body.appendChild( stats.domElement );
     stats.domElement.style.position = 'absolute';
@@ -14,7 +13,7 @@ function threedTest(dataArray, bufferLength){
     var renderer = new THREE.WebGLRenderer({ antialias: true });
     document.body.appendChild( renderer.domElement ); //add canvas to dom
     renderer.domElement.id = 'threed-canvas';
-    renderer.setClearColor( new THREE.Color(0xede6e0) ); //same as bgColor
+    renderer.setClearColor( new THREE.Color(0x000000) ); //same as bgColor
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -26,11 +25,11 @@ function threedTest(dataArray, bufferLength){
       camera.position.set(0, 0, 1000);
 
       document.addEventListener("keydown", function(event) {
-        if (event.keyCode == '38') {
+        if (event.keyCode == '38' && camera.position.z + 50 < 1950) {
           //Up
           camera.position.z += 50;
         }
-        else if (event.keyCode == '40') {
+        else if (event.keyCode == '40' && camera.position.z - 50 > 0) {
           //Down
           camera.position.z -= 50;
         }
@@ -39,18 +38,27 @@ function threedTest(dataArray, bufferLength){
 
     // Scene setup
     var scene = new THREE.Scene();
+    scene.fog = new THREE.Fog( 0xefd1b5, 0.1, 2000 );
 
     // Light setup
       // light( colour, strength)
-    var ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    var ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
     ambientLight.position.set(0, 0, 0);
     scene.add(ambientLight);
 
-    var pointLight = new THREE.PointLight(0xffffff, 0.5);
+    var pointLight = new THREE.PointLight(0xffffff, 0.3);
     pointLight.position.set(0, 1000, 1000);
     scene.add(pointLight);
 
+
     // Geometry
+    var worldGeo = new THREE.SphereGeometry(1100, 32, 32);
+    var worldMat = new THREE.MeshLambertMaterial({ color: 0xef4773, side: THREE.BackSide });
+    var worldMesh = new THREE.Mesh(worldGeo, worldMat);
+    worldMesh.name = 'worldMesh';
+    scene.add(worldMesh);
+
+
     function createReactParticle(){
       var reactParticle = new THREE.Object3D();
       reactParticle.name = 'reactParticle';
@@ -60,9 +68,13 @@ function threedTest(dataArray, bufferLength){
       var nucleusMat = new THREE.MeshLambertMaterial(
         { color: 0xef4773, emissive: 0xffffff, emissiveIntensity: 0} );
       var nucleusMesh = new THREE.Mesh(nucleusGeo, nucleusMat);
-
-      reactParticle.add(nucleusMesh);
       nucleusMesh.name = 'nucleusMesh';
+      reactParticle.add(nucleusMesh);
+
+
+      var particleLight = new THREE.PointLight(0xffffff, 0.5, 300, 2);
+      particleLight.position.set(nucleusMesh.position.x, nucleusMesh.position.y, nucleusMesh.position.z);
+      reactParticle.add(particleLight);
 
       // Particle outer dust
       var sphereParticles = new THREE.Object3D();
@@ -71,7 +83,7 @@ function threedTest(dataArray, bufferLength){
       for (var i = 0; i < nucleusGeo.vertices.length; i++){
         var tempVert = new THREE.Vector3(nucleusGeo.vertices[i].x, nucleusGeo.vertices[i].y, nucleusGeo.vertices[i].z);
 
-        var tempSphereGeo = new THREE.SphereGeometry(5, 20, 20)
+        var tempSphereGeo = new THREE.SphereGeometry(5, 10, 10)
         var tempSphereMat = new THREE.MeshLambertMaterial(
           { color: 0x47d0ef });
         var tempSphereMesh = new THREE.Mesh(tempSphereGeo, tempSphereMat);
@@ -109,7 +121,7 @@ function threedTest(dataArray, bufferLength){
 
       function updateReactParticle(particle, curDa){
         var nucleus = particle.children[0];
-        var sphereParticles = particle.children[1];
+        var sphereParticles = particle.children[2];
 
         sphereParticles.scale.x = sphereParticles.scale.y = sphereParticles.scale.z = 1+curDa;
 
