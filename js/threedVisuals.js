@@ -65,8 +65,8 @@ function threedTest(dataArray, bufferLength){
 
       // Particle nucleus
       var nucleusGeo = new THREE.IcosahedronGeometry(50, 1);
-      var nucleusMat = new THREE.MeshLambertMaterial(
-        { color: 0xef4773, emissive: 0xffffff, emissiveIntensity: 0} );
+      var nucleusMat = new THREE.MeshStandardMaterial(
+        { color: 0xbd95ef, metalness: 1, roughness: 0.50, transparent: true, opacity: 0.7} );
       var nucleusMesh = new THREE.Mesh(nucleusGeo, nucleusMat);
       nucleusMesh.name = 'nucleusMesh';
       reactParticle.add(nucleusMesh);
@@ -98,12 +98,23 @@ function threedTest(dataArray, bufferLength){
     var reactParticles = new THREE.Object3D();
 
     var particleGridGeo = new THREE.DodecahedronGeometry(500, 0);
+    particleGridGeo.computeLineDistances();
+
+    var particleGridMat = new THREE.LineDashedMaterial({ color: 0xffffff, linewidth: 100, scale: 100, dashSize: 100, gapSize: 100 });
+
+    var particleGridLines = new THREE.LineSegments(particleGridGeo, particleGridMat);
+    particleGridLines.name = 'particleGrid';
+
+
     for (var i = 0; i < particleGridGeo.vertices.length; i++) {
       var tempPart = createReactParticle();
       var tempPos = particleGridGeo.vertices[i];
       tempPart.position.set(tempPos.x, tempPos.y, tempPos.z);
       reactParticles.add(tempPart);
     }
+
+    reactParticles.add(particleGridLines);
+
     scene.add(reactParticles);
 
     // Render Loop
@@ -115,11 +126,18 @@ function threedTest(dataArray, bufferLength){
 
       analyser.getByteFrequencyData(dataArray);
 
+      // // Rotate main grid
       reactParticles.rotation.x += 0.01;
       reactParticles.rotation.y += 0.01;
       reactParticles.rotation.z += 0.01;
 
       function updateReactParticle(particle, curDa){
+        particle.rotation.x += 0.01;
+        particle.rotation.y += 0.01;
+        particle.rotation.z += 0.01;
+
+        // console.log(particle);
+        // debugger;
         var nucleus = particle.children[0];
         var sphereParticles = particle.children[2];
 
@@ -132,9 +150,6 @@ function threedTest(dataArray, bufferLength){
         sphereParticles.rotation.y -= 0.01;
         sphereParticles.rotation.z -= 0.01;
 
-        // console.log('nucleus', nucleus.material);
-        // nucleus.material.emissiveIntensity = da/2;
-
         nucleus.scale.x = nucleus.scale.y = nucleus.scale.z = curDa;
         nucleus.rotation.x += 0.01;
         nucleus.rotation.y += 0.01;
@@ -144,8 +159,17 @@ function threedTest(dataArray, bufferLength){
       var indexIncrement = Math.floor(dataArray.length / reactParticles.children.length);
       for (var i = 0; i < reactParticles.children.length; i++) {
         var da = dataArray[i*indexIncrement]/255 +0.01;
-        updateReactParticle(reactParticles.children[i], da);
+        if(reactParticles.children[i].name !== 'particleGrid'){
+            updateReactParticle(reactParticles.children[i], da);
+        }
+
       }
+
+      // Update environment
+      var hue = (dataArray[0]/255)
+                *40 //range
+                +172; //base colour
+      scene.fog.color = new THREE.Color('hsl('+hue+', 50%, 79%)');
 
       renderer.render(scene, camera);
 
