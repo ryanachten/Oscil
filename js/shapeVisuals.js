@@ -1464,83 +1464,82 @@ function chladniPlate(dataArray, bufferLength){
 	}
 
 
-function mandelbrot(dataArray, bufferLength){
+	function mandelbrot(dataArray, bufferLength){
 
-  $('#visualiser').hide();
+	  $('#visualiser').hide();
 
-  function resetCanv(){
-    var newVis = $('.visual-mode.active').data('visual');
-		if( newVis !== 'Mandelbrot'){
-			removeP5Canvas(newVis);
-			$('.visual-mode').off('click', resetCanv);
-		}
-	}
-	$('.visual-mode').on('click', resetCanv);
-
-  var visGui = new dat.GUI({ autoPlace: false });
-	visGui.domElement.id = 'visdat-gui';
-	$('#visual-options').append(visGui.domElement);
-	var visGuiSettings = {
-		maxIterations : 50,
-	};
-	visGui.add(visGuiSettings, 'maxIterations').min(0).max(100).step(1);
-
-  var p5Init = function( p ) {
-
-    p.setup = function() {
-      var canvas = p.createCanvas(canvWidth, canvHeight);
-      canvas.id('p5-canvas');
-			p.pixelDensity(1);
-    };
-
-    p.draw = function() {
-
-			p.loadPixels();
-
-			for(var x = 0; x < p.width; x++){
-				for(var y = 0; y < p.height; y++){
-
-					var a = p.map( x, 0, p.width, -2, 2 );
-					var b = p.map( y, 0, p.height, -2, 2 );
-
-					var ca = a;
-					var cb = b;
-
-					var maxIterations = visGuiSettings.maxIterations;
-					var n = 0; //tracks the number of iterations
-
-					//  complex numbers which does not diverge when iterated
-					while (n < maxIterations) {
-
-						var aa = a * a - b * b;
-						var bb = 2 * a * b;
-						a = aa + ca;
-						b = bb + cb;
-
-						if (p.abs(a + b) > 16) { //ensures result doesn't tend towards infinity
-							break;
-						}
-						n++;
-					}
-
-					var bright = p.map(n, 0, maxIterations, 0, 255);
-					// bright = p.map( p.sqrt(bright), 0, 1, 0, );
-					// // defines whether something is inside of the mandelbrot set
-					if (n === maxIterations) {
-						bright = 0;
-					}
-
-					var pix = (x + y * p.width) * 4;
-					p.pixels[pix + 0] = bright;
-					p.pixels[pix + 1] = bright/2;
-					p.pixels[pix + 2] = bright/4;
-					p.pixels[pix + 3] = 255;
-				}
+	  function resetCanv(){
+	    var newVis = $('.visual-mode.active').data('visual');
+			if( newVis !== 'Mandelbrot'){
+				removeP5Canvas(newVis);
+				$('.visual-mode').off('click', resetCanv);
 			}
+		}
+		$('.visual-mode').on('click', resetCanv);
 
-			p.updatePixels();
-    };
-  };
+	  var visGui = new dat.GUI({ autoPlace: false });
+		visGui.domElement.id = 'visdat-gui';
+		$('#visual-options').append(visGui.domElement);
+		var visGuiSettings = {
+			sampleRes : 50,
+			maxIterations : 50,
+		};
+		visGui.add(visGuiSettings, 'sampleRes').min(0).max(500).step(1);
+		visGui.add(visGuiSettings, 'maxIterations').min(0).max(100).step(1);
 
-  var myp5 = new p5(p5Init, 'container');
-}
+	  var p5Init = function( p ) {
+
+	    p.setup = function() {
+	      var canvas = p.createCanvas(canvWidth, canvHeight);
+	      canvas.id('p5-canvas');
+				p.pixelDensity(1);
+				p.noStroke();
+	    };
+
+	    p.draw = function() {
+				
+				var sampleSize = visGuiSettings.sampleRes;
+				var sampleWidth = p.width/sampleSize;
+				var sampleHeight = p.height/sampleSize;
+
+				for(var x = 0; x < sampleSize; x++){
+					for(var y = 0; y < sampleSize; y++){
+
+						var a = p.map( x*sampleWidth, 0, sampleWidth*sampleSize, -2, 2 );
+						var b = p.map( y*sampleHeight, 0, sampleHeight*sampleSize, -2, 2 );
+
+						var ca = a;
+						var cb = b;
+
+						var maxIterations = visGuiSettings.maxIterations;
+						var n = 0; //tracks the number of iterations
+
+						//  complex numbers which does not diverge when iterated
+						while (n < maxIterations) {
+
+							var aa = a * a - b * b;
+							var bb = 2 * a * b;
+							a = aa + ca;
+							b = bb + cb;
+
+							if (p.abs(a + b) > 16) { //ensures result doesn't tend towards infinity
+								break;
+							}
+							n++;
+						}
+
+						var bright = p.map(n, 0, maxIterations, 0, 255);
+						// // check if n is inside of the mandelbrot set
+						if (n === maxIterations) {
+							bright = 0;
+						}
+
+						p.fill(bright, bright/2, bright/4, 255);
+						p.rect(x*sampleWidth, y*sampleHeight, sampleWidth, sampleHeight);
+					}
+				}
+	    };
+	  };
+
+	  var myp5 = new p5(p5Init, 'container');
+	}
