@@ -59,6 +59,8 @@ function threedTest(dataArray, bufferLength){
     scene.add(worldMesh);
 
 
+    // React Particle system
+
     function createReactParticle(){
       var reactParticle = new THREE.Object3D();
       reactParticle.name = 'reactParticle';
@@ -117,6 +119,14 @@ function threedTest(dataArray, bufferLength){
 
     scene.add(reactParticles);
 
+    // Central Torus
+      //r, t, ts, rs, p, q
+    var centralTorusGeo = new THREE.TorusKnotGeometry(250, 5, 50, 4, 2, 5);
+    var centralTorusMat = new THREE.MeshStandardMaterial(
+      { color: 0xbd95ef, metalness: 1, roughness: 0.50, transparent: true, opacity: 0.7} );
+    var centralTorusMesh = new THREE.Mesh(centralTorusGeo, centralTorusMat);
+    scene.add(centralTorusMesh);
+
     // Render Loop
     requestAnimationFrame(render);
 
@@ -125,6 +135,10 @@ function threedTest(dataArray, bufferLength){
       stats.begin();
 
       analyser.getByteFrequencyData(dataArray);
+
+      centralTorusMesh.rotation.x -= 0.01;
+      centralTorusMesh.rotation.y -= 0.01;
+      centralTorusMesh.rotation.z -= 0.01;
 
       // // Rotate main grid
       reactParticles.rotation.x += 0.01;
