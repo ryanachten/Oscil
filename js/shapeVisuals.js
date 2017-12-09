@@ -1462,3 +1462,44 @@ function chladniPlate(dataArray, bufferLength){
 			}
 		}
 	}
+
+
+function mandelbrot(dataArray, bufferLength){
+
+  $('#visualiser').hide();
+
+  function resetCanv(){
+    var newVis = $('.visual-mode.active').data('visual');
+		if( newVis !== 'Mandelbrot'){
+			removeP5Canvas(newVis);
+			$('.visual-mode').off('click', resetCanv);
+		}
+	}
+	$('.visual-mode').on('click', resetCanv);
+
+  // var visGui = new dat.GUI({ autoPlace: false });
+	// visGui.domElement.id = 'visdat-gui';
+	// $('#visual-options').append(visGui.domElement);
+	// var visGuiSettings = {
+	// 	positionMode : 'perlin',
+	// 	perlinScale : 0.01,
+	// };
+	// visGui.add(visGuiSettings, 'positionMode', ['fixed', 'perlin', 'mouse']);
+	// visGui.add(visGuiSettings, 'perlinScale').min(0.01).max(0.1);
+
+  var p5Init = function( p ) {
+
+    p.setup = function() {
+      var canvas = p.createCanvas(canvWidth, canvHeight);
+      canvas.id('p5-canvas');
+      p.background(bgColor);
+			console.log('Working');
+    };
+
+    p.draw = function() {
+
+    };
+  };
+
+  var myp5 = new p5(p5Init, 'container');
+}

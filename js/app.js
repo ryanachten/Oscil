@@ -121,22 +121,23 @@ function visualise(visMode){
 		case 'Refract' : refract(dataArray, bufferLength); break;
 		case 'Gradient' : gradient(dataArray, bufferLength); break;
 		case 'PolyShapes' : polyShapes(dataArray, bufferLength); break;
-		case 'Particles' : particles(dataArray, bufferLength); break;
-		case 'Macroblocks' : macroblocks(dataArray, bufferLength); break;
-		case 'RepeatPix' : repeatPix(dataArray, bufferLength); break;
-
-		// Image Visuals
-		case 'PixMix' : pixMix(dataArray, bufferLength); break;
-		case 'PixShuffle' : pixShuffle(dataArray, bufferLength); break;
 		case 'ShapeAgents' : shapeAgents(dataArray, bufferLength); break;
 		case 'BrownianTree' : brownianTree(dataArray, bufferLength); break;
+		case 'Particles' : particles(dataArray, bufferLength); break;
 		case 'ConcretePoetry' : concretePoetry(dataArray, bufferLength); break;
-		case 'ImgShuffle' : imgShuffle(dataArray, bufferLength); break;
-		case 'PixelPainting' : pixelPainting(dataArray, bufferLength); break;
 		case 'LissajousFigure' : lissajousFigure(dataArray, bufferLength); break;
 		case 'LissajousWebs' : lissajousWebs(dataArray, bufferLength); break;
 		case 'NodeAttraction' : nodeAttraction(dataArray, bufferLength); break;
 		case 'ChladniPlate' : chladniPlate(dataArray, bufferLength); break;
+		case 'Mandelbrot' : mandelbrot(dataArray, bufferLength); break;
+
+		// Image Visuals
+		case 'Macroblocks' : macroblocks(dataArray, bufferLength); break;
+		case 'RepeatPix' : repeatPix(dataArray, bufferLength); break;
+		case 'PixMix' : pixMix(dataArray, bufferLength); break;
+		case 'PixShuffle' : pixShuffle(dataArray, bufferLength); break;
+		case 'ImgShuffle' : imgShuffle(dataArray, bufferLength); break;
+		case 'PixelPainting' : pixelPainting(dataArray, bufferLength); break;
 
 		// Video Visuals
 		case 'DrosteVideo' : drosteVideo(dataArray, bufferLength); break;
