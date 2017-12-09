@@ -1477,27 +1477,68 @@ function mandelbrot(dataArray, bufferLength){
 	}
 	$('.visual-mode').on('click', resetCanv);
 
-  // var visGui = new dat.GUI({ autoPlace: false });
-	// visGui.domElement.id = 'visdat-gui';
-	// $('#visual-options').append(visGui.domElement);
-	// var visGuiSettings = {
-	// 	positionMode : 'perlin',
-	// 	perlinScale : 0.01,
-	// };
-	// visGui.add(visGuiSettings, 'positionMode', ['fixed', 'perlin', 'mouse']);
-	// visGui.add(visGuiSettings, 'perlinScale').min(0.01).max(0.1);
+  var visGui = new dat.GUI({ autoPlace: false });
+	visGui.domElement.id = 'visdat-gui';
+	$('#visual-options').append(visGui.domElement);
+	var visGuiSettings = {
+		maxIterations : 50,
+	};
+	visGui.add(visGuiSettings, 'maxIterations').min(0).max(100).step(1);
 
   var p5Init = function( p ) {
 
     p.setup = function() {
       var canvas = p.createCanvas(canvWidth, canvHeight);
       canvas.id('p5-canvas');
-      p.background(bgColor);
-			console.log('Working');
+			p.pixelDensity(1);
     };
 
     p.draw = function() {
 
+			p.loadPixels();
+
+			for(var x = 0; x < p.width; x++){
+				for(var y = 0; y < p.height; y++){
+
+					var a = p.map( x, 0, p.width, -2, 2 );
+					var b = p.map( y, 0, p.height, -2, 2 );
+
+					var ca = a;
+					var cb = b;
+
+					var maxIterations = visGuiSettings.maxIterations;
+					var n = 0; //tracks the number of iterations
+
+					//  complex numbers which does not diverge when iterated
+					while (n < maxIterations) {
+
+						var aa = a * a - b * b;
+						var bb = 2 * a * b;
+						a = aa + ca;
+						b = bb + cb;
+
+						if (p.abs(a + b) > 16) { //ensures result doesn't tend towards infinity
+							break;
+						}
+						n++;
+					}
+
+					var bright = p.map(n, 0, maxIterations, 0, 255);
+					// bright = p.map( p.sqrt(bright), 0, 1, 0, );
+					// // defines whether something is inside of the mandelbrot set
+					if (n === maxIterations) {
+						bright = 0;
+					}
+
+					var pix = (x + y * p.width) * 4;
+					p.pixels[pix + 0] = bright;
+					p.pixels[pix + 1] = bright/2;
+					p.pixels[pix + 2] = bright/4;
+					p.pixels[pix + 3] = 255;
+				}
+			}
+
+			p.updatePixels();
     };
   };
 
