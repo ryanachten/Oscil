@@ -1481,11 +1481,15 @@ function chladniPlate(dataArray, bufferLength){
 		visGui.domElement.id = 'visdat-gui';
 		$('#visual-options').append(visGui.domElement);
 		var visGuiSettings = {
-			sampleRes : 50,
+			sampleRes : 350,
 			maxIterations : 50,
+			minPos : -2.5,
+			maxPos : 2,
 		};
 		visGui.add(visGuiSettings, 'sampleRes').min(0).max(500).step(1);
 		visGui.add(visGuiSettings, 'maxIterations').min(0).max(100).step(1);
+		visGui.add(visGuiSettings, 'minPos').min(-2.5).max(2.5);
+		visGui.add(visGuiSettings, 'maxPos').min(-2.5).max(2.5);
 
 	  var p5Init = function( p ) {
 
@@ -1497,7 +1501,7 @@ function chladniPlate(dataArray, bufferLength){
 	    };
 
 	    p.draw = function() {
-				
+
 				var sampleSize = visGuiSettings.sampleRes;
 				var sampleWidth = p.width/sampleSize;
 				var sampleHeight = p.height/sampleSize;
@@ -1505,8 +1509,8 @@ function chladniPlate(dataArray, bufferLength){
 				for(var x = 0; x < sampleSize; x++){
 					for(var y = 0; y < sampleSize; y++){
 
-						var a = p.map( x*sampleWidth, 0, sampleWidth*sampleSize, -2, 2 );
-						var b = p.map( y*sampleHeight, 0, sampleHeight*sampleSize, -2, 2 );
+						var a = p.map( x*sampleWidth, 0, sampleWidth*sampleSize, visGuiSettings.minPos, visGuiSettings.maxPos );
+						var b = p.map( y*sampleHeight, 0, sampleHeight*sampleSize, visGuiSettings.minPos, visGuiSettings.maxPos );
 
 						var ca = a;
 						var cb = b;
@@ -1522,7 +1526,8 @@ function chladniPlate(dataArray, bufferLength){
 							a = aa + ca;
 							b = bb + cb;
 
-							if (p.abs(a + b) > 16) { //ensures result doesn't tend towards infinity
+							var escapeTime = 4;
+							if (a * a + b * b > escapeTime) { //ensures result doesn't tend towards infinity
 								break;
 							}
 							n++;
