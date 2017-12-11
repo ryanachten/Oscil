@@ -1464,13 +1464,13 @@ function chladniPlate(dataArray, bufferLength){
 	}
 
 
-	function mandelbrot(dataArray, bufferLength){
+	function julia8bit(dataArray, bufferLength){
 
 	  $('#visualiser').hide();
 
 	  function resetCanv(){
 	    var newVis = $('.visual-mode.active').data('visual');
-			if( newVis !== 'Mandelbrot'){
+			if( newVis !== 'Julia8bit'){
 				removeP5Canvas(newVis);
 				$('.visual-mode').off('click', resetCanv);
 			}
@@ -1481,12 +1481,12 @@ function chladniPlate(dataArray, bufferLength){
 		visGui.domElement.id = 'visdat-gui';
 		$('#visual-options').append(visGui.domElement);
 		var visGuiSettings = {
-			sampleRes : 250,
-			maxIterations : 50,
-			aConst: -0.70176, //julia
-			bConst: - 0.3842, //julia
-			minPos : -2.5,
-			maxPos : 2,
+			sampleRes : 140,
+			maxIterations : 35,
+			aConst: -0.70176,
+			bConst: - 0.02,
+			minPos : -1.6,
+			maxPos : 1.7,
 		};
 		visGui.add(visGuiSettings, 'sampleRes').min(0).max(500).step(1);
 		visGui.add(visGuiSettings, 'maxIterations').min(0).max(100).step(1);
@@ -1527,7 +1527,7 @@ function chladniPlate(dataArray, bufferLength){
 						var ca = a;
 						var cb = b;
 
-						var maxIterations = visGuiSettings.maxIterations;
+						var maxIterations = visGuiSettings.maxIterations + da;
 						var n = 0; //tracks the number of iterations
 
 
@@ -1554,7 +1554,7 @@ function chladniPlate(dataArray, bufferLength){
 								break;
 							}
 							var twoab = 2.0 * a * b;
-							a = aa - bb + (visGuiSettings.aConst + da);//visGuiSettings.aConst;
+							a = aa - bb + (visGuiSettings.aConst + da);
 							b = twoab + visGuiSettings.bConst;
 
 
@@ -1566,7 +1566,7 @@ function chladniPlate(dataArray, bufferLength){
 						if (n === maxIterations) {
 							bright = 0;
 						}
-						 p.fill(Math.sin(bright)*255, 255, Math.sin(bright)*255);
+						p.fill(Math.sin(bright)*255, 200, Math.sin(bright)*255);
 						p.ellipseMode(p.CENTER);
 						p.ellipse(x*sampleWidth, y*sampleHeight, sampleWidth, sampleHeight);
 					}

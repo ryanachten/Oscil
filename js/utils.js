@@ -12,7 +12,7 @@ function removeP5Canvas(newVisual){
     case 'Tesserae':
     case 'ParticlePainting':
     case 'SlitScan':
-    case 'Mandelbrot': //FIXME: doesn't use video - function might need to be altered accordingly
+    case 'Julia8bit': //FIXME: doesn't use video - function might need to be altered accordingly
       break;
     default:
       $('#visualiser').show();

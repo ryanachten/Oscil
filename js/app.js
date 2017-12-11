@@ -129,7 +129,7 @@ function visualise(visMode){
 		case 'LissajousWebs' : lissajousWebs(dataArray, bufferLength); break;
 		case 'NodeAttraction' : nodeAttraction(dataArray, bufferLength); break;
 		case 'ChladniPlate' : chladniPlate(dataArray, bufferLength); break;
-		case 'Mandelbrot' : mandelbrot(dataArray, bufferLength); break;
+		case 'Julia8bit' : julia8bit(dataArray, bufferLength); break;
 
 		// Image Visuals
 		case 'Macroblocks' : macroblocks(dataArray, bufferLength); break;
