@@ -1481,8 +1481,10 @@ function chladniPlate(dataArray, bufferLength){
 		visGui.domElement.id = 'visdat-gui';
 		$('#visual-options').append(visGui.domElement);
 		var visGuiSettings = {
-			sampleRes : 350,
+			sampleRes : 250,
 			maxIterations : 50,
+			aConst: -0.70176, //julia
+			bConst: - 0.3842, //julia
 			minPos : -2.5,
 			maxPos : 2,
 		};
@@ -1490,6 +1492,8 @@ function chladniPlate(dataArray, bufferLength){
 		visGui.add(visGuiSettings, 'maxIterations').min(0).max(100).step(1);
 		visGui.add(visGuiSettings, 'minPos').min(-2.5).max(2.5);
 		visGui.add(visGuiSettings, 'maxPos').min(-2.5).max(2.5);
+		visGui.add(visGuiSettings, 'aConst').min(-2.50000).max(2.50000);
+		visGui.add(visGuiSettings, 'bConst').min(-2.50000).max(2.50000);
 
 	  var p5Init = function( p ) {
 
@@ -1498,13 +1502,21 @@ function chladniPlate(dataArray, bufferLength){
 	      canvas.id('p5-canvas');
 				p.pixelDensity(1);
 				p.noStroke();
+				p.colorMode(p.HSB, 255);
 	    };
 
 	    p.draw = function() {
 
+				p.background(0);
+
+				analyser.getByteFrequencyData(dataArray);
+
 				var sampleSize = visGuiSettings.sampleRes;
 				var sampleWidth = p.width/sampleSize;
 				var sampleHeight = p.height/sampleSize;
+
+				var da = p.map(dataArray[0], 0, 255, -2.5, 2.5);
+				// console.log(da);
 
 				for(var x = 0; x < sampleSize; x++){
 					for(var y = 0; y < sampleSize; y++){
@@ -1518,18 +1530,34 @@ function chladniPlate(dataArray, bufferLength){
 						var maxIterations = visGuiSettings.maxIterations;
 						var n = 0; //tracks the number of iterations
 
+
 						//  complex numbers which does not diverge when iterated
 						while (n < maxIterations) {
 
-							var aa = a * a - b * b;
-							var bb = 2 * a * b;
-							a = aa + ca;
-							b = bb + cb;
+							// mandelbrot
+							// var aa = a * a - b * b;
+							// var bb = 2 * a * b;
+							// a = aa + ca;
+							// b = bb + cb;
 
+							// mandelbrot
+							// var escapeTime = 4;
+							// if (a * a + b * b > escapeTime) { //ensures result doesn't tend towards infinity
+
+							// julia
+							var aa = a * a;
+							var bb = b * b;
+							// julia
 							var escapeTime = 4;
-							if (a * a + b * b > escapeTime) { //ensures result doesn't tend towards infinity
+							if (aa + bb > escapeTime){
+
 								break;
 							}
+							var twoab = 2.0 * a * b;
+							a = aa - bb + (visGuiSettings.aConst + da);//visGuiSettings.aConst;
+							b = twoab + visGuiSettings.bConst;
+
+
 							n++;
 						}
 
@@ -1538,9 +1566,9 @@ function chladniPlate(dataArray, bufferLength){
 						if (n === maxIterations) {
 							bright = 0;
 						}
-
-						p.fill(bright, bright/2, bright/4, 255);
-						p.rect(x*sampleWidth, y*sampleHeight, sampleWidth, sampleHeight);
+						 p.fill(Math.sin(bright)*255, 255, Math.sin(bright)*255);
+						p.ellipseMode(p.CENTER);
+						p.ellipse(x*sampleWidth, y*sampleHeight, sampleWidth, sampleHeight);
 					}
 				}
 	    };
