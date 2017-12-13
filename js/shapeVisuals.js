@@ -1597,6 +1597,127 @@ function chladniPlate(dataArray, bufferLength){
 	  var myp5 = new p5(p5Init, 'container');
 	}
 
+	function lSystem(dataArray, bufferLength){
+
+	  $('#visualiser').hide();
+
+	  function resetCanv(){
+	    var newVis = $('.visual-mode.active').data('visual');
+			if( newVis !== 'Lsystem'){
+				removeP5Canvas(newVis);
+				$('.visual-mode').off('click', resetCanv);
+			}
+		}
+		$('.visual-mode').on('click', resetCanv);
+
+	  // var visGui = new dat.GUI({ autoPlace: false });
+		// visGui.domElement.id = 'visdat-gui';
+		// $('#visual-options').append(visGui.domElement);
+		// var visGuiSettings = {
+		// 	treeCount : 12,
+		// 	reactTreeNum : true,
+		// 	branchCount : 200,
+		// 	reactBranchNum : true,
+		// 	branchLength : 100,
+		// 	reactLength : true,
+		// 	branchDecay : 67,
+		// 	reactDecay : false,
+		// };
+		// visGui.add(visGuiSettings, 'treeCount').min(0).max(24).step(4);
+		// visGui.add(visGuiSettings, 'reactTreeNum');
+		// visGui.add(visGuiSettings, 'branchCount').min(0).max(500);
+		// visGui.add(visGuiSettings, 'reactBranchNum');
+		// visGui.add(visGuiSettings, 'branchLength').min(0).max(1000);
+		// visGui.add(visGuiSettings, 'reactLength');
+		// visGui.add(visGuiSettings, 'branchDecay').min(0).max(100);
+		// visGui.add(visGuiSettings, 'reactDecay');
+
+	  var p5Init = function( p ) {
+
+	    p.setup = function() {
+	      var canvas = p.createCanvas(canvWidth, canvHeight);
+	      canvas.id('p5-canvas');
+				p.background(51);
+				p.stroke(255);
+	    };
+
+			var axiom = "F";
+			var sentence = axiom;
+			var rules = [];
+			rules[0] = {
+				a : 'F',
+				b : 'FF+[+F-F-F]-[-F+F+F]'
+			}
+
+			var len = 1000;
+
+			function generate(){
+				// Looks at every letter in the 'sentence' / axiom
+				// and replaces according to the rule
+
+				var nextSentence = "";
+				len *= 0.5;
+
+				for (var i = 0; i < sentence.length; i++) {
+
+					var found = false;
+					var current = sentence.charAt(i);
+
+					for (var j = 0; j < rules.length; j++) {
+							if( current == rules[j].a ){
+								nextSentence += rules[j].b
+								found = true;
+								break;
+							}
+					}
+					if (!found) {
+						nextSentence += current;
+					}
+				}
+				sentence = nextSentence;
+				turtle();
+			}
+
+			function turtle(){
+				//parse each letter as a drawing instruction
+				//based off the rudimentary Turtle drawer
+
+				p.background(51);
+				p.resetMatrix();
+				p.translate(canvWidth/2, canvHeight);
+
+				for (var i = 0; i < sentence.length; i++) {
+					var current = sentence.charAt(i);
+
+					if (current == 'F') {
+						p.line(0,0,0, -len);
+						p.translate(0, -len);
+					}else if (current == '+') {
+						p.rotate(p.PI/6);
+					}else if (current == '-') {
+						p.rotate(-p.PI/6);
+					}else if (current == '[') {
+						p.push();
+					}else if (current == ']') {
+						p.pop();
+					}
+
+				}
+			}
+
+			$('body').click(function(){
+				generate();
+			});
+
+
+	    p.draw = function() {
+
+			};
+	  };
+
+	  var myp5 = new p5(p5Init, 'container');
+	}
+
 	function julia8bit(dataArray, bufferLength){
 
 	  $('#visualiser').hide();

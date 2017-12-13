@@ -14,6 +14,7 @@ function removeP5Canvas(newVisual){
     case 'SlitScan':
     case 'Julia8bit': //FIXME: doesn't use video - function might need to be altered accordingly
     case 'FractalTree':
+    case 'Lsystem':
       break;
     default:
       $('#visualiser').show();

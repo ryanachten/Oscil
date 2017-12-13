@@ -130,6 +130,7 @@ function visualise(visMode){
 		case 'NodeAttraction' : nodeAttraction(dataArray, bufferLength); break;
 		case 'ChladniPlate' : chladniPlate(dataArray, bufferLength); break;
 		case 'FractalTree' : fractalTree(dataArray, bufferLength); break;
+		case 'Lsystem' : lSystem(dataArray, bufferLength); break;
 		case 'Julia8bit' : julia8bit(dataArray, bufferLength); break;
 
 		// Image Visuals
