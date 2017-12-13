@@ -1464,6 +1464,139 @@ function chladniPlate(dataArray, bufferLength){
 	}
 
 
+	function fractalTree(dataArray, bufferLength){
+
+	  $('#visualiser').hide();
+
+	  function resetCanv(){
+	    var newVis = $('.visual-mode.active').data('visual');
+			if( newVis !== 'FractalTree'){
+				removeP5Canvas(newVis);
+				$('.visual-mode').off('click', resetCanv);
+			}
+		}
+		$('.visual-mode').on('click', resetCanv);
+
+	  var visGui = new dat.GUI({ autoPlace: false });
+		visGui.domElement.id = 'visdat-gui';
+		$('#visual-options').append(visGui.domElement);
+		var visGuiSettings = {
+			treeCount : 12,
+			reactTreeNum : true,
+			branchCount : 200,
+			reactBranchNum : true,
+			branchLength : 100,
+			reactLength : true,
+			branchDecay : 67,
+			reactDecay : false,
+		};
+		visGui.add(visGuiSettings, 'treeCount').min(0).max(24).step(4);
+		visGui.add(visGuiSettings, 'reactTreeNum');
+		visGui.add(visGuiSettings, 'branchCount').min(0).max(500);
+		visGui.add(visGuiSettings, 'reactBranchNum');
+		visGui.add(visGuiSettings, 'branchLength').min(0).max(1000);
+		visGui.add(visGuiSettings, 'reactLength');
+		visGui.add(visGuiSettings, 'branchDecay').min(0).max(100);
+		visGui.add(visGuiSettings, 'reactDecay');
+
+	  var p5Init = function( p ) {
+
+			var tree = [];
+			var da;
+
+	    p.setup = function() {
+	      var canvas = p.createCanvas(canvWidth, canvHeight);
+	      canvas.id('p5-canvas');
+				p.colorMode(p.HSB);
+	    };
+
+	    p.draw = function() {
+
+				analyser.getByteFrequencyData(dataArray);
+				da = p.map(dataArray[0], 0, 255, 0, 1);
+				console.log(dataArray[0]);
+
+				var treeCount = visGuiSettings.treeCount;
+				if (visGuiSettings.reactTreeNum) {
+					treeCount = treeCount * da + (treeCount/2);
+				}
+
+				p.background(bgColor);
+				var branchCount = visGuiSettings.branchCount;
+				if (visGuiSettings.reactBranchNum) {
+					branchCount = branchCount * da;
+				}
+
+				p.translate(canvWidth/2, canvHeight/2);
+
+				for (var i = 0; i < treeCount; i++) {
+					drawTree(branchCount);
+					p.rotate((Math.PI/180)*(360/treeCount));
+				}
+			};
+
+			function drawTree(branchCount){
+				tree = [];
+				var a = p.createVector(0, 0);
+				var branchLength = visGuiSettings.branchLength;
+				if(visGuiSettings.reactLength){
+					branchLength = branchLength*da+(branchLength/2);
+				}
+				var b = p.createVector(0, 0 -branchLength);
+
+				tree[0] = new Branch(a, b);
+
+				for (var i = 0; i < branchCount/2; i++) {
+					if(!tree[i].finished){
+						tree.push(tree[i].branchA());
+						tree.push(tree[i].branchB());
+						tree[i].finished = true;
+					}
+					tree[i].hue += 20;
+					tree[i].show();
+				}
+			}
+
+			function Branch(start, end){
+				this.hue = 200;
+				this.begin = start;
+				this.end = end;
+				this.finished = false;
+				this.show = function(){
+					p.stroke(this.hue, 100, 50);
+					p.line( this.begin.x, this.begin.y, this.end.x, this.end.y);
+				}
+				this.branchA = function(){
+					var dir = p5.Vector.sub(this.end, this.begin);
+					dir.rotate(p.PI/4);
+					var branchDecay = visGuiSettings.branchDecay;
+					if (visGuiSettings.reactDecay) {
+						branchDecay = branchDecay*(1-da) + branchDecay/2;
+					}
+					dir.mult(branchDecay/100);
+					var newEnd = p5.Vector.add(this.end, dir);
+					var right = new Branch(this.end, newEnd);
+					return right;
+				}
+				this.branchB = function(){
+					var dir = p5.Vector.sub(this.end, this.begin);
+					dir.rotate(-p.PI/4);
+					var branchDecay = visGuiSettings.branchDecay;
+					if (visGuiSettings.reactDecay) {
+						branchDecay = branchDecay*(1-da) + branchDecay/2;
+					}
+					dir.mult(branchDecay/100);
+					var newEnd = p5.Vector.add(this.end, dir);
+					var left = new Branch(this.end, newEnd);
+					return left;
+				}
+			}
+
+	  };
+
+	  var myp5 = new p5(p5Init, 'container');
+	}
+
 	function julia8bit(dataArray, bufferLength){
 
 	  $('#visualiser').hide();

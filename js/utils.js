@@ -13,6 +13,7 @@ function removeP5Canvas(newVisual){
     case 'ParticlePainting':
     case 'SlitScan':
     case 'Julia8bit': //FIXME: doesn't use video - function might need to be altered accordingly
+    case 'FractalTree':
       break;
     default:
       $('#visualiser').show();
