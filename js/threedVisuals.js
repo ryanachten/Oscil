@@ -208,7 +208,7 @@ function mengerSponge(dataArray, bufferLength){
     var renderer = new THREE.WebGLRenderer({ antialias: true });
     document.body.appendChild( renderer.domElement ); //add canvas to dom
     renderer.domElement.id = 'threed-canvas';
-    renderer.setClearColor( new THREE.Color(0x000000) ); //same as bgColor
+    renderer.setClearColor( new THREE.Color(0x000000) );
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -233,94 +233,77 @@ function mengerSponge(dataArray, bufferLength){
 
     // Scene setup
     var scene = new THREE.Scene();
-    scene.fog = new THREE.Fog( 0xefd1b5, 0.1, 2000 );
 
     // Light setup
       // light( colour, strength)
-    var ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+    var ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     ambientLight.position.set(0, 0, 0);
     scene.add(ambientLight);
 
-    var pointLight = new THREE.PointLight(0xffffff, 0.3);
+    var pointLight = new THREE.PointLight(0xffffff, 0.5);
     pointLight.position.set(0, 1000, 1000);
     scene.add(pointLight);
 
 
     // Geometry
-    var worldGeo = new THREE.SphereGeometry(1100, 32, 32);
-    var worldMat = new THREE.MeshLambertMaterial({ color: 0xef4773, side: THREE.BackSide });
-    var worldMesh = new THREE.Mesh(worldGeo, worldMat);
-    worldMesh.name = 'worldMesh';
-    scene.add(worldMesh);
+    function Box( x, y, z, r){
+      this.pos = new THREE.Vector3( x, y, z);
+      this.r = r;
 
+      var boxGeo = new THREE.BoxGeometry(this.r, this.r, this.r);
+      boxGeo.computeLineDistances();
 
-    // React Particle system
+      var boxMat = new THREE.MeshStandardMaterial({ color: 0xffffff, wireframe: false, transparent: true, opacity: 0.5 });
+      var boxMesh = new THREE.Mesh(boxGeo, boxMat);
+      boxMesh.position.set( x, y, z );
 
-    function createReactParticle(){
-      var reactParticle = new THREE.Object3D();
-      reactParticle.name = 'reactParticle';
+      boxMesh.name = 'boxMesh';
+      this.mesh = boxMesh;
 
-      // Particle nucleus
-      var nucleusGeo = new THREE.IcosahedronGeometry(50, 1);
-      var nucleusMat = new THREE.MeshStandardMaterial(
-        { color: 0xbd95ef, metalness: 1, roughness: 0.50, transparent: true, opacity: 0.7} );
-      var nucleusMesh = new THREE.Mesh(nucleusGeo, nucleusMat);
-      nucleusMesh.name = 'nucleusMesh';
-      reactParticle.add(nucleusMesh);
+      // scene.add(this.mesh);
 
+      this.generate = function(){
+          var boxes = [];
+          for (var x = -1; x < 2; x++) {
+            for (var y = -1; y < 2; y++) {
+              for (var z = -1; z < 2; z++) {
 
-      var particleLight = new THREE.PointLight(0xffffff, 0.5, 300, 2);
-      particleLight.position.set(nucleusMesh.position.x, nucleusMesh.position.y, nucleusMesh.position.z);
-      reactParticle.add(particleLight);
-
-      // Particle outer dust
-      var sphereParticles = new THREE.Object3D();
-      sphereParticles.name = 'sphereParticles';
-
-      for (var i = 0; i < nucleusGeo.vertices.length; i++){
-        var tempVert = new THREE.Vector3(nucleusGeo.vertices[i].x, nucleusGeo.vertices[i].y, nucleusGeo.vertices[i].z);
-
-        var tempSphereGeo = new THREE.SphereGeometry(5, 10, 10)
-        var tempSphereMat = new THREE.MeshLambertMaterial(
-          { color: 0x47d0ef });
-        var tempSphereMesh = new THREE.Mesh(tempSphereGeo, tempSphereMat);
-        tempSphereMesh.position.set(tempVert.x, tempVert.y, tempVert.z);
-        sphereParticles.add(tempSphereMesh);
+                // Find the holes for the sponge
+                var sum = Math.abs(x) + Math.abs(y) + Math.abs(z);
+                var newR = this.r /3; //reduces size for ea. fractal step
+                if (sum > 1) {
+                  // var b = new Box( Math.random() * 60, Math.random() * 60, Math.random() * 60, newR);
+                  var b = new Box( this.pos.x + x * newR, this.pos.y + y * newR, this.pos.z + z * newR, newR);
+                  boxes.push(b);
+                }
+              }
+            }
+          }
+        return boxes;
       }
-
-      reactParticle.add(sphereParticles);
-      return reactParticle;
     }
 
-    var reactParticles = new THREE.Object3D();
+    var a = 0;
+    var sponge = new THREE.Object3D();
 
-    var particleGridGeo = new THREE.DodecahedronGeometry(500, 0);
-    particleGridGeo.computeLineDistances();
+    function init(){
 
-    var particleGridMat = new THREE.LineDashedMaterial({ color: 0xffffff, linewidth: 100, scale: 100, dashSize: 100, gapSize: 100 });
-
-    var particleGridLines = new THREE.LineSegments(particleGridGeo, particleGridMat);
-    particleGridLines.name = 'particleGrid';
-
-
-    for (var i = 0; i < particleGridGeo.vertices.length; i++) {
-      var tempPart = createReactParticle();
-      var tempPos = particleGridGeo.vertices[i];
-      tempPart.position.set(tempPos.x, tempPos.y, tempPos.z);
-      reactParticles.add(tempPart);
+      var starterBox = new Box(0, 0, 0, 200);
+      var gen2boxes = starterBox.generate();
+      var gen3boxes = [];
+      for (var i = 0; i < gen2boxes.length; i++) {
+        gen3boxes.push(gen2boxes[i].generate());
+      }
+      console.log(gen3boxes[0]);
+      for (var i = 0; i < gen3boxes.length; i++) {
+        for (var j = 0; j < gen3boxes[i].length; j++) {
+          sponge.add(gen3boxes[i][j].mesh);
+        }
+      }
+      scene.add(sponge);
     }
+    init();
 
-    reactParticles.add(particleGridLines);
-
-    scene.add(reactParticles);
-
-    // Central Torus
-      //r, t, ts, rs, p, q
-    var centralTorusGeo = new THREE.TorusKnotGeometry(250, 5, 50, 4, 2, 5);
-    var centralTorusMat = new THREE.MeshStandardMaterial(
-      { color: 0xbd95ef, metalness: 1, roughness: 0.50, transparent: true, opacity: 0.7} );
-    var centralTorusMesh = new THREE.Mesh(centralTorusGeo, centralTorusMat);
-    scene.add(centralTorusMesh);
 
     // Render Loop
     requestAnimationFrame(render);
@@ -330,55 +313,23 @@ function mengerSponge(dataArray, bufferLength){
       stats.begin();
 
       analyser.getByteFrequencyData(dataArray);
+      var da = dataArray[0]/255;
 
-      centralTorusMesh.rotation.x -= 0.01;
-      centralTorusMesh.rotation.y -= 0.01;
-      centralTorusMesh.rotation.z -= 0.01;
+      sponge.rotation.x += 0.01;
+      sponge.rotation.y += 0.01;
 
-      // // Rotate main grid
-      reactParticles.rotation.x += 0.01;
-      reactParticles.rotation.y += 0.01;
-      reactParticles.rotation.z += 0.01;
+      for (var i = 0; i < sponge.children.length; i++) {
 
-      function updateReactParticle(particle, curDa){
-        particle.rotation.x += 0.01;
-        particle.rotation.y += 0.01;
-        particle.rotation.z += 0.01;
+        var len = da * 2;
+        var oldLength = sponge.children[i].position.length();
 
-        // console.log(particle);
-        // debugger;
-        var nucleus = particle.children[0];
-        var sphereParticles = particle.children[2];
+        if ( oldLength !== 0 ) {
 
-        sphereParticles.scale.x = sphereParticles.scale.y = sphereParticles.scale.z = 1+curDa;
+            sponge.children[i].position.multiplyScalar( 1 + ( len / oldLength ) );
 
-        for (var i = 0; i < sphereParticles.children.length; i++) {
-          sphereParticles.children[i].scale.x = sphereParticles.children[i].scale.y = sphereParticles.children[i].scale.z = 1-curDa;
-        }
-        sphereParticles.rotation.x -= 0.01;
-        sphereParticles.rotation.y -= 0.01;
-        sphereParticles.rotation.z -= 0.01;
-
-        nucleus.scale.x = nucleus.scale.y = nucleus.scale.z = curDa;
-        nucleus.rotation.x += 0.01;
-        nucleus.rotation.y += 0.01;
-        nucleus.rotation.z += 0.01;
-      }
-
-      var indexIncrement = Math.floor(dataArray.length / reactParticles.children.length);
-      for (var i = 0; i < reactParticles.children.length; i++) {
-        var da = dataArray[i*indexIncrement]/255 +0.01;
-        if(reactParticles.children[i].name !== 'particleGrid'){
-            updateReactParticle(reactParticles.children[i], da);
         }
 
       }
-
-      // Update environment
-      var hue = (dataArray[0]/255)
-                *40 //range
-                +172; //base colour
-      scene.fog.color = new THREE.Color('hsl('+hue+', 50%, 79%)');
 
       renderer.render(scene, camera);
 
