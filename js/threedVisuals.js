@@ -255,10 +255,19 @@ function mengerSponge(dataArray, bufferLength){
 
       var boxMat = new THREE.MeshStandardMaterial({ color: 0xffffff, wireframe: false, transparent: true, opacity: 0.5 });
       var boxMesh = new THREE.Mesh(boxGeo, boxMat);
-      boxMesh.position.set( x, y, z );
 
-      boxMesh.name = 'boxMesh';
-      this.mesh = boxMesh;
+      var boxObj = new THREE.Object3D();
+      boxObj.add(boxMesh);
+      boxObj.position.set( x, y, z );
+
+      boxObj.name = 'boxObj';
+      boxObj.userData = {
+        posX : x,
+        posY: y,
+        posZ: z
+      }
+
+      this.mesh = boxObj;
 
       // scene.add(this.mesh);
 
@@ -294,12 +303,12 @@ function mengerSponge(dataArray, bufferLength){
       for (var i = 0; i < gen2boxes.length; i++) {
         gen3boxes.push(gen2boxes[i].generate());
       }
-      console.log(gen3boxes[0]);
       for (var i = 0; i < gen3boxes.length; i++) {
         for (var j = 0; j < gen3boxes[i].length; j++) {
           sponge.add(gen3boxes[i][j].mesh);
         }
       }
+      // console.log(gen3boxes[0][0]);
       scene.add(sponge);
     }
     init();
@@ -308,6 +317,8 @@ function mengerSponge(dataArray, bufferLength){
     // Render Loop
     requestAnimationFrame(render);
 
+    var delta = 0.01;
+
     function render(){
 
       stats.begin();
@@ -315,20 +326,27 @@ function mengerSponge(dataArray, bufferLength){
       analyser.getByteFrequencyData(dataArray);
       var da = dataArray[0]/255;
 
+      var sinSize = Math.sin(delta);
+      delta += 0.001;
+
       sponge.rotation.x += 0.01;
       sponge.rotation.y += 0.01;
 
       for (var i = 0; i < sponge.children.length; i++) {
 
-        var len = da * 2;
-        var oldLength = sponge.children[i].position.length();
+        var len = sinSize * 500;
+
+        sponge.children[i].scale.set(1,1,1);
+        sponge.children[i].scale.multiplyScalar(2*(1-da) + 0.1);
+
+        var originalPos = sponge.children[i].userData;
+        originalPos = new THREE.Vector3(originalPos.posX, originalPos.posY, originalPos.posZ);
+        var oldLength = originalPos.length();
 
         if ( oldLength !== 0 ) {
-
-            sponge.children[i].position.multiplyScalar( 1 + ( len / oldLength ) );
-
+            originalPos.multiplyScalar( 1 + ( len / oldLength ) );
+            sponge.children[i].position.copy(originalPos);
         }
-
       }
 
       renderer.render(scene, camera);
