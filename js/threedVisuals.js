@@ -253,7 +253,7 @@ function mengerSponge(dataArray, bufferLength){
       var boxGeo = new THREE.BoxGeometry(this.r, this.r, this.r);
       boxGeo.computeLineDistances();
 
-      var boxMat = new THREE.MeshStandardMaterial({ color: 0xffffff, wireframe: false, transparent: true, opacity: 0.5 });
+      var boxMat = new THREE.MeshPhongMaterial({ color: 0xffffff, specular: 0xffffff, wireframe: false, transparent: true, opacity: 0.5, side: THREE.DoubleSide });
       var boxMesh = new THREE.Mesh(boxGeo, boxMat);
 
       var boxObj = new THREE.Object3D();
@@ -335,9 +335,16 @@ function mengerSponge(dataArray, bufferLength){
       for (var i = 0; i < sponge.children.length; i++) {
 
         var len = sinSize * 500;
+        var scl = Math.abs(
+            3*(1-da) //music reaction scale
+            * sinSize //scaled according boxes distance
+            + 0.1 ); //prevents errors from being too small
 
         sponge.children[i].scale.set(1,1,1);
-        sponge.children[i].scale.multiplyScalar(2*(1-da) + 0.1);
+        sponge.children[i].scale.multiplyScalar(scl);
+
+        sponge.children[i].rotation.x -= 0.01;
+        sponge.children[i].rotation.y -= 0.01;
 
         var originalPos = sponge.children[i].userData;
         originalPos = new THREE.Vector3(originalPos.posX, originalPos.posY, originalPos.posZ);
@@ -347,6 +354,14 @@ function mengerSponge(dataArray, bufferLength){
             originalPos.multiplyScalar( 1 + ( len / oldLength ) );
             sponge.children[i].position.copy(originalPos);
         }
+
+        var hue = Math.abs(((45/sponge.children.length) * i + 90)
+                  + (sinSize*180));
+        var tempColor = new THREE.Color("hsl(" + hue + ", 70%, 50%)");
+        sponge.children[i].children[0].material.color = tempColor;
+
+        var tempSpecular = new THREE.Color("hsl(" + (Math.abs(180-hue)) + ", 70%, 50%)");
+        sponge.children[i].children[0].material.specular = tempColor;
       }
 
       renderer.render(scene, camera);
