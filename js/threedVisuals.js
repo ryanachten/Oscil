@@ -214,10 +214,10 @@ function mengerSponge(dataArray, bufferLength){
 
     // Camera setup
       //PerspectiveCamera( fieldOfView, aspectRatio, minDist, maxDist)
-    var camera = new THREE.PerspectiveCamera(35,
+    var camera = new THREE.PerspectiveCamera(75,
       window.innerWidth / window.innerHeight, 0.1, 3000);
 
-      camera.position.set(0, 0, 1000);
+      camera.position.set(0, 0, 500);
 
       document.addEventListener("keydown", function(event) {
         if (event.keyCode == '38' && camera.position.z + 50 < 1950) {
@@ -233,17 +233,26 @@ function mengerSponge(dataArray, bufferLength){
 
     // Scene setup
     var scene = new THREE.Scene();
+    scene.fog = new THREE.Fog( 0xefd1b5, 0.1, 2000 );
+
+    var worldGeo = new THREE.SphereGeometry(1100, 32, 32);
+    var worldMat = new THREE.MeshLambertMaterial({ color: 0xef4773, side: THREE.BackSide });
+    var worldMesh = new THREE.Mesh(worldGeo, worldMat);
+    worldMesh.name = 'worldMesh';
+    scene.add(worldMesh);
 
     // Light setup
       // light( colour, strength)
     var ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     ambientLight.position.set(0, 0, 0);
-    scene.add(ambientLight);
+    // scene.add(ambientLight);
 
     var pointLight = new THREE.PointLight(0xffffff, 0.5);
     pointLight.position.set(0, 1000, 1000);
     scene.add(pointLight);
 
+    var hemisphereLight = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
+    scene.add(hemisphereLight);
 
     // Geometry
     function Box( x, y, z, r){
@@ -363,6 +372,9 @@ function mengerSponge(dataArray, bufferLength){
         var tempSpecular = new THREE.Color("hsl(" + (Math.abs(180-hue)) + ", 70%, 50%)");
         sponge.children[i].children[0].material.specular = tempColor;
       }
+
+      worldMat.color = new THREE.Color("hsl(" + (Math.abs(90+hue)) + ", 50%, 50%)");
+      scene.fog.color= new THREE.Color("hsl(" + (Math.abs(50+hue)) + ", 20%, 80%)");
 
       renderer.render(scene, camera);
 
