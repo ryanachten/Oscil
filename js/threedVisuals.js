@@ -383,3 +383,144 @@ function mengerSponge(dataArray, bufferLength){
       requestAnimationFrame(render);
     }
 }
+
+function superShapes(dataArray, bufferLength){
+
+    $('#visualiser').hide();
+
+    // Stats performance visualiser
+    var stats = new Stats();
+      stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
+      document.body.appendChild( stats.domElement );
+      stats.domElement.style.position = 'absolute';
+      stats.domElement.style.right = 0;
+
+    // Renderer setup
+    var renderer = new THREE.WebGLRenderer({ antialias: true });
+      document.body.appendChild( renderer.domElement ); //add canvas to dom
+      renderer.domElement.id = 'threed-canvas';
+      renderer.setClearColor( new THREE.Color(0x000000) );
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+    // Camera setup
+    var camera = new THREE.PerspectiveCamera(35,
+      window.innerWidth / window.innerHeight, 0.1, 3000);
+
+      camera.position.set(0, 0, 1000);
+      var controls = new THREE.OrbitControls( camera);
+
+
+    // Scene setup
+    var scene,
+    ambientLight, pointLight;
+
+    var sphereMesh;
+
+    function init(){
+      scene = new THREE.Scene();
+
+      ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+      ambientLight.position.set(0, 0, 0);
+
+      pointLight = new THREE.PointLight(0xffffff, 0.5);
+      pointLight.position.set(0, 1000, 1000);
+      scene.add(pointLight);
+
+      var points = calcSphere(200, 20);
+      sphereMesh = buildSphere(points);
+      scene.add(sphereMesh);
+    }
+    init();
+
+    function calcSphere(radius, detailLevel){
+      var globePoints = [];
+
+      for (var i = 0; i < detailLevel+1; i++) { //latitude
+        var lat = map_range(i, 0, detailLevel, 0, Math.PI);
+
+        var latPoints = [];
+        for (var j = 0; j < detailLevel+1; j++) { //longitude
+          var long = map_range(j, 0, detailLevel, 0, Math.PI*2);
+
+          // convert lat and long to cartesian coords
+          var x = radius * Math.sin(lat) * Math.cos(long);
+          var y = radius * Math.sin(lat) * Math.sin(long);
+          var z = radius * Math.cos(lat);
+
+          latPoints.push({x, y, z});
+        }
+        globePoints.push(latPoints);
+      }
+      return globePoints;
+    }
+
+    function buildSphere(globePoints) {
+
+      var sphereGeo = new THREE.Geometry();
+
+      for (var i = 0; i < globePoints.length-1; i++) {
+        for (var j = 0; j < globePoints[i].length-1; j++) {
+
+            var curIndex = sphereGeo.vertices.length; //used for tracking cur location in vertices array
+
+            var v1 = globePoints[i][j];
+            var v2 = globePoints[i+1][j];
+            var v3 = globePoints[i][j+1];
+            var v4 = globePoints[i+1][j+1];
+
+            sphereGeo.vertices.push( new THREE.Vector3(v1.x, v1.y, v1.z) );
+            sphereGeo.vertices.push( new THREE.Vector3(v2.x, v2.y, v2.z) );
+            sphereGeo.vertices.push( new THREE.Vector3(v3.x, v3.y, v3.z) );
+            sphereGeo.vertices.push( new THREE.Vector3(v4.x, v4.y, v4.z) );
+
+            var f1 = new THREE.Face3(
+              curIndex+0,
+              curIndex+1,
+              curIndex+2);
+            var f2 = new THREE.Face3(
+              curIndex+1,
+              curIndex+2,
+              curIndex+3);
+
+            sphereGeo.faces.push(f1);
+            sphereGeo.faces.push(f2);
+        }
+      }
+
+      sphereGeo.computeFaceNormals();
+
+      var sphereMat = new THREE.MeshLambertMaterial();
+      sphereMat.side = THREE.DoubleSide;
+
+      var sphereMesh = new THREE.Mesh(sphereGeo, sphereMat);
+
+      // var helper = new THREE.FaceNormalsHelper( sphereMesh, 10, 0xF98F9E, 5 );
+      // scene.add(helper);
+      return sphereMesh;
+    }
+
+    function map_range(value, low1, high1, low2, high2) {
+			return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
+		}
+
+
+    // Render Loop
+    render();
+
+    function render(){
+
+      stats.begin();
+
+      controls.update();
+
+      // sphereMesh.rotation.x += 0.01;
+      // sphereMesh.rotation.y += 0.01;
+
+      renderer.render(scene, camera);
+
+      stats.end();
+
+      requestAnimationFrame(render);
+    }
+}

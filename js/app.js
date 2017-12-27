@@ -152,6 +152,7 @@ function visualise(visMode){
 		// 3D Visuals
 		case 'ThreedTest' : threedTest(dataArray, bufferLength); break;
 		case 'MengerSponge' : mengerSponge(dataArray, bufferLength); break;
+		case 'SuperShapes' : superShapes(dataArray, bufferLength); break;
 
 		// Utilities
 		case 'Test' : tests(dataArray, bufferLength); break;
