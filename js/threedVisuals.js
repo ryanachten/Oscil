@@ -427,26 +427,48 @@ function superShapes(dataArray, bufferLength){
       pointLight.position.set(0, 1000, 1000);
       scene.add(pointLight);
 
-      var points = calcSphere(200, 20);
-      sphereMesh = buildSphere(points);
+      var spherePoints = calcSphere(200, 20);
+      sphereMesh = buildSphere(spherePoints);
       scene.add(sphereMesh);
     }
     init();
+
+
+    function superShapeRadius(theta, m, n1, n2, n3){
+      var a = 1;
+      var b = 1;
+
+      var t1 = Math.abs((1/a) * Math.cos(m * theta /4));
+      t1 = Math.pow(t1, n2);
+
+      var t2 = Math.abs((1/b) * Math.sin(m * theta /4));
+      t2 = Math.pow(t2, n3);
+
+      var t3 = t1 + t2;
+      r = Math.pow(t3, -1/n1);
+
+      // var r = 1; == sphere
+      return r;
+    }
 
     function calcSphere(radius, detailLevel){
       var globePoints = [];
 
       for (var i = 0; i < detailLevel+1; i++) { //latitude
-        var lat = map_range(i, 0, detailLevel, 0, Math.PI);
+        var lat = map_range(i, 0, detailLevel, -Math.PI/2, Math.PI/2);
+        // get lat supershape radius based off formula
+        var r2 = superShapeRadius(lat, 2, 10, 10, 10);
 
         var latPoints = [];
         for (var j = 0; j < detailLevel+1; j++) { //longitude
-          var long = map_range(j, 0, detailLevel, 0, Math.PI*2);
+          var long = map_range(j, 0, detailLevel, -Math.PI, Math.PI);
+          // get lat supershape radius based off formula
+          var r1 = superShapeRadius(long, 8, 60, 100, 30);
 
           // convert lat and long to cartesian coords
-          var x = radius * Math.sin(lat) * Math.cos(long);
-          var y = radius * Math.sin(lat) * Math.sin(long);
-          var z = radius * Math.cos(lat);
+          var x = radius * r1 * Math.cos(long) * r2 * Math.cos(lat);
+          var y = radius * r1 * Math.sin(long) * r2 *  Math.cos(lat);
+          var z = radius * r2 * Math.sin(lat);
 
           latPoints.push({x, y, z});
         }
@@ -460,6 +482,9 @@ function superShapes(dataArray, bufferLength){
       var sphereGeo = new THREE.Geometry();
 
       for (var i = 0; i < globePoints.length-1; i++) {
+
+        var hue = map_range(i, 0, globePoints.length-1, 0, 360*6);
+
         for (var j = 0; j < globePoints[i].length-1; j++) {
 
             var curIndex = sphereGeo.vertices.length; //used for tracking cur location in vertices array
@@ -478,10 +503,12 @@ function superShapes(dataArray, bufferLength){
               curIndex+0,
               curIndex+1,
               curIndex+2);
+              f1.color = new THREE.Color("hsl("+(hue%360)+", 100%, 50%)");
             var f2 = new THREE.Face3(
               curIndex+1,
               curIndex+2,
               curIndex+3);
+              f2.color = new THREE.Color("hsl("+(hue%360)+", 100%, 50%)");
 
             sphereGeo.faces.push(f1);
             sphereGeo.faces.push(f2);
@@ -490,7 +517,7 @@ function superShapes(dataArray, bufferLength){
 
       sphereGeo.computeFaceNormals();
 
-      var sphereMat = new THREE.MeshLambertMaterial();
+      var sphereMat = new THREE.MeshLambertMaterial({vertexColors: THREE.FaceColors});
       sphereMat.side = THREE.DoubleSide;
 
       var sphereMesh = new THREE.Mesh(sphereGeo, sphereMat);
@@ -506,7 +533,10 @@ function superShapes(dataArray, bufferLength){
 
 
     // Render Loop
+    var test = 0.01;
     render();
+
+
 
     function render(){
 
@@ -514,8 +544,22 @@ function superShapes(dataArray, bufferLength){
 
       controls.update();
 
+      var spherePoints = calcSphere(200+test, 20);
+      test += 0.5;
+      console.log(sphereMesh);
+      // TODO: create update function instead of instantiating new mesh
+      sphereMesh = buildSphere(spherePoints);
+      sphereMesh.geometry.verticesNeedUpdate = true;
+      console.log(sphereMesh);
+      debugger;
+
+
+      // sphereMesh.geometry.elementsNeedUpdate = true;
+
       // sphereMesh.rotation.x += 0.01;
       // sphereMesh.rotation.y += 0.01;
+
+
 
       renderer.render(scene, camera);
 
