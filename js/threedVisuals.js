@@ -392,34 +392,32 @@ function superShapes(dataArray, bufferLength){
   	visGui.domElement.id = 'visdat-gui';
   	$('#visual-options').append(visGui.domElement);
   	var visGuiSettings = {
-  		lat_m:  0.01,
-  		lat_n1: 0.01,
-      lat_n1: 0.01,
-      lat_n2: 0.01,
-      lat_n3: 0.01,
+  		lat_m:  2,
+  		lat_n1: 10,
+      lat_n2: 10,
+      lat_n3: 10,
 
-      long_m:  0.01,
-      long_n1: 0.01,
-      long_n1: 0.01,
-      long_n2: 0.01,
-      long_n3: 0.01
+      long_m:  8,
+      long_n1: 60,
+      long_n2: 100,
+      long_n3: 30
   	};
     visGui.add(visGuiSettings, 'lat_m').min(-20).max(20).onChange(
       function(val){  latSuperRadForumla.m = val;  });
-    visGui.add(visGuiSettings, 'lat_n1').min(-20).max(20).onChange(
+    visGui.add(visGuiSettings, 'lat_n1').min(-100).max(100).onChange(
       function(val){  latSuperRadForumla.n1 = val;  });
-    visGui.add(visGuiSettings, 'lat_n2').min(-20).max(20).onChange(
+    visGui.add(visGuiSettings, 'lat_n2').min(-100).max(100).onChange(
       function(val){  latSuperRadForumla.n2 = val;  });
-    visGui.add(visGuiSettings, 'lat_n3').min(-20).max(20).onChange(
+    visGui.add(visGuiSettings, 'lat_n3').min(-100).max(100).onChange(
       function(val){  latSuperRadForumla.n3 = val;  });
 
-    visGui.add(visGuiSettings, 'long_m').min(-20).max(20).onChange(
+    visGui.add(visGuiSettings, 'long_m').min(-100).max(100).onChange(
       function(val){  longSuperRadForumla.m = val;  });
-    visGui.add(visGuiSettings, 'long_n1').min(-20).max(20).onChange(
+    visGui.add(visGuiSettings, 'long_n1').min(-100).max(100).onChange(
       function(val){  longSuperRadForumla.n1 = val;  });
-    visGui.add(visGuiSettings, 'long_n2').min(-20).max(20).onChange(
+    visGui.add(visGuiSettings, 'long_n2').min(-100).max(100).onChange(
       function(val){  longSuperRadForumla.n2 = val;  });
-    visGui.add(visGuiSettings, 'long_n3').min(-20).max(20).onChange(
+    visGui.add(visGuiSettings, 'long_n3').min(-100).max(100).onChange(
       function(val){  longSuperRadForumla.n3 = val;  });
 
     // Stats performance visualiser
