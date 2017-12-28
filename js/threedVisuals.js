@@ -388,6 +388,40 @@ function superShapes(dataArray, bufferLength){
 
     $('#visualiser').hide();
 
+    var visGui = new dat.GUI({ autoPlace: false });
+  	visGui.domElement.id = 'visdat-gui';
+  	$('#visual-options').append(visGui.domElement);
+  	var visGuiSettings = {
+  		lat_m:  0.01,
+  		lat_n1: 0.01,
+      lat_n1: 0.01,
+      lat_n2: 0.01,
+      lat_n3: 0.01,
+
+      long_m:  0.01,
+      long_n1: 0.01,
+      long_n1: 0.01,
+      long_n2: 0.01,
+      long_n3: 0.01
+  	};
+    visGui.add(visGuiSettings, 'lat_m').min(-20).max(20).onChange(
+      function(val){  latSuperRadForumla.m = val;  });
+    visGui.add(visGuiSettings, 'lat_n1').min(-20).max(20).onChange(
+      function(val){  latSuperRadForumla.n1 = val;  });
+    visGui.add(visGuiSettings, 'lat_n2').min(-20).max(20).onChange(
+      function(val){  latSuperRadForumla.n2 = val;  });
+    visGui.add(visGuiSettings, 'lat_n3').min(-20).max(20).onChange(
+      function(val){  latSuperRadForumla.n3 = val;  });
+
+    visGui.add(visGuiSettings, 'long_m').min(-20).max(20).onChange(
+      function(val){  longSuperRadForumla.m = val;  });
+    visGui.add(visGuiSettings, 'long_n1').min(-20).max(20).onChange(
+      function(val){  longSuperRadForumla.n1 = val;  });
+    visGui.add(visGuiSettings, 'long_n2').min(-20).max(20).onChange(
+      function(val){  longSuperRadForumla.n2 = val;  });
+    visGui.add(visGuiSettings, 'long_n3').min(-20).max(20).onChange(
+      function(val){  longSuperRadForumla.n3 = val;  });
+
     // Stats performance visualiser
     var stats = new Stats();
       stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
@@ -415,7 +449,24 @@ function superShapes(dataArray, bufferLength){
     var scene,
     ambientLight, pointLight;
 
-    var sphereMesh;
+    var latSuperRadForumla = {
+      m: 2,
+      n1: 10,
+      n2: 10,
+      n3: 10,
+    };
+
+    var longSuperRadForumla = {
+      m: 8,
+      n1: 60,
+      n2: 100,
+      n3: 30,
+    };
+
+    var sphereGeo = new THREE.Geometry();
+    var sphereMat = new THREE.MeshLambertMaterial({vertexColors: THREE.FaceColors});
+    sphereMat.side = THREE.DoubleSide;
+    var sphereMesh = new THREE.Mesh(sphereGeo, sphereMat);
 
     function init(){
       scene = new THREE.Scene();
@@ -428,7 +479,7 @@ function superShapes(dataArray, bufferLength){
       scene.add(pointLight);
 
       var spherePoints = calcSphere(200, 20);
-      sphereMesh = buildSphere(spherePoints);
+      buildSphere(spherePoints);
       scene.add(sphereMesh);
     }
     init();
@@ -457,13 +508,15 @@ function superShapes(dataArray, bufferLength){
       for (var i = 0; i < detailLevel+1; i++) { //latitude
         var lat = map_range(i, 0, detailLevel, -Math.PI/2, Math.PI/2);
         // get lat supershape radius based off formula
-        var r2 = superShapeRadius(lat, 2, 10, 10, 10);
+        var f = latSuperRadForumla;
+        var r2 = superShapeRadius(lat, f.m, f.n1, f.n2, f.n3);
 
         var latPoints = [];
         for (var j = 0; j < detailLevel+1; j++) { //longitude
           var long = map_range(j, 0, detailLevel, -Math.PI, Math.PI);
           // get lat supershape radius based off formula
-          var r1 = superShapeRadius(long, 8, 60, 100, 30);
+          var f = longSuperRadForumla;
+          var r1 = superShapeRadius(long, f.m, f.n1, f.n2, f.n3);
 
           // convert lat and long to cartesian coords
           var x = radius * r1 * Math.cos(long) * r2 * Math.cos(lat);
@@ -478,8 +531,6 @@ function superShapes(dataArray, bufferLength){
     }
 
     function buildSphere(globePoints) {
-
-      var sphereGeo = new THREE.Geometry();
 
       for (var i = 0; i < globePoints.length-1; i++) {
 
@@ -517,26 +568,48 @@ function superShapes(dataArray, bufferLength){
 
       sphereGeo.computeFaceNormals();
 
-      var sphereMat = new THREE.MeshLambertMaterial({vertexColors: THREE.FaceColors});
-      sphereMat.side = THREE.DoubleSide;
-
-      var sphereMesh = new THREE.Mesh(sphereGeo, sphereMat);
-
       // var helper = new THREE.FaceNormalsHelper( sphereMesh, 10, 0xF98F9E, 5 );
       // scene.add(helper);
-      return sphereMesh;
+    }
+
+    function updateSphere(globePoints) {
+
+      var newPoints = [];
+
+      for (var i = 0; i < globePoints.length-1; i++) {
+
+        var hue = map_range(i, 0, globePoints.length-1, 0, 360*6);
+
+        for (var j = 0; j < globePoints[i].length-1; j++) {
+
+            var v1 = globePoints[i][j];
+            var v2 = globePoints[i+1][j];
+            var v3 = globePoints[i][j+1];
+            var v4 = globePoints[i+1][j+1];
+
+            // sphereGeo.vertices.push( new THREE.Vector3(v1.x, v1.y, v1.z) );
+            newPoints.push( {x: v1.x, y: v1.y, z: v1.z} );
+            newPoints.push( {x: v2.x, y: v2.y, z: v2.z} );
+            newPoints.push( {x: v3.x, y: v3.y, z: v3.z} );
+            newPoints.push( {x: v4.x, y: v4.y, z: v4.z} );
+
+        }
+      }
+
+
+      for (var i = 0; i < sphereGeo.vertices.length; i++) {
+
+        sphereGeo.vertices[i].set(newPoints[i].x, newPoints[i].y, newPoints[i].z);
+      }
+      sphereGeo.verticesNeedUpdate = true;
     }
 
     function map_range(value, low1, high1, low2, high2) {
 			return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
 		}
 
-
     // Render Loop
-    var test = 0.01;
     render();
-
-
 
     function render(){
 
@@ -544,22 +617,11 @@ function superShapes(dataArray, bufferLength){
 
       controls.update();
 
-      var spherePoints = calcSphere(200+test, 20);
-      test += 0.5;
-      console.log(sphereMesh);
-      // TODO: create update function instead of instantiating new mesh
-      sphereMesh = buildSphere(spherePoints);
-      sphereMesh.geometry.verticesNeedUpdate = true;
-      console.log(sphereMesh);
-      debugger;
+      var spherePoints = calcSphere(200, 20);
+      updateSphere(spherePoints);
 
-
-      // sphereMesh.geometry.elementsNeedUpdate = true;
-
-      // sphereMesh.rotation.x += 0.01;
-      // sphereMesh.rotation.y += 0.01;
-
-
+      sphereMesh.rotation.x += 0.01;
+      sphereMesh.rotation.y += 0.01;
 
       renderer.render(scene, camera);
 
