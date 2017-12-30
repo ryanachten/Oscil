@@ -392,7 +392,7 @@ function superShapes(dataArray, bufferLength){
   	visGui.domElement.id = 'visdat-gui';
   	$('#visual-options').append(visGui.domElement);
   	var visGuiSettings = {
-      react_lat_m: false,
+      react_lat_m: true,
       react_lat_n1: false,
       react_lat_n2: false,
       react_lat_n3: false,
@@ -401,7 +401,7 @@ function superShapes(dataArray, bufferLength){
       lat_n2: 10,
       lat_n3: 10,
 
-      react_long_m: true,
+      react_long_m: false,
       react_long_n1: false,
       react_long_n2: false,
       react_long_n3: false,
@@ -580,6 +580,8 @@ function superShapes(dataArray, bufferLength){
       // scene.add(helper);
     }
 
+    var colOffset = 1;
+
     function updateSphere(globePoints) {
 
       var newPoints = [];
@@ -604,12 +606,20 @@ function superShapes(dataArray, bufferLength){
         }
       }
 
-
       for (var i = 0; i < sphereGeo.vertices.length; i++) {
 
         sphereGeo.vertices[i].set(newPoints[i].x, newPoints[i].y, newPoints[i].z);
       }
       sphereGeo.verticesNeedUpdate = true;
+
+      for (var i = 0; i < sphereGeo.faces.length; i++) {
+        var hue = map_range(i, 0, sphereGeo.faces.length, 0, 360*6);
+
+        var newCol = new THREE.Color("hsl("+((hue+colOffset)%360)+", 100%, 50%)");
+        sphereGeo.faces[i].color.copy(newCol)
+      }
+      colOffset += 5;
+      sphereGeo.colorsNeedUpdate = true;
     }
 
     function map_range(value, low1, high1, low2, high2) {
