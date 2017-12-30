@@ -392,33 +392,43 @@ function superShapes(dataArray, bufferLength){
   	visGui.domElement.id = 'visdat-gui';
   	$('#visual-options').append(visGui.domElement);
   	var visGuiSettings = {
+      react_lat_m: false,
+      react_lat_n1: false,
+      react_lat_n2: false,
+      react_lat_n3: false,
   		lat_m:  2,
   		lat_n1: 10,
       lat_n2: 10,
       lat_n3: 10,
 
+      react_long_m: true,
+      react_long_n1: false,
+      react_long_n2: false,
+      react_long_n3: false,
       long_m:  8,
       long_n1: 60,
       long_n2: 100,
       long_n3: 30
   	};
-    visGui.add(visGuiSettings, 'lat_m').min(-20).max(20).onChange(
-      function(val){  latSuperRadForumla.m = val;  });
-    visGui.add(visGuiSettings, 'lat_n1').min(-100).max(100).onChange(
-      function(val){  latSuperRadForumla.n1 = val;  });
-    visGui.add(visGuiSettings, 'lat_n2').min(-100).max(100).onChange(
-      function(val){  latSuperRadForumla.n2 = val;  });
-    visGui.add(visGuiSettings, 'lat_n3').min(-100).max(100).onChange(
-      function(val){  latSuperRadForumla.n3 = val;  });
+    var latFolder = visGui.addFolder('Latitude');
+    latFolder.add(visGuiSettings, 'react_lat_m');
+    latFolder.add(visGuiSettings, 'lat_m').min(-20).max(20);
+    latFolder.add(visGuiSettings, 'react_lat_n1');
+    latFolder.add(visGuiSettings, 'lat_n1').min(-100).max(100);
+    latFolder.add(visGuiSettings, 'react_lat_n2');
+    latFolder.add(visGuiSettings, 'lat_n2').min(-100).max(100);
+    latFolder.add(visGuiSettings, 'react_lat_n3');
+    latFolder.add(visGuiSettings, 'lat_n3').min(-100).max(100);
 
-    visGui.add(visGuiSettings, 'long_m').min(-100).max(100).onChange(
-      function(val){  longSuperRadForumla.m = val;  });
-    visGui.add(visGuiSettings, 'long_n1').min(-100).max(100).onChange(
-      function(val){  longSuperRadForumla.n1 = val;  });
-    visGui.add(visGuiSettings, 'long_n2').min(-100).max(100).onChange(
-      function(val){  longSuperRadForumla.n2 = val;  });
-    visGui.add(visGuiSettings, 'long_n3').min(-100).max(100).onChange(
-      function(val){  longSuperRadForumla.n3 = val;  });
+    var longFolder = visGui.addFolder('Longitude');
+    longFolder.add(visGuiSettings, 'react_long_m');
+    longFolder.add(visGuiSettings, 'long_m').min(-100).max(100);
+    longFolder.add(visGuiSettings, 'react_long_n1');
+    longFolder.add(visGuiSettings, 'long_n1').min(-100).max(100);
+    longFolder.add(visGuiSettings, 'react_long_n2');
+    longFolder.add(visGuiSettings, 'long_n2').min(-100).max(100);
+    longFolder.add(visGuiSettings, 'react_long_n3');
+    longFolder.add(visGuiSettings, 'long_n3').min(-100).max(100);
 
     // Stats performance visualiser
     var stats = new Stats();
@@ -614,6 +624,52 @@ function superShapes(dataArray, bufferLength){
       stats.begin();
 
       controls.update();
+
+      analyser.getByteFrequencyData(dataArray);
+      var da = dataArray[0];
+
+      if (visGuiSettings.react_lat_m) {
+        latSuperRadForumla.m = (da/255) * visGuiSettings.lat_m;
+      }else{
+        latSuperRadForumla.m = visGuiSettings.lat_m;
+      }
+      if (visGuiSettings.react_lat_n1) {
+        latSuperRadForumla.n1 = (da/255) * visGuiSettings.lat_n1;
+      }else{
+        latSuperRadForumla.n1 = visGuiSettings.lat_n1;
+      }
+      if (visGuiSettings.react_lat_n2) {
+        latSuperRadForumla.n2 = (da/255) * visGuiSettings.lat_n2;
+      }else{
+        latSuperRadForumla.n2 = visGuiSettings.lat_n2;
+      }
+      if (visGuiSettings.react_lat_n3) {
+        latSuperRadForumla.n3 = (da/255) * visGuiSettings.lat_n3;
+      }else{
+        latSuperRadForumla.n3 = visGuiSettings.lat_n3;
+      }
+
+      if (visGuiSettings.react_long_m) {
+        longSuperRadForumla.m = (da/255) * visGuiSettings.long_m;
+      }else{
+        longSuperRadForumla.m = visGuiSettings.long_m;
+      }
+      if (visGuiSettings.react_long_n1) {
+        longSuperRadForumla.n1 = (da/255) * visGuiSettings.long_n1;
+      }else{
+        longSuperRadForumla.n1 = visGuiSettings.long_n1;
+      }
+      if (visGuiSettings.react_long_n2) {
+        longSuperRadForumla.n2 = (da/255) * visGuiSettings.long_n2;
+      }else{
+        longSuperRadForumla.n2 = visGuiSettings.long_n2;
+      }
+      if (visGuiSettings.react_long_n3) {
+        longSuperRadForumla.n3 = (da/255) * visGuiSettings.long_n3;
+      }else{
+        longSuperRadForumla.n3 = visGuiSettings.long_n3;
+      }
+
 
       var spherePoints = calcSphere(200, 20);
       updateSphere(spherePoints);
