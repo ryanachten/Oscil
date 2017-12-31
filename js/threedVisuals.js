@@ -455,7 +455,7 @@ function superShapes(dataArray, bufferLength){
 
     // Scene setup
     var scene,
-    ambientLight, pointLight;
+    ambientLight, pointLight, worldMesh;
 
     var latSuperRadForumla = {
       m: 2,
@@ -481,10 +481,18 @@ function superShapes(dataArray, bufferLength){
 
       ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
       ambientLight.position.set(0, 0, 0);
+      scene.add(ambientLight);
 
       pointLight = new THREE.PointLight(0xffffff, 0.5);
       pointLight.position.set(0, 1000, 1000);
-      scene.add(pointLight);
+      // scene.add(pointLight);
+
+      var worldGeo = new THREE.SphereGeometry(1000, 20, 20);
+      var worldMat = new THREE.MeshLambertMaterial({ color: 0xef4773, side: THREE.BackSide });
+      var worldMesh = new THREE.Mesh(worldGeo, worldMat);
+      scene.add(worldMesh);
+
+      scene.fog = new THREE.Fog( 0xefd1b5, 0.1, 2000 );
 
       var spherePoints = calcSphere(200, 20);
       buildSphere(spherePoints);
