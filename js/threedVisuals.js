@@ -392,6 +392,7 @@ function superShapes(dataArray, bufferLength){
   	visGui.domElement.id = 'visdat-gui';
   	$('#visual-options').append(visGui.domElement);
   	var visGuiSettings = {
+      colorCycle: 6,
       react_lat_m: true,
       react_lat_n1: false,
       react_lat_n2: false,
@@ -410,6 +411,7 @@ function superShapes(dataArray, bufferLength){
       long_n2: 100,
       long_n3: 30
   	};
+    visGui.add(visGuiSettings, 'colorCycle').min(0).max(50);
     var latFolder = visGui.addFolder('Latitude');
     latFolder.add(visGuiSettings, 'react_lat_m');
     latFolder.add(visGuiSettings, 'lat_m').min(-20).max(20);
@@ -621,7 +623,7 @@ function superShapes(dataArray, bufferLength){
       sphereGeo.verticesNeedUpdate = true;
 
       for (var i = 0; i < sphereGeo.faces.length; i++) {
-        var hue = map_range(i, 0, sphereGeo.faces.length, 0, 360*6);
+        var hue = map_range(i, 0, sphereGeo.faces.length, 0, 360*visGuiSettings.colorCycle);
 
         var newCol = new THREE.Color("hsl("+((hue+colOffset)%360)+", 100%, 50%)");
         sphereGeo.faces[i].color.copy(newCol)
