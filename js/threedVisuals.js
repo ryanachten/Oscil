@@ -704,3 +704,97 @@ function superShapes(dataArray, bufferLength){
       requestAnimationFrame(render);
     }
 }
+
+function terrainGen(dataArray, bufferLength){
+
+    $('#visualiser').hide();
+
+    // Stats performance visualiser
+    var stats = new Stats();
+      stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
+      document.body.appendChild( stats.domElement );
+      stats.domElement.style.position = 'absolute';
+      stats.domElement.style.right = 0;
+
+    // Renderer setup
+    var renderer = new THREE.WebGLRenderer({ antialias: true });
+      document.body.appendChild( renderer.domElement ); //add canvas to dom
+      renderer.domElement.id = 'threed-canvas';
+      renderer.setClearColor( new THREE.Color(0x000000) );
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+    // Camera setup
+    var camera = new THREE.PerspectiveCamera(35,
+      window.innerWidth / window.innerHeight, 0.1, 3000);
+
+      camera.position.set(0, 0, 1000);
+      var controls = new THREE.OrbitControls( camera);
+
+
+    // Scene setup
+    var scene, ambientLight, pointLight, worldMesh;
+
+
+    function init(){
+      scene = new THREE.Scene();
+
+      ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+      ambientLight.position.set(0, 0, 0);
+      // scene.add(ambientLight);
+
+      pointLight = new THREE.PointLight(0xffffff, 0.5);
+      pointLight.position.set(0, 1000, 1000);
+      scene.add(pointLight);
+
+      // var worldGeo = new THREE.SphereGeometry(1000, 20, 20);
+      // var worldMat = new THREE.MeshLambertMaterial({ color: 0xef4773, side: THREE.BackSide });
+      // var worldMesh = new THREE.Mesh(worldGeo, worldMat);
+      // scene.add(worldMesh);
+
+      scene.fog = new THREE.Fog( 0xefd1b5, 0.1, 2000 );
+
+      setupTerrain(1500, 1500, 20);
+    }
+    init();
+
+    function setupTerrain(width, height, scale){
+
+      var terrainGeo = new THREE.PlaneGeometry(width, height, scale, scale);
+
+      for (var i = 0; i < terrainGeo.vertices.length; i++) {
+        terrainGeo.vertices[i].z =  Math.random()*50;
+      }
+
+      var terrainMat = new THREE.MeshLambertMaterial({wireframe:true});
+      var terrainMesh = new THREE.Mesh(terrainGeo, terrainMat);
+      scene.add(terrainMesh);
+
+      terrainGeo.rotateX(-Math.PI/2.5);
+      terrainGeo.computeFaceNormals();
+
+      // var helper = new THREE.FaceNormalsHelper( terrainMesh, 10, 0xF98F9E, 5 );
+      // scene.add(helper);
+    }
+
+
+    function map_range(value, low1, high1, low2, high2) {
+			return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
+		}
+
+    // Render Loop
+    render();
+
+    function render(){
+
+      stats.begin();
+
+      controls.update();
+
+      renderer.render(scene, camera);
+
+      stats.end();
+
+      requestAnimationFrame(render);
+    }
+}
