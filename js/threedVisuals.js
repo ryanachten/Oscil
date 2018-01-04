@@ -720,7 +720,7 @@ function terrainGen(dataArray, bufferLength){
     var renderer = new THREE.WebGLRenderer({ antialias: true });
       document.body.appendChild( renderer.domElement ); //add canvas to dom
       renderer.domElement.id = 'threed-canvas';
-      renderer.setClearColor( new THREE.Color(0x000000) );
+      renderer.setClearColor( new THREE.Color(0xefd1b5) );
       renderer.setPixelRatio(window.devicePixelRatio);
       renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -728,8 +728,9 @@ function terrainGen(dataArray, bufferLength){
     var camera = new THREE.PerspectiveCamera(35,
       window.innerWidth / window.innerHeight, 0.1, 3000);
 
-      camera.position.set(0, 0, 1000);
-      var controls = new THREE.OrbitControls( camera);
+      camera.position.set(0, -1000, 100);
+      var controls = new THREE.OrbitControls(camera);
+
 
 
     // Scene setup
@@ -751,17 +752,17 @@ function terrainGen(dataArray, bufferLength){
       console.log(pointLightHelper);
       scene.add( pointLightHelper );
 
-      // var hemisphere = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
-      // scene.add(hemisphere);
+      var hemisphere = new THREE.HemisphereLight( 0xffffbb, 0x080820, 0.5 );
+      scene.add(hemisphere);
 
       // var worldGeo = new THREE.SphereGeometry(1000, 20, 20);
       // var worldMat = new THREE.MeshLambertMaterial({ color: 0xef4773, side: THREE.BackSide });
       // var worldMesh = new THREE.Mesh(worldGeo, worldMat);
       // scene.add(worldMesh);
 
-      scene.fog = new THREE.Fog( 0xefd1b5, 0.1, 3000 );
+      scene.fog = new THREE.Fog( 0xff4da0, 0.1, 3000 );
 
-      setupTerrain(2500, 2500, 40);
+      setupTerrain(2500, 2500, 10);
     }
     init();
 
@@ -775,9 +776,8 @@ function terrainGen(dataArray, bufferLength){
 
       terrainGeo = new THREE.PlaneGeometry(width, height, scale, scale);
 
-      var terrainMat = new THREE.MeshLambertMaterial();
+      var terrainMat = new THREE.MeshLambertMaterial({color: 0x4deaff, transparent: true, opacity: 0.5});
       terrainMesh = new THREE.Mesh(terrainGeo, terrainMat);
-      terrainMesh.rotateX(-Math.PI /2.5);
 
       terrainGeo.computeFaceNormals();
 
@@ -788,6 +788,7 @@ function terrainGen(dataArray, bufferLength){
     }
 
     var yOff = 0;
+    var xOff = 0;
     var daIndex = 0;
 
     function map_range(value, low1, high1, low2, high2) {
@@ -806,17 +807,20 @@ function terrainGen(dataArray, bufferLength){
       controls.update();
 
       var amplitude = (dataArray[50]/255) //normalise
-                  *150+10;
+                  *150+50;
 
       for (var i = 0; i < terrainGeo.vertices.length; i++) {
-        terrainGeo.vertices[i].z = simplex.noise2D(terrainGeo.vertices[i].x, terrainGeo.vertices[i].y - yOff) *amplitude;
+          terrainGeo.vertices[i].z = simplex.noise2D(terrainGeo.vertices[i].x/500 -xOff, terrainGeo.vertices[i].y/500 - yOff) *100;
       }
 
       terrainGeo.verticesNeedUpdate = true;
 
       var speed = (dataArray[0]/255) //normalise
                   /50;
+      var speed2 = (dataArray[20]/255) //normalise
+                  /50;
       yOff -= speed;
+      xOff -= speed2;
 
       daIndex++;
       if (daIndex >= dataArray.length) {
