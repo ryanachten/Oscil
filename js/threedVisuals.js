@@ -762,7 +762,7 @@ function terrainGen(dataArray, bufferLength){
 
       scene.fog = new THREE.Fog( 0xff4da0, 0.1, 3000 );
 
-      setupTerrain(2500, 2500, 10);
+      setupTerrain(2500, 2500, 50);
     }
     init();
 
@@ -776,7 +776,7 @@ function terrainGen(dataArray, bufferLength){
 
       terrainGeo = new THREE.PlaneGeometry(width, height, scale, scale);
 
-      var terrainMat = new THREE.MeshLambertMaterial({color: 0x4deaff, transparent: true, opacity: 0.5});
+      var terrainMat = new THREE.MeshLambertMaterial({color: 0x4deaff, transparent: true, opacity: 0.7});
       terrainMesh = new THREE.Mesh(terrainGeo, terrainMat);
 
       terrainGeo.computeFaceNormals();
@@ -815,10 +815,10 @@ function terrainGen(dataArray, bufferLength){
 
       terrainGeo.verticesNeedUpdate = true;
 
-      var speed = (dataArray[0]/255) //normalise
-                  /50;
-      var speed2 = (dataArray[20]/255) //normalise
-                  /50;
+      var speed = (dataArray[0]/25500) //normalise
+                  *20-0.01;
+      var speed2 = (dataArray[20]/25500) //normalise
+                  *10-0.03;
       yOff -= speed;
       xOff -= speed2;
 
