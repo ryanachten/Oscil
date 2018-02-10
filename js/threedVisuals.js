@@ -730,6 +730,9 @@ function terrainGen(dataArray, bufferLength){
 
       camera.position.set(0, -1000, 100);
       var controls = new THREE.OrbitControls(camera);
+      // controls.autoRotate = true;
+      // controls.minPolarAngle = 0;
+      // controls.maxPolarAngle = 0;
 
 
 
@@ -755,8 +758,8 @@ function terrainGen(dataArray, bufferLength){
       var hemisphere = new THREE.HemisphereLight( 0xffffbb, 0x080820, 0.5 );
       scene.add(hemisphere);
 
-      // var worldGeo = new THREE.SphereGeometry(1000, 20, 20);
-      // var worldMat = new THREE.MeshLambertMaterial({ color: 0xef4773, side: THREE.BackSide });
+      // var worldGeo = new THREE.SphereGeometry(200, 20, 20);
+      // var worldMat = new THREE.MeshStandardMaterial({ color: 0x0000ff, flatShading: true, transparent:true, opacity: 0.5 });
       // var worldMesh = new THREE.Mesh(worldGeo, worldMat);
       // scene.add(worldMesh);
 
@@ -776,7 +779,8 @@ function terrainGen(dataArray, bufferLength){
 
       terrainGeo = new THREE.PlaneGeometry(width, height, scale, scale);
 
-      var terrainMat = new THREE.MeshLambertMaterial({color: 0x4deaff, transparent: true, opacity: 0.7});
+      var terrainMat = new THREE.MeshPhongMaterial({color: 0x4deaff, transparent: true, opacity: 0.7});
+      // terrainMat.flatShading = true;
       terrainMesh = new THREE.Mesh(terrainGeo, terrainMat);
 
       terrainGeo.computeFaceNormals();
