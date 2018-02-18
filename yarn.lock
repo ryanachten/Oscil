@@ -1466,6 +1466,10 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
+dat.gui@0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/dat.gui/-/dat.gui-0.7.0.tgz#877d9a1a1fb75e4963864d7d36e4ff122776fb64"
+
 date-now@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
