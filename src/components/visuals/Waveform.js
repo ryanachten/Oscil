@@ -20,9 +20,13 @@ class Waveform extends React.Component{
     const {canvWidth, canvHeight, canvasCtx} = setupCanvas(this.canvas);
     this.canvasCtx = canvasCtx;
 
-    this.setState({
-      canvWidth,
-      canvHeight
+    this.setState({ canvWidth, canvHeight });
+
+    window.addEventListener("resize", () => {
+      this.setState({
+        canvWidth: $(window).width(),
+        canvHeight: $(window).height()
+      });
     });
 
     setupAudio.then( (analyser) => {
@@ -52,7 +56,7 @@ class Waveform extends React.Component{
     canvasCtx.lineWidth = 2;
 
     canvasCtx.beginPath();
-    const sliceWidth = canvWidth * 1.0 / this.bufferLength;
+    const sliceWidth = canvWidth / this.bufferLength;
 		let x = 0;
 
 		for(let i = 0; i < this.bufferLength; i++){
@@ -79,7 +83,10 @@ class Waveform extends React.Component{
 
   render(){
     return(
-      <canvas ref={(canvas) => {this.canvas = canvas}}></canvas>
+      <canvas
+        width={this.state.canvWidth}
+        height={this.state.canvHeight}
+        ref={(canvas) => {this.canvas = canvas}}></canvas>
     );
   }
 }

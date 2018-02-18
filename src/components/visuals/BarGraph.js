@@ -20,9 +20,13 @@ class Waveform extends React.Component{
     const {canvWidth, canvHeight, canvasCtx} = setupCanvas(this.canvas);
     this.canvasCtx = canvasCtx;
 
-    this.setState({
-      canvWidth,
-      canvHeight
+    this.setState({ canvWidth, canvHeight });
+
+    window.addEventListener("resize", () => {
+      this.setState({
+        canvWidth: $(window).width(),
+        canvHeight: $(window).height()
+      });
     });
 
     setupAudio.then( (analyser) => {
@@ -74,7 +78,10 @@ componentWillUnmount(){
 
 render(){
   return(
-    <canvas ref={(canvas) => {this.canvas = canvas}}></canvas>
+    <canvas
+      width={this.state.canvWidth}
+      height={this.state.canvHeight}
+      ref={(canvas) => {this.canvas = canvas}}></canvas>
   );
 }
 }
