@@ -17,7 +17,7 @@ class Waveform extends React.Component{
   }
 
   componentDidMount(){
-    const {canvWidth, canvHeight, canvasCtx} = setupCanvas();
+    const {canvWidth, canvHeight, canvasCtx} = setupCanvas(this.canvas);
     this.canvasCtx = canvasCtx;
 
     this.setState({
@@ -75,14 +75,11 @@ class Waveform extends React.Component{
 
   componentWillUnmount(){
     cancelAnimationFrame(this.frameId);
-    $('#visualiser').remove();
   }
 
   render(){
     return(
-      <div>
-        Waveform
-      </div>
+      <canvas ref={(canvas) => {this.canvas = canvas}}></canvas>
     );
   }
 }

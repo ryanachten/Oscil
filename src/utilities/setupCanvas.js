@@ -1,9 +1,6 @@
 import $ from 'jquery';
 
-export default () => {
-  const canvas = document.createElement("canvas");
-  canvas.id = 'visualiser';
-  document.body.appendChild(canvas);
+export default (canvas) => {
 
   let canvWidth, canvHeight, canvasCtx;
 

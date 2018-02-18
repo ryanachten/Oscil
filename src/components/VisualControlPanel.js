@@ -44,14 +44,16 @@ class HomePage extends React.Component{
           <div className="visual-selection active">
             { Object.keys(visuals).map((visual) => {
               const currentVis = visuals[visual];
-              return(
-                <Link key={visual} to={`/${visual}`}>
-                  <div className="visual-mode"
-                    style={{backgroundImage: `url(${currentVis.thumbImg})`}}>
-                    <p>{visual}</p>
-                  </div>
-                </Link>
-              )
+              if (currentVis.type === this.state.type) {
+                return(
+                  <Link key={visual} to={`/${visual}`}>
+                    <div className="visual-mode"
+                      style={{backgroundImage: `url(${currentVis.thumbImg})`}}>
+                      <p>{visual}</p>
+                    </div>
+                  </Link>
+                )
+              }
             })}
           </div>
 
