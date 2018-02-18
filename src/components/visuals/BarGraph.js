@@ -22,12 +22,13 @@ class Waveform extends React.Component{
 
     this.setState({ canvWidth, canvHeight });
 
-    window.addEventListener("resize", () => {
+    this.resize = () => {
       this.setState({
         canvWidth: $(window).width(),
         canvHeight: $(window).height()
       });
-    });
+    };
+    window.addEventListener("resize", this.resize);
 
     setupAudio.then( (analyser) => {
 
@@ -74,6 +75,7 @@ draw(){
 
 componentWillUnmount(){
   cancelAnimationFrame(this.frameId);
+  window.removeEventListener("resize", this.resize);
 }
 
 render(){
