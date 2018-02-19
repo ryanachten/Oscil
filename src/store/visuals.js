@@ -1,11 +1,16 @@
-// import Waveform from '../components/visuals/Waveform';
 import waveform from '../visuals/waveform';
 import barGraph from '../visuals/barGraph';
 
 const visuals = {
   waveform: {
-    visual: waveform,
     type: 'shape',
+    visual: waveform,
+    settings: {
+      gradMode : {
+        options: ['linear', 'radial'],
+        default: 'radial'
+      }
+    },
     thumbImg: 'https://c2.staticflickr.com/4/3890/14587030670_727b688651_q.jpg'
   },
   barGraph: {

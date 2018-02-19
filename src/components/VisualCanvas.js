@@ -2,6 +2,7 @@ import React from 'react';
 import $ from 'jquery';
 import setupCanvas from '../utilities/setupCanvas';
 import {setupAudio, getAudioBuffer} from '../utilities/setupAudio';
+import setupVisSettings from '../utilities/setupVisualSettings';
 
 class VisualCanvas extends React.Component{
 
@@ -13,7 +14,8 @@ class VisualCanvas extends React.Component{
     this.state = {
       canvWidth: undefined,
       canvHeight: undefined,
-      visualDraw: props.visualDraw
+      visualDraw: props.visualDraw,
+      visualSettings: undefined
     }
   }
 
@@ -38,6 +40,11 @@ class VisualCanvas extends React.Component{
       this.analyser = analyser;
       this.bufferLength = bufferLength;
       this.dataArray = dataArray;
+
+      if (this.props.visualSettings) {
+        this.state.visualSettings = setupVisSettings(this.props.visualSettings);
+      }
+
       this.draw();
     }).catch( (reason) => {
         // Do something
@@ -57,6 +64,7 @@ class VisualCanvas extends React.Component{
 
   componentWillUnmount(){
     cancelAnimationFrame(this.frameId);
+    $('#visdat-gui').remove();
     window.removeEventListener("resize", this.resize);
   }
 

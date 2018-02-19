@@ -15,10 +15,12 @@ const AppRouter = () => (
         <Route path="/" component={HomePage} exact={true} />
           <Route path="/:id"
             component={({ match }) => {
-              const currentVisual = visuals[match.params.id].visual;
+              const visualDraw = visuals[match.params.id].visual;
+              const visualSettings = visuals[match.params.id].settings;
               return <VisualCanvas
                         key={match.params.id}
-                        visualDraw={currentVisual}
+                        visualDraw={visualDraw}
+                        visualSettings={visualSettings}
                       />
             }} />
         <Route component={NotFoundPage} />
