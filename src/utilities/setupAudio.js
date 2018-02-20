@@ -14,6 +14,7 @@ const setupAudio = new Promise((resolve, reject) => {
       analyser.fftSize = 256; //1024
       source.connect(analyser);
       setupAudioDatGui(analyser);
+      console.log(analyser);
       resolve(analyser);
     },
     function(err) {

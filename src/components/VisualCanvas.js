@@ -23,7 +23,7 @@ class VisualCanvas extends React.Component{
     const {canvWidth, canvHeight, canvasCtx} = setupCanvas(this.canvas);
     this.canvasCtx = canvasCtx;
 
-    this.setState({ canvWidth, canvHeight });
+    this.setState(() => ({ canvWidth, canvHeight }));
 
     this.resize = () => {
       this.setState({

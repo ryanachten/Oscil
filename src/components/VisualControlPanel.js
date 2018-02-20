@@ -22,24 +22,24 @@ class HomePage extends React.Component{
           <h2>Visualisation:</h2>
 
           <button className="visual-type-toggle" onClick={() =>
-            this.setState({
+            this.setState(() => ({
               type: 'shape'
-            })}>Shape</button>
+            }))}>Shape</button>
 
           <button className="visual-type-toggle" onClick={() =>
-            this.setState({
+            this.setState(() => ({
               type: 'image'
-            })}>Image</button>
+            }))}>Image</button>
 
           <button className="visual-type-toggle" onClick={() =>
-            this.setState({
+            this.setState(() => ({
               type: 'video'
-            })}>Video</button>
+            }))}>Video</button>
 
           <button className="visual-type-toggle" onClick={() =>
-            this.setState({
+            this.setState(() => ({
               type: '3D'
-            })}>3D</button>
+            }))}>3D</button>
 
           <div className="visual-selection active">
             { Object.keys(visuals).map((visual) => {
