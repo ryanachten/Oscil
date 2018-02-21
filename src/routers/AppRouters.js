@@ -16,11 +16,11 @@ const AppRouter = () => (
           <Route path="/:id"
             component={({ match }) => {
               const visualDraw = visuals[match.params.id].visual;
-              const visualSettings = visuals[match.params.id].settings;
+              // const visualSettings = visuals[match.params.id].settings;
               return <VisualCanvas
                         key={match.params.id}
                         visualDraw={visualDraw}
-                        visualSettings={visualSettings}
+                        // visualSettings={visualSettings}
                       />
             }} />
         <Route component={NotFoundPage} />

@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 
 import AppRouter from './routers/AppRouters.js'
 import configureStore from './store/configureStore';
@@ -21,23 +22,32 @@ store.subscribe( () => {
 
 store.dispatch(
   setVisual({
-    visual:'waveform',
+    visual:'gradient',
   })
 );
 
-store.dispatch(
-  updateVisualSettings({
-    settings: {
-      gradMode: 'linear'
-    }
-  })
-);
+// setTimeout(function () {
+//   store.dispatch(
+//     setVisual({
+//       visual:'barGraph',
+//     })
+//   );
+// }, 3000);
 
-store.dispatch(
-  setVisual({
-    visual:'barGraph',
-  })
-);
+//
+// store.dispatch(
+//   updateVisualSettings({
+//     settings: {
+//       gradMode: 'linear'
+//     }
+//   })
+// );
+//
+// store.dispatch(
+//   setVisual({
+//     visual:'barGraph',
+//   })
+// );
 //
 // store.dispatch(
 //   setupAudio({
@@ -46,5 +56,10 @@ store.dispatch(
 //   })
 // );
 
+const jsx = (
+  <Provider store={store}>
+    <AppRouter />
+  </Provider>
+);
 
-ReactDOM.render( <AppRouter />, document.getElementById('app') );
+ReactDOM.render( jsx, document.getElementById('app') );

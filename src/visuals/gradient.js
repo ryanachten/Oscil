@@ -1,9 +1,9 @@
-export default (canvasCtx, canvWidth, canvHeight, bufferLength, dataArray) => {
+export default ({canvasCtx, visualSettings, canvWidth, canvHeight, bufferLength, dataArray}) => {
   const colourStops = 5;
 
   let grad;
 
-  if (visGuiSettings.gradMode === "linear"){
+  if (visualSettings.gradMode === "linear"){
     //Linear
     grad = canvasCtx.createLinearGradient(0,0, canvWidth, canvHeight);
   }

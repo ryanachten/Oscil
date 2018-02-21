@@ -1,8 +1,11 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import visuals from '../store/visuals';
 
-class HomePage extends React.Component{
+import VisualDatGui from './VisualDatGui';
+
+class VisualControlPanel extends React.Component{
 
   constructor(props){
     super(props);
@@ -56,11 +59,19 @@ class HomePage extends React.Component{
               }
             })}
           </div>
-
+          { this.props.settings && (
+              <VisualDatGui />
+          )}
         </div>
       </div>
     )
   }
 }
 
-export default HomePage;
+const mapStateToProps = ({visual}) => {
+  return{
+    settings: visual.visualSettings
+  }
+}
+
+export default connect(mapStateToProps)(VisualControlPanel);

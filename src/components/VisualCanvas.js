@@ -1,8 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import $ from 'jquery';
 import setupCanvas from '../utilities/setupCanvas';
+import selectVisual from '../selectors/visual';
 import {setupAudio, getAudioBuffer} from '../utilities/setupAudio';
-import setupVisSettings from '../utilities/setupVisualSettings';
+
 
 class VisualCanvas extends React.Component{
 
@@ -14,8 +16,6 @@ class VisualCanvas extends React.Component{
     this.state = {
       canvWidth: undefined,
       canvHeight: undefined,
-      visualDraw: props.visualDraw,
-      visualSettings: undefined
     }
   }
 
@@ -41,9 +41,6 @@ class VisualCanvas extends React.Component{
       this.bufferLength = bufferLength;
       this.dataArray = dataArray;
 
-      if (this.props.visualSettings) {
-        this.state.visualSettings = setupVisSettings(this.props.visualSettings);
-      }
 
       this.draw();
     }).catch( (reason) => {
@@ -57,9 +54,14 @@ class VisualCanvas extends React.Component{
     this.frameId = requestAnimationFrame(this.draw);
 
     this.analyser.getByteTimeDomainData(this.dataArray);
-    this.state.visualDraw(this.canvasCtx,
-                          this.state.canvWidth, this.state.canvHeight,
-                          this.bufferLength, this.dataArray);
+    this.props.visualDraw({
+      canvasCtx: this.canvasCtx,
+      visualSettings: this.props.visualSettings,
+      canvWidth: this.state.canvWidth,
+      canvHeight: this.state.canvHeight,
+      bufferLength: this.bufferLength,
+      dataArray: this.dataArray
+    });
   }
 
   componentWillUnmount(){
@@ -78,4 +80,9 @@ class VisualCanvas extends React.Component{
   }
 }
 
-export default VisualCanvas;
+const mapStateToProps = ({visual}) => {
+  const {visualDraw, visualSettings} = selectVisual(visual);
+  return {visualDraw, visualSettings};
+};
+
+export default connect(mapStateToProps)(VisualCanvas);

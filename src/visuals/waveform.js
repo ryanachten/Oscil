@@ -1,4 +1,4 @@
-export default (canvasCtx, canvWidth, canvHeight, bufferLength, dataArray) => {
+export default ({canvasCtx, canvWidth, canvHeight, bufferLength, dataArray}) => {
   canvasCtx.fillStyle = 'white';
   canvasCtx.fillRect(0,0, canvWidth, canvHeight);
   canvasCtx.lineWidth = 2;
