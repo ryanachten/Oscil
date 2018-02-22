@@ -5,6 +5,7 @@ import setupCanvas from '../utilities/setupCanvas';
 import selectVisual from '../selectors/visual';
 import {setupAudio, getAudioBuffer} from '../utilities/setupAudio';
 
+import { setVisual } from '../actions/visual';
 
 class VisualCanvas extends React.Component{
 
@@ -17,6 +18,19 @@ class VisualCanvas extends React.Component{
       canvWidth: undefined,
       canvHeight: undefined,
     }
+  }
+
+  componentWillMount(){
+    // Sets store on first load if url request
+    // console.log('mounting');
+    this.props.dispatch(setVisual({visual: this.props.pathId}));
+  }
+
+  componentWillReceiveProps({pathId}){
+    // Sets store after first load for url requests
+    // console.log('propping');
+    this.props.dispatch(setVisual({visual: pathId}));
+
   }
 
   componentDidMount(){
