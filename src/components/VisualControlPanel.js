@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import visuals from '../store/visuals';
 
+import AudioAnalyser from './AudioAnalyser';
 import VisualDatGui from './VisualDatGui';
 
 class VisualControlPanel extends React.Component{

@@ -22,6 +22,7 @@ class VisualCanvas extends React.Component{
   }
 
   componentWillMount(){
+    console.log('will mount');
     // Sets store on first load if url request
     this.props.dispatch(setVisual({visual: this.props.pathId}));
   }
