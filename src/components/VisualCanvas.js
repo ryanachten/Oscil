@@ -13,6 +13,7 @@ class VisualCanvas extends React.Component{
     super(props);
 
     this.draw = this.draw.bind(this);
+    this.resize = this.resize.bind(this);
 
     this.state = {
       canvWidth: undefined,
@@ -22,13 +23,11 @@ class VisualCanvas extends React.Component{
 
   componentWillMount(){
     // Sets store on first load if url request
-    // console.log('mounting');
     this.props.dispatch(setVisual({visual: this.props.pathId}));
   }
 
   componentWillReceiveProps({pathId}){
     // Sets store after first load for url requests
-    // console.log('propping');
     this.props.dispatch(setVisual({visual: pathId}));
 
   }
@@ -39,12 +38,6 @@ class VisualCanvas extends React.Component{
 
     this.setState(() => ({ canvWidth, canvHeight }));
 
-    this.resize = () => {
-      this.setState({
-        canvWidth: $(window).width(),
-        canvHeight: $(window).height()
-      });
-    };
     window.addEventListener("resize", this.resize);
 
     setupAudio.then( (analyser) => {
@@ -55,13 +48,19 @@ class VisualCanvas extends React.Component{
       this.bufferLength = bufferLength;
       this.dataArray = dataArray;
 
-
       this.draw();
     }).catch( (reason) => {
         // Do something
         console.log(reason);
       }
     );
+  }
+
+  resize(){
+    this.setState({
+      canvWidth: $(window).width(),
+      canvHeight: $(window).height()
+    });
   }
 
   draw(){
