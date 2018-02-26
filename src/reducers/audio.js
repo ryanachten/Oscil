@@ -1,4 +1,9 @@
-const audioReducerDefaultState = { setupStatus: 'pending', bufferLength: 0, dataArray: [] };
+const audioReducerDefaultState = { setupStatus: 'pending', bufferLength: 0, dataArray: [], analyserSettings: {
+  fftsize : 256,
+  minDb : -100,
+  maxDb : 20,
+  smoothing : 80
+} };
 
 export default (state = audioReducerDefaultState, action) => {
   switch (action.type) {

@@ -37,10 +37,17 @@ class AudioAnalyser extends React.Component{
     );
   }
 
+  updateAudioSettings(){
+    this.analyser.minDecibels = this.props.analyserSettings.minDb;
+    this.analyser.maxDecibels = this.props.analyserSettings.maxDb;
+    this.analyser.smoothingTimeConstant = (this.props.analyserSettings.smoothing/100).toFixed(2);
+  }
+
   streamAudio(){
     this.frameId = requestAnimationFrame(this.streamAudio);
+    this.updateAudioSettings();
     this.analyser.getByteTimeDomainData(this.dataArray);
-    // console.log(this.dataArray);
+
     // send action to update dataArray and bufferLength
     this.props.dispatch(
       updateAudioData({
@@ -57,7 +64,11 @@ class AudioAnalyser extends React.Component{
   }
 }
 
-export default connect()(AudioAnalyser);
+const mapStateToProps = ({audio: {analyserSettings}}) => {
+  return {analyserSettings};
+}
+
+export default connect(mapStateToProps)(AudioAnalyser);
 
 
 const setupAudio = new Promise((resolve, reject) => {
@@ -72,7 +83,6 @@ const setupAudio = new Promise((resolve, reject) => {
       const source = audioCtx.createMediaStreamSource(stream);
       analyser.fftSize = 256; //1024
       source.connect(analyser);
-      // setupAudioDatGui(analyser);
 
       resolve(analyser);
     },

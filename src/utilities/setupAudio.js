@@ -1,5 +1,3 @@
-import $ from 'jquery';
-
 const checkAudioPermissions = new Promise((resolve, reject) => {
 
   navigator.getUserMedia (

@@ -31,27 +31,22 @@ class AudioDatGui extends React.Component{
     this.audioGui.add(audioGuiSettings, 'fftsize', [256]).onChange(
       () => {
         this.updateAudioSettings(audioGuiSettings)
-      }
-    		// window.cancelAnimationFrame(drawVisual);
-    		// visualise(visualisationMode.value);
-    	);
+      });
+
     this.audioGui.add(audioGuiSettings, 'minDb').min(-150).max(-50).onChange(
       ()=> {
         this.updateAudioSettings(audioGuiSettings)
-        }
-    		// analyser.minDecibels = audioGuiSettings.minDb;
-    	);
+      });
+
     this.audioGui.add(audioGuiSettings, 'maxDb').min(-80).max(20).onChange(
       () => {
-    	 this.updateAudioSettings(audioGuiSettings)}
-    		// analyser.maxDecibels = audioGuiSettings.maxDb;
-    	);
+    	 this.updateAudioSettings(audioGuiSettings)
+     });
+
     this.audioGui.add(audioGuiSettings, 'smoothing').min(0).max(100).onChange(
       () => {
         this.updateAudioSettings(audioGuiSettings)
-      }
-    		// analyser.smoothingTimeConstant = audioGuiSettings.smoothing/100;
-    	);
+      });
   }
 
   updateAudioSettings(newSettings){
