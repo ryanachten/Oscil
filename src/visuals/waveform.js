@@ -1,3 +1,5 @@
+import {mapRange} from '../utilities/visualUtilities';
+
 export default ({canvasCtx, canvWidth, canvHeight, bufferLength, dataArray}) => {
   canvasCtx.fillStyle = 'white';
   canvasCtx.fillRect(0,0, canvWidth, canvHeight);
@@ -10,7 +12,7 @@ export default ({canvasCtx, canvWidth, canvHeight, bufferLength, dataArray}) => 
   for(let i = 0; i < bufferLength; i++){
     const da = dataArray[i] / 255;
     canvasCtx.strokeStyle = 'hsl('+ da*360 +',80%,70%)';
-    const y = map_range(da, 0, 1, 0, canvHeight);
+    const y = mapRange(da, 0, 1, 0, canvHeight);
 
     if(i===0){
       canvasCtx.moveTo(x,y);
@@ -22,8 +24,4 @@ export default ({canvasCtx, canvWidth, canvHeight, bufferLength, dataArray}) => 
 
   canvasCtx.lineTo(canvWidth, canvHeight/2);
   canvasCtx.stroke();
-}
-
-function map_range(value, low1, high1, low2, high2) {
-  return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
 }

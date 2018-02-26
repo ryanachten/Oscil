@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import $ from 'jquery';
 import setupCanvas from '../utilities/setupCanvas';
 import selectVisual from '../selectors/visual';
-import {setupAudio, getAudioBuffer} from '../utilities/setupAudio';
+import {checkAudioPermissions} from '../utilities/setupAudio';
 
 import { setVisual } from '../actions/visual';
 
@@ -51,13 +51,8 @@ class VisualCanvas extends React.Component{
 
     window.addEventListener("resize", this.resize);
 
-    setupAudio.then( (analyser) => {
-
-      const {bufferLength, dataArray} = getAudioBuffer(analyser);
-
-      this.analyser = analyser;
-      this.bufferLength = bufferLength;
-      this.dataArray = dataArray;
+    // FIXME: This promise is technically a duplicate of what takes places in the AudioAnalyser component
+    checkAudioPermissions.then( (analyser) => {
 
       this.initVisual();
       this._isMounted = true;
@@ -102,15 +97,13 @@ class VisualCanvas extends React.Component{
   drawVisual(){
     this.frameId = requestAnimationFrame(this.drawVisual);
 
-    this.analyser.getByteTimeDomainData(this.dataArray);
-    // console.log(this.dataArray[0]);
     this.ownSettings = this.props.visualDraw({
       canvasCtx: this.canvasCtx,
       visualSettings: this.props.visualSettings,
       canvWidth: this.state.canvWidth,
       canvHeight: this.state.canvHeight,
-      bufferLength: this.bufferLength,
-      dataArray: this.dataArray,
+      bufferLength: this.props.bufferLength,
+      dataArray: this.props.dataArray,
       ownSettings: this.ownSettings
     });
   }
@@ -125,9 +118,13 @@ class VisualCanvas extends React.Component{
   }
 }
 
-const mapStateToProps = ({visual}) => {
+const mapStateToProps = ({visual, audio}) => {
+  const {dataArray, bufferLength} = audio;
   const {visualInit, visualDraw, visualSettings} = selectVisual(visual);
-  return {visualInit, visualDraw, visualSettings};
+  return {
+    visualInit, visualDraw, visualSettings,
+    dataArray, bufferLength
+  };
 };
 
 export default connect(mapStateToProps)(VisualCanvas);

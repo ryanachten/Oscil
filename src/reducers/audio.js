@@ -28,6 +28,12 @@ export default (state = audioReducerDefaultState, action) => {
       };
     break;
 
+    case 'UPDATE_ANALYSER_SETTINGS':
+      return{
+        ...state,
+        analyserSettings: action.settings
+      };
+      break;
     default:
       return state;
   }

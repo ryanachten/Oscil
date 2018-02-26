@@ -5,6 +5,7 @@ import visuals from '../store/visuals';
 
 import AudioAnalyser from './AudioAnalyser';
 import VisualDatGui from './VisualDatGui';
+import AudioDatGui from './AudioDatGui';
 
 class VisualControlPanel extends React.Component{
 
@@ -63,6 +64,8 @@ class VisualControlPanel extends React.Component{
           { this.props.settings && (
               <VisualDatGui />
           )}
+          <AudioAnalyser />
+          <AudioDatGui />
         </div>
       </div>
     )

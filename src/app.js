@@ -16,7 +16,7 @@ const store = configureStore();
 store.subscribe( () => {
   const state = store.getState();
   const currentVisual = getCurrentVisual(state.visual);
-  console.log(currentVisual);
+  // console.log(currentVisual);
 
 });
 
