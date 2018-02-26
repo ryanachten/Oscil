@@ -8,9 +8,9 @@ export default ({canvasCtx, canvWidth, canvHeight, bufferLength, dataArray}) => 
   let x = 0;
 
   for(let i = 0; i < bufferLength; i++){
-    const v = dataArray[i] / 128.0;
-    canvasCtx.strokeStyle = 'hsl('+ dataArray[i]*5 +',80%,70%)';
-    const y = v * canvHeight/2;
+    const da = dataArray[i] / 255;
+    canvasCtx.strokeStyle = 'hsl('+ da*360 +',80%,70%)';
+    const y = map_range(da, 0, 1, 0, canvHeight);
 
     if(i===0){
       canvasCtx.moveTo(x,y);
@@ -20,6 +20,10 @@ export default ({canvasCtx, canvWidth, canvHeight, bufferLength, dataArray}) => 
     x += sliceWidth;
   }
 
-  canvasCtx.lineTo(canvWidth, canvWidth/2);
+  canvasCtx.lineTo(canvWidth, canvHeight/2);
   canvasCtx.stroke();
+}
+
+function map_range(value, low1, high1, low2, high2) {
+  return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
 }

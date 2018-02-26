@@ -12,7 +12,7 @@ class VisualCanvas extends React.Component{
   constructor(props){
     super(props);
 
-    this.draw = this.draw.bind(this);
+    this.drawVisual = this.drawVisual.bind(this);
     this.resize = this.resize.bind(this);
 
     this.state = {
@@ -22,15 +22,25 @@ class VisualCanvas extends React.Component{
   }
 
   componentWillMount(){
-    console.log('will mount');
     // Sets store on first load if url request
     this.props.dispatch(setVisual({visual: this.props.pathId}));
   }
 
-  componentWillReceiveProps({pathId}){
-    // Sets store after first load for url requests
-    this.props.dispatch(setVisual({visual: pathId}));
+  componentWillReceiveProps(nextProps){
 
+    // // Sets store after first load for url requests
+    if (nextProps.pathId === this.props.pathId) {
+      return;
+    }
+    this.props.dispatch(setVisual({visual: nextProps.pathId}));
+  }
+
+  componentDidUpdate(){
+    if (this._isMounted && this.props.visualInit) {
+      console.log('cancel');
+      cancelAnimationFrame(this.frameId);
+      this.initVisual();
+    }
   }
 
   componentDidMount(){
@@ -49,12 +59,20 @@ class VisualCanvas extends React.Component{
       this.bufferLength = bufferLength;
       this.dataArray = dataArray;
 
-      this.draw();
+      this.initVisual();
+      this._isMounted = true;
     }).catch( (reason) => {
         // Do something
         console.log(reason);
       }
     );
+  }
+
+  componentWillUnmount(){
+    cancelAnimationFrame(this.frameId);
+    $('#visdat-gui').remove();
+    window.removeEventListener("resize", this.resize);
+    this._isMounted = false;
   }
 
   resize(){
@@ -64,24 +82,37 @@ class VisualCanvas extends React.Component{
     });
   }
 
-  draw(){
-    this.frameId = requestAnimationFrame(this.draw);
+  initVisual(){
+
+    if (this.props.visualInit === undefined) {
+      this.drawVisual();
+    }
+    else{
+      this.ownSettings = this.props.visualInit({
+        canvasCtx: this.canvasCtx,
+        visualSettings: this.props.visualSettings,
+        canvWidth: this.state.canvWidth,
+        canvHeight: this.state.canvHeight,
+      });
+      console.log('ownSettings', this.ownSettings);
+      this.drawVisual();
+    }
+  }
+
+  drawVisual(){
+    this.frameId = requestAnimationFrame(this.drawVisual);
 
     this.analyser.getByteTimeDomainData(this.dataArray);
-    this.props.visualDraw({
+    // console.log(this.dataArray[0]);
+    this.ownSettings = this.props.visualDraw({
       canvasCtx: this.canvasCtx,
       visualSettings: this.props.visualSettings,
       canvWidth: this.state.canvWidth,
       canvHeight: this.state.canvHeight,
       bufferLength: this.bufferLength,
-      dataArray: this.dataArray
+      dataArray: this.dataArray,
+      ownSettings: this.ownSettings
     });
-  }
-
-  componentWillUnmount(){
-    cancelAnimationFrame(this.frameId);
-    $('#visdat-gui').remove();
-    window.removeEventListener("resize", this.resize);
   }
 
   render(){
@@ -95,8 +126,8 @@ class VisualCanvas extends React.Component{
 }
 
 const mapStateToProps = ({visual}) => {
-  const {visualDraw, visualSettings} = selectVisual(visual);
-  return {visualDraw, visualSettings};
+  const {visualInit, visualDraw, visualSettings} = selectVisual(visual);
+  return {visualInit, visualDraw, visualSettings};
 };
 
 export default connect(mapStateToProps)(VisualCanvas);
