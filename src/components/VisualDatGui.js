@@ -31,9 +31,17 @@ class VisualDatGui extends React.Component{
   addSettings(settings){
     let refSettings = {}; //used simply for dat gui adding api
     let visualSettings = []; //used to store controllers for removal
+
     Object.keys(settings).map((setting) => {
       refSettings[setting] = settings[setting].active;
-      const curSetting = this.visGui.add(refSettings, setting, settings[setting].options)
+      let curSetting = this.visGui.add(refSettings, setting, settings[setting].options);
+
+      if (settings[setting].min) {
+        curSetting = curSetting.min(settings[setting].min);
+      }
+      if (settings[setting].max) {
+        curSetting = curSetting.max(settings[setting].max);
+      }
       curSetting.onChange(
         (active) => this.updateStateSettings({setting, active})
       );
