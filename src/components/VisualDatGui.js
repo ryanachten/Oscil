@@ -9,7 +9,16 @@ class VisualDatGui extends React.Component{
   constructor(props){
     super(props);
 
-    this.updateVisualSettings = this.updateVisualSettings.bind(this);
+    this.updateStateSettings = this.updateStateSettings.bind(this);
+  }
+
+  componentWillReceiveProps({settings}){
+    if (settings !== this.props.settings) {
+      console.log('VisualDatGui newprops');
+      console.log('New settings', settings);
+      this.removeSettings();
+      this.addSettings(settings);
+    }
   }
 
   componentDidMount(){
@@ -21,15 +30,24 @@ class VisualDatGui extends React.Component{
   }
 
   addSettings(settings){
-    let visualSettings = {};
-    console.log(visualSettings);
+    let refSettings = {}; //used simply for dat gui adding api
+    let visualSettings = []; //used to store controllers for removal
     Object.keys(settings).map((setting) => {
-      visualSettings[setting] = settings[setting].active;
-      this.visGui.add(visualSettings, setting, settings[setting].options).onChange((active) => this.updateVisualSettings({setting, active}));
+      refSettings[setting] = settings[setting].active;
+      const curSetting = this.visGui.add(refSettings, setting, settings[setting].options).onChange((active) => this.updateStateSettings({setting, active}));
+
+      visualSettings.push(curSetting);
+    });
+    this.visualSettings = visualSettings;
+  }
+
+  removeSettings(){
+    this.visualSettings.map((setting) => {
+      this.visGui.remove(setting);
     });
   }
 
-  updateVisualSettings({setting, active}){
+  updateStateSettings({setting, active}){
     let newSettings = {};
     newSettings[setting] = active;
     this.props.dispatch(
