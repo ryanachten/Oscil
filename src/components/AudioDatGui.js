@@ -17,16 +17,11 @@ class AudioDatGui extends React.Component{
     audioGui.domElement.id = 'audiodat-gui';
     $(this.container).append(audioGui.domElement);
     this.audioGui = audioGui;
-    this.addSettings();
+    this.addSettings(this.props.analyserSettings);
   }
 
-  addSettings(){
-    const audioGuiSettings = {
-    	fftsize : 256,
-    	minDb : -100,
-    	maxDb : 20,
-    	smoothing : 80
-    };
+  addSettings(defaultSettings){
+    const audioGuiSettings = defaultSettings;
 
     this.audioGui.add(audioGuiSettings, 'fftsize', [256]).onChange(
       () => {
@@ -64,4 +59,8 @@ class AudioDatGui extends React.Component{
   }
 }
 
-export default connect()(AudioDatGui);
+const mapStateToProps = ({audio: {analyserSettings}}) => {
+  return {analyserSettings};
+}
+
+export default connect(mapStateToProps)(AudioDatGui);
