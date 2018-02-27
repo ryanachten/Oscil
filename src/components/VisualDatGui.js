@@ -22,6 +22,7 @@ class VisualDatGui extends React.Component{
 
   addSettings(settings){
     let visualSettings = {};
+    console.log(visualSettings);
     Object.keys(settings).map((setting) => {
       visualSettings[setting] = settings[setting].active;
       this.visGui.add(visualSettings, setting, settings[setting].options).onChange((active) => this.updateVisualSettings({setting, active}));

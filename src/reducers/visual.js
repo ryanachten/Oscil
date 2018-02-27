@@ -1,5 +1,5 @@
 const visualReducerDefaultState = {
-  currentVisual: 'waveForm'
+  currentVisual: 'waveform'
 };
 
 export default (state = visualReducerDefaultState, action) => {

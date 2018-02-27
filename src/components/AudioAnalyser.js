@@ -11,7 +11,6 @@ class AudioAnalyser extends React.Component{
   }
 
   componentWillMount(){
-    console.log(this.props);
     setupAudio.then( (analyser) => {
 
       var bufferLength = analyser.frequencyBinCount;
