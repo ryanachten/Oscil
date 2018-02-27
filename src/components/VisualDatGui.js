@@ -12,10 +12,9 @@ class VisualDatGui extends React.Component{
     this.updateStateSettings = this.updateStateSettings.bind(this);
   }
 
-  componentWillReceiveProps({settings}){
-    if (settings !== this.props.settings) {
-      console.log('VisualDatGui newprops');
-      console.log('New settings', settings);
+  componentWillReceiveProps({currentVisual, settings}){
+    if (currentVisual !== this.props.currentVisual) {
+      console.log('New visual - update settings');
       this.removeSettings();
       this.addSettings(settings);
     }
@@ -34,7 +33,10 @@ class VisualDatGui extends React.Component{
     let visualSettings = []; //used to store controllers for removal
     Object.keys(settings).map((setting) => {
       refSettings[setting] = settings[setting].active;
-      const curSetting = this.visGui.add(refSettings, setting, settings[setting].options).onChange((active) => this.updateStateSettings({setting, active}));
+      const curSetting = this.visGui.add(refSettings, setting, settings[setting].options)
+      curSetting.onChange(
+        (active) => this.updateStateSettings({setting, active})
+      );
 
       visualSettings.push(curSetting);
     });
@@ -64,9 +66,10 @@ class VisualDatGui extends React.Component{
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = ({visual}) => {
   return{
-    settings: state.visual.visualSettings
+    currentVisual: visual.currentVisual,
+    settings: visual.visualSettings
   }
 };
 
