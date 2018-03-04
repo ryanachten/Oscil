@@ -2,8 +2,8 @@ import {mapRange} from '../utilities/visualUtilities';
 
 export const particleInit = ({canvasCtx, visualSettings, canvWidth, canvHeight}) => {
   canvasCtx.globalCompositeOperation = 'source-over';
-  console.log('visualSettings.particleCount.active', visualSettings.particleCount.active);
-  const count = visualSettings.particleCount.active;
+  const count = Math.round(visualSettings.particleCount.active);
+  console.log('particle count:', count);
   let particles = [];
   for (let i = 0; i < count; i++) {
     particles.push(new create_particle(count));
@@ -26,8 +26,6 @@ export const particleInit = ({canvasCtx, visualSettings, canvWidth, canvHeight})
 
   return {particles};
 }
-
-
 
 
 export const particleDraw = ({

@@ -9,7 +9,6 @@ class VisualDatGui extends React.Component{
   constructor(props){
     super(props);
 
-    // this.updateStateSettings = this.updateStateSettings.bind(this);
   }
 
   componentWillReceiveProps({currentVisual, settings}){
@@ -64,9 +63,16 @@ class VisualDatGui extends React.Component{
     let newSettings = this.props.settings;
     newSettings[setting].active = active;
     console.log('newSettings', newSettings);
+
+    let requiresInit = false;
+    if (newSettings[setting].requiresInitOnChange) {
+      console.log('requiresInitOnChange');
+      requiresInit = true;
+    }
     this.props.dispatch(
       updateVisualSettings({
-        settings: newSettings
+        settings: newSettings,
+        requiresInit
       })
     );
   };

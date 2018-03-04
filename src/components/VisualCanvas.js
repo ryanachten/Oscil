@@ -5,7 +5,7 @@ import setupCanvas from '../utilities/setupCanvas';
 import selectVisual from '../selectors/visual';
 import {checkAudioPermissions} from '../utilities/setupAudio';
 
-import { setVisual } from '../actions/visual';
+import { setVisual, resolveInit } from '../actions/visual';
 
 class VisualCanvas extends React.Component{
 
@@ -27,17 +27,15 @@ class VisualCanvas extends React.Component{
   }
 
   componentWillReceiveProps(nextProps){
-
     // // Sets store after first load for url requests
     if (nextProps.pathId !== this.props.pathId) {
       this.props.dispatch(setVisual({visual: nextProps.pathId}));
     }
-
   }
 
-  componentDidUpdate(){
-    if (this._isMounted && this.props.visualInit) {
-      console.log('cancel');
+  componentDidUpdate(prevProps){
+    // Resets visual if dat gui sends requiresInit in action
+    if (this.props.requiresInit && prevProps.requiresInit !== this.props.requiresInit) {
       cancelAnimationFrame(this.frameId);
       this.initVisual();
     }
@@ -55,7 +53,6 @@ class VisualCanvas extends React.Component{
     checkAudioPermissions.then( (analyser) => {
 
       this.initVisual();
-      this._isMounted = true;
     }).catch( (reason) => {
         // Do something
         console.log(reason);
@@ -67,7 +64,6 @@ class VisualCanvas extends React.Component{
     cancelAnimationFrame(this.frameId);
     $('#visdat-gui').remove();
     window.removeEventListener("resize", this.resize);
-    this._isMounted = false;
   }
 
   resize(){
@@ -90,7 +86,9 @@ class VisualCanvas extends React.Component{
         canvHeight: this.state.canvHeight,
       });
       console.log('ownSettings', this.ownSettings);
+
       this.drawVisual();
+      this.props.dispatch(resolveInit());
     }
   }
 
@@ -119,10 +117,11 @@ class VisualCanvas extends React.Component{
 
 const mapStateToProps = ({visual, audio}) => {
   const {dataArray, bufferLength} = audio;
-  const {visualInit, visualDraw, visualSettings} = selectVisual(visual);
+  const {visualInit, visualDraw, visualSettings, requiresInit} = selectVisual(visual);
   return {
     visualInit, visualDraw, visualSettings,
-    dataArray, bufferLength
+    requiresInit,
+    dataArray, bufferLength,
   };
 };
 
