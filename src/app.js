@@ -8,10 +8,6 @@ import configureStore from './store/configureStore';
 import 'normalize.css/normalize.css';
 import './styles/style.scss';
 
-
-import getCurrentVisual from './selectors/visual';
-import {setVisual, updateVisualSettings} from './actions/visual';
-
 const store = configureStore();
 
 const jsx = (
