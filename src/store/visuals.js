@@ -32,7 +32,8 @@ const visuals = {
       particleCount : {
         active: 30,
         min: 5,
-        max: 50
+        max: 50,
+        requiresInitOnChange: true
       }
     },
     thumbImg: 'https://c1.staticflickr.com/1/501/20506686861_c48dddabac_q.jpg'

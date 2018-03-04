@@ -3,7 +3,7 @@ export default ({canvasCtx, visualSettings, canvWidth, canvHeight, bufferLength,
 
   let grad;
 
-  if (visualSettings.gradMode === "linear"){
+  if (visualSettings.gradMode.active === "linear"){
     //Linear
     grad = canvasCtx.createLinearGradient(0,0, canvWidth, canvHeight);
   }

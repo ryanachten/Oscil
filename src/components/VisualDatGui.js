@@ -9,7 +9,7 @@ class VisualDatGui extends React.Component{
   constructor(props){
     super(props);
 
-    this.updateStateSettings = this.updateStateSettings.bind(this);
+    // this.updateStateSettings = this.updateStateSettings.bind(this);
   }
 
   componentWillReceiveProps({currentVisual, settings}){
@@ -36,16 +36,19 @@ class VisualDatGui extends React.Component{
       refSettings[setting] = settings[setting].active;
       let curSetting = this.visGui.add(refSettings, setting, settings[setting].options);
 
+      // Applies max and min sliders if applicable
       if (settings[setting].min) {
         curSetting = curSetting.min(settings[setting].min);
       }
       if (settings[setting].max) {
         curSetting = curSetting.max(settings[setting].max);
       }
+      // On change listener
       curSetting.onChange(
-        (active) => this.updateStateSettings({setting, active})
+        (active) => {
+          this.updateStateSettings({setting, active});
+        }
       );
-
       visualSettings.push(curSetting);
     });
     this.visualSettings = visualSettings;
@@ -58,8 +61,9 @@ class VisualDatGui extends React.Component{
   }
 
   updateStateSettings({setting, active}){
-    let newSettings = {};
-    newSettings[setting] = active;
+    let newSettings = this.props.settings;
+    newSettings[setting].active = active;
+    console.log('newSettings', newSettings);
     this.props.dispatch(
       updateVisualSettings({
         settings: newSettings

@@ -2,6 +2,7 @@ import {mapRange} from '../utilities/visualUtilities';
 
 export const particleInit = ({canvasCtx, visualSettings, canvWidth, canvHeight}) => {
   canvasCtx.globalCompositeOperation = 'source-over';
+  console.log('visualSettings.particleCount.active', visualSettings.particleCount.active);
   const count = visualSettings.particleCount.active;
   let particles = [];
   for (let i = 0; i < count; i++) {

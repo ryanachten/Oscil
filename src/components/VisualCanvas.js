@@ -29,10 +29,10 @@ class VisualCanvas extends React.Component{
   componentWillReceiveProps(nextProps){
 
     // // Sets store after first load for url requests
-    if (nextProps.pathId === this.props.pathId) {
-      return;
+    if (nextProps.pathId !== this.props.pathId) {
+      this.props.dispatch(setVisual({visual: nextProps.pathId}));
     }
-    this.props.dispatch(setVisual({visual: nextProps.pathId}));
+
   }
 
   componentDidUpdate(){
@@ -96,7 +96,6 @@ class VisualCanvas extends React.Component{
 
   drawVisual(){
     this.frameId = requestAnimationFrame(this.drawVisual);
-
     this.ownSettings = this.props.visualDraw({
       canvasCtx: this.canvasCtx,
       visualSettings: this.props.visualSettings,
