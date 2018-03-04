@@ -13,6 +13,7 @@ class AudioAnalyser extends React.Component{
   componentWillMount(){
     setupAudio.then( (analyser) => {
 
+      analyser.fftSize = 256; //1024
       var bufferLength = analyser.frequencyBinCount;
     	var dataArray = new Uint8Array(bufferLength);
 
@@ -48,12 +49,12 @@ class AudioAnalyser extends React.Component{
     this.analyser.getByteTimeDomainData(this.dataArray);
 
     // send action to update dataArray and bufferLength
-    this.props.dispatch(
-      updateAudioData({
-        bufferLength: this.bufferLength,
-        dataArray: this.dataArray
-      })
-    );
+    // this.props.dispatch(
+    //   updateAudioData({
+    //     bufferLength: this.bufferLength,
+    //     dataArray: this.dataArray
+    //   })
+    // );
   }
 
   render(){
@@ -80,7 +81,6 @@ const setupAudio = new Promise((resolve, reject) => {
     },
     function(stream) {
       const source = audioCtx.createMediaStreamSource(stream);
-      analyser.fftSize = 256; //1024
       source.connect(analyser);
 
       resolve(analyser);
