@@ -1,13 +1,17 @@
 import {mapRange} from '../utilities/visualUtilities';
 
 export const particleInit = ({canvasCtx, visualSettings, canvWidth, canvHeight}) => {
-  canvasCtx.globalCompositeOperation = 'source-over';
-  const count = Math.round(visualSettings.particleCount.active);
-  console.log('particle count:', count);
-  let particles = [];
-  for (let i = 0; i < count; i++) {
-    particles.push(new create_particle(count));
-  }
+
+  return new Promise(function(resolve, reject) {
+    canvasCtx.globalCompositeOperation = 'source-over';
+    const count = Math.round(visualSettings.particleCount.active);
+    console.log('particle count:', count);
+    let particles = [];
+    for (let i = 0; i < count; i++) {
+      particles.push(new create_particle(count));
+    }
+    resolve({particles});
+  });
 
   function create_particle(count){
 
@@ -15,7 +19,6 @@ export const particleInit = ({canvasCtx, visualSettings, canvWidth, canvHeight})
     const partMinSize = 10;
     this.radius = Math.random()*(partMaxSize-partMinSize);
     this.hue = 360/count * (Math.random()*(count-1));
-    // console.log(hue);
     this.colour = 'hsl(' + this.hue + ', 70%, 70%)';
     this.x = Math.random()*canvWidth;
     this.y = Math.random()*canvHeight;
@@ -23,8 +26,6 @@ export const particleInit = ({canvasCtx, visualSettings, canvWidth, canvHeight})
     this.vx = Math.random()*10-2; //change
     this.vy = Math.random()*10-2; //change
   }
-
-  return {particles};
 }
 
 
@@ -55,7 +56,15 @@ export const particleDraw = ({
       canvasCtx.arc(p.x, p.y, p.radius, 0, Math.PI*2, true);
       canvasCtx.closePath();
 
-      const grad = canvasCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
+      let grad;
+      try {
+         grad = canvasCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
+      } catch (e) {
+        grad = canvasCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
+      } finally {
+
+      }
+
       if (da !== 0){
         p.hue = p.hue + 1;
         p.colour = 'hsl(' + p.hue + ', 70%, 70%)';

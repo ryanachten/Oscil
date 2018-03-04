@@ -62,11 +62,11 @@ class VisualDatGui extends React.Component{
   updateStateSettings({setting, active}){
     let newSettings = this.props.settings;
     newSettings[setting].active = active;
-    console.log('newSettings', newSettings);
 
+    // If the setting being updated requires init to be called,
+    // add to action
     let requiresInit = false;
     if (newSettings[setting].requiresInitOnChange) {
-      console.log('requiresInitOnChange');
       requiresInit = true;
     }
     this.props.dispatch(

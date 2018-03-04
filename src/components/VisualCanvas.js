@@ -35,7 +35,7 @@ class VisualCanvas extends React.Component{
 
   componentDidUpdate(prevProps){
     // Resets visual if dat gui sends requiresInit in action
-    if (this.props.requiresInit && prevProps.requiresInit !== this.props.requiresInit) {
+    if (this.props.requiresInit && this.canvIsMounted) {
       cancelAnimationFrame(this.frameId);
       this.initVisual();
     }
@@ -53,6 +53,7 @@ class VisualCanvas extends React.Component{
     checkAudioPermissions.then( (analyser) => {
 
       this.initVisual();
+      this.canvIsMounted = true;
     }).catch( (reason) => {
         // Do something
         console.log(reason);
@@ -64,6 +65,7 @@ class VisualCanvas extends React.Component{
     cancelAnimationFrame(this.frameId);
     $('#visdat-gui').remove();
     window.removeEventListener("resize", this.resize);
+    this.canvIsMounted = false;
   }
 
   resize(){
@@ -76,19 +78,25 @@ class VisualCanvas extends React.Component{
   initVisual(){
 
     if (this.props.visualInit === undefined) {
+      console.log('visualInit === undefined');
       this.drawVisual();
     }
     else{
-      this.ownSettings = this.props.visualInit({
+      this.props.dispatch(resolveInit());
+      this.props.visualInit({
         canvasCtx: this.canvasCtx,
         visualSettings: this.props.visualSettings,
         canvWidth: this.state.canvWidth,
         canvHeight: this.state.canvHeight,
-      });
-      console.log('ownSettings', this.ownSettings);
+      }).then((ownSettings) => {
 
-      this.drawVisual();
-      this.props.dispatch(resolveInit());
+        this.ownSettings = ownSettings;
+        console.log('ownSettings', this.ownSettings);
+
+        this.drawVisual();
+
+      });
+
     }
   }
 
