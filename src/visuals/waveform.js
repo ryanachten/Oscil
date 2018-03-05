@@ -29,5 +29,5 @@ const waveformDraw = ({canvasCtx, canvWidth, canvHeight, bufferLength, dataArray
 export default {
   draw: waveformDraw,
   type: 'shape',
-  thumbImg: 'https://c1.staticflickr.com/3/2912/14763226235_c97c9a4aba_q.jpg'
+  thumbImg: 'https://c2.staticflickr.com/4/3900/14784363445_fc54b8cb85_q.jpg'
 }

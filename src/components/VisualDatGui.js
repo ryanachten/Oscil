@@ -35,11 +35,12 @@ class VisualDatGui extends React.Component{
       refSettings[setting] = settings[setting].active;
       let curSetting = this.visGui.add(refSettings, setting, settings[setting].options);
 
+      console.log(settings[setting].min);
       // Applies max and min sliders if applicable
-      if (settings[setting].min) {
+      if (typeof settings[setting].min === "number") {
         curSetting = curSetting.min(settings[setting].min);
       }
-      if (settings[setting].max) {
+      if (typeof settings[setting].max === "number") {
         curSetting = curSetting.max(settings[setting].max);
       }
       // On change listener
