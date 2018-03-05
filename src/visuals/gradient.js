@@ -1,4 +1,4 @@
-export default ({canvasCtx, visualSettings, canvWidth, canvHeight, bufferLength, dataArray}) => {
+const gradientDraw = ({canvasCtx, visualSettings, canvWidth, canvHeight, bufferLength, dataArray}) => {
   const colourStops = 5;
 
   let grad;
@@ -25,3 +25,14 @@ export default ({canvasCtx, visualSettings, canvWidth, canvHeight, bufferLength,
   canvasCtx.fillStyle = grad;
   canvasCtx.fillRect(0,0,canvWidth, canvHeight);
 };
+
+export default {
+  draw: gradientDraw,
+  type: 'shape',
+  settings: {
+    gradMode : {
+      options: ['linear', 'radial'],
+      active: 'radial'
+    }
+  }
+}

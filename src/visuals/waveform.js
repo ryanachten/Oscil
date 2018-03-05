@@ -1,6 +1,6 @@
 import {mapRange} from '../utilities/visualUtilities';
 
-export default ({canvasCtx, canvWidth, canvHeight, bufferLength, dataArray}) => {
+const waveformDraw = ({canvasCtx, canvWidth, canvHeight, bufferLength, dataArray}) => {
   canvasCtx.fillStyle = 'white';
   canvasCtx.fillRect(0,0, canvWidth, canvHeight);
   canvasCtx.lineWidth = 2;
@@ -24,4 +24,10 @@ export default ({canvasCtx, canvWidth, canvHeight, bufferLength, dataArray}) => 
 
   canvasCtx.lineTo(canvWidth, canvHeight/2);
   canvasCtx.stroke();
+}
+
+export default {
+  draw: waveformDraw,
+  type: 'shape',
+  thumbImg: 'https://c1.staticflickr.com/3/2912/14763226235_c97c9a4aba_q.jpg'
 }

@@ -1,4 +1,4 @@
-export default ({canvasCtx, canvWidth, canvHeight, bufferLength, dataArray}) => {
+const barGraphDraw = ({canvasCtx, canvWidth, canvHeight, bufferLength, dataArray}) => {
   canvasCtx.fillStyle = 'white';
   canvasCtx.fillRect(0, 0, canvWidth, canvHeight);
 
@@ -17,4 +17,10 @@ export default ({canvasCtx, canvWidth, canvHeight, bufferLength, dataArray}) => 
 
     x += barWidth;
   }
+}
+
+export default {
+  draw: barGraphDraw,
+  type: 'shape',
+  thumbImg: 'https://c1.staticflickr.com/3/2912/14763226235_c97c9a4aba_q.jpg'
 }

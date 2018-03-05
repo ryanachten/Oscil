@@ -1,6 +1,6 @@
 import {mapRange} from '../utilities/visualUtilities';
 
-export const particleInit = ({canvasCtx, visualSettings, canvWidth, canvHeight}) => {
+const particleInit = ({canvasCtx, visualSettings, canvWidth, canvHeight}) => {
 
   return new Promise(function(resolve, reject) {
     canvasCtx.globalCompositeOperation = 'source-over';
@@ -29,7 +29,7 @@ export const particleInit = ({canvasCtx, visualSettings, canvWidth, canvHeight})
 }
 
 
-export const particleDraw = ({
+const particleDraw = ({
     canvasCtx, visualSettings, ownSettings,
     canvWidth, canvHeight,
     bufferLength, dataArray
@@ -99,3 +99,18 @@ export const particleDraw = ({
   ownSettings.particles = particles;
   return ownSettings;
 }
+
+export default {
+  init: particleInit,
+  draw: particleDraw,
+  type: 'shape',
+  settings: {
+    particleCount : {
+      active: 30,
+      min: 5,
+      max: 50,
+      requiresInitOnChange: true
+    }
+  },
+  thumbImg: 'https://c1.staticflickr.com/1/501/20506686861_c48dddabac_q.jpg'
+};
