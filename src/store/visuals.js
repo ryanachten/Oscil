@@ -4,6 +4,7 @@ import gradient from '../visuals/gradient';
 import particles from '../visuals/particles';
 import brownianTree from '../visuals/brownianTree';
 import concretePoetry from '../visuals/concretePoetry';
+import lissajousFigure from '../visuals/lissajousFigure';
 
 const visuals = {
   waveform,
@@ -11,7 +12,8 @@ const visuals = {
   gradient,
   particles,
   brownianTree,
-  concretePoetry
+  concretePoetry,
+  lissajousFigure
 };
 
 export default visuals;
