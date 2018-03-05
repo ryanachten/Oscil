@@ -11,11 +11,7 @@ const init = ({canvasCtx, visualSettings, canvWidth, canvHeight}) => {
   	let xPos, yPos, endOfPage;
   	let i, fontSize;
 
-    if(visualSettings.textInput.active.length > 0){
-      textSample = visualSettings.textInput.active;
-    }else{
-      textSample = 'there is always soma, delicious soma, half a gramme for a half-holiday, a gramme for a week-end, two grammes for a trip to the gorgeous East, three for a dark eternity on the moon';
-    }
+    textSample = visualSettings.textInput.active;
 
     if(visualSettings.case.active === 'upper'){
       textSample = textSample.toUpperCase();
