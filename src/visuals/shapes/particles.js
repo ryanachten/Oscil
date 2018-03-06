@@ -1,4 +1,4 @@
-import {mapRange} from '../utilities/visualUtilities';
+import {mapRange} from '../../utilities/visualUtilities';
 
 const particleInit = ({canvasCtx, visualSettings, canvWidth, canvHeight}) => {
 

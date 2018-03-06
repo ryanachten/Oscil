@@ -1,4 +1,4 @@
-import {mapRange} from '../utilities/visualUtilities';
+import {mapRange} from '../../utilities/visualUtilities';
 
 const init = ({canvasCtx, visualSettings, canvWidth, canvHeight}) => {
 
