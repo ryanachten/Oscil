@@ -1,8 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import visuals from '../store/visuals';
 
+import VisualSelection from './VisualSelection';
 import VisualDatGui from './VisualDatGui';
 import AudioDatGui from './AudioDatGui';
 
@@ -12,7 +11,13 @@ class VisualControlPanel extends React.Component{
     super(props);
 
     this.state = {
-      type: 'shape'
+      currentType: 'shape',
+      allTypes: [
+        {value: 'shape', label: 'Shape'},
+        {value: 'image', label: 'Image'},
+        {value: 'video', label: 'Video'},
+        {value: '3D', label: '3D'}
+      ]
     }
   }
 
@@ -25,44 +30,23 @@ class VisualControlPanel extends React.Component{
         <div className="ui-section">
           <h2>Visualisation:</h2>
 
-          <button className="visual-type-toggle" onClick={() =>
-            this.setState(() => ({
-              type: 'shape'
-            }))}>Shape</button>
+          { this.state.allTypes.map((type) => {
+            return(
+              <button
+                key={type.value}
+                className="visual-type-toggle"
+                onClick={() => this.setState(() => ({
+                  currentType: type.value
+                }))}>{type.label}</button>
+            );
+          })}
 
-          <button className="visual-type-toggle" onClick={() =>
-            this.setState(() => ({
-              type: 'image'
-            }))}>Image</button>
+          <VisualSelection type={this.state.currentType}/>
 
-          <button className="visual-type-toggle" onClick={() =>
-            this.setState(() => ({
-              type: 'video'
-            }))}>Video</button>
-
-          <button className="visual-type-toggle" onClick={() =>
-            this.setState(() => ({
-              type: '3D'
-            }))}>3D</button>
-
-          <div className="visual-selection active">
-            { Object.keys(visuals).map((visual) => {
-              const currentVis = visuals[visual];
-              if (currentVis.type === this.state.type) {
-                return(
-                  <Link key={visual} to={`/${visual}`}>
-                    <div className="visual-mode"
-                      style={{backgroundImage: `url(${currentVis.thumbImg})`}}>
-                      <p>{visual}</p>
-                    </div>
-                  </Link>
-                )
-              }
-            })}
-          </div>
           { this.props.settings && (
               <VisualDatGui />
           )}
+
           <AudioDatGui />
         </div>
       </div>
