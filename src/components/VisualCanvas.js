@@ -78,7 +78,6 @@ class VisualCanvas extends React.Component{
   initVisual(){
 
     if (this.props.visualInit === undefined) {
-      console.log('visualInit === undefined');
       this.drawVisual();
     }
     else{
@@ -91,7 +90,6 @@ class VisualCanvas extends React.Component{
       }).then((ownSettings) => {
 
         this.ownSettings = ownSettings;
-        console.log('ownSettings', this.ownSettings);
 
         this.drawVisual();
 
