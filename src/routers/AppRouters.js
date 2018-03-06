@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Switch, Link, NavLink } from 'react-router-dom';
 import Header from '../components/Header';
 import HomePage from '../components/HomePage';
 import NotFoundPage from '../components/NotFoundPage';
-import VisualCanvas from '../components/VisualCanvas';
+import VisualPage from '../components/VisualPage';
 
 const AppRouter = (props) => (
   <BrowserRouter>
@@ -14,7 +14,7 @@ const AppRouter = (props) => (
         <Route path="/" component={HomePage} exact={true} />
           <Route path="/:id"
             component={({ match }) => {
-              return <VisualCanvas pathId={match.params.id} />
+              return <VisualPage pathId={match.params.id} />
             }} />
         <Route component={NotFoundPage} />
       </Switch>
