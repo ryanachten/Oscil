@@ -37,25 +37,19 @@ const draw = ({
   }) => {
 
   const img = ownSettings.img;
-  const sampleRate = Math.round(visualSettings.sampleRate.active);
 
-  for(var i = 0; i < bufferLength; i+=sampleRate) {
-    const da = dataArray[i];
-    let tileCount;
-    if (da !== 0){
-      tileCount = Math.floor(Math.log(da)/Math.log(1.5));
-    }
+  const da = dataArray[0]/255;
+  let tileCount = Math.floor(da*visualSettings.maxImgSize.active);
 
-    if (tileCount < 2 || typeof tileCount == 'undefined')
-      tileCount = 2;
-    if (tileCount % 2 !== 0){
-      tileCount+=1;
-    }
-
-    canvasCtx.clearRect(0,0,canvWidth, canvHeight);
-    canvasCtx.fillRect(0,0,canvWidth, canvHeight);
-    tileImg(tileCount);
+  if (tileCount < 2 || typeof tileCount == 'undefined')
+    tileCount = 2;
+  if (tileCount % 2 !== 0){
+    tileCount+=1;
   }
+
+  canvasCtx.clearRect(0,0,canvWidth, canvHeight);
+  canvasCtx.fillRect(0,0,canvWidth, canvHeight);
+  tileImg(tileCount);
 
   function tileImg(tileCount){
 
@@ -103,12 +97,7 @@ export default {
   draw,
   type: 'image',
   settings: {
-    fps: {
-      active: 15,
-      min: 5,
-      max: 30
-    },
-    sampleRate: {
+    maxImgSize: {
       active: 30,
       min: 10,
       max: 50
@@ -116,38 +105,3 @@ export default {
   },
   thumbImg: 'https://c2.staticflickr.com/6/5553/14763710395_b870d547ce_m.jpg'
 };
-
-
-//
-// 	//for controlling FPS
-// 	var stop = false;
-// 	var frameCount = 0;
-// 	var fps, fpsInterval, startTime, now, then, elapsed;
-//
-// 	function startAnimating(fps){
-// 		fpsInterval = 1000/fps;
-// 		then = Date.now();
-// 		startTime = then;
-// 		animate();
-// 	}
-//
-// 	function animate(){
-// 		if(stop){
-// 			return;
-// 		}
-// 		drawVisual = requestAnimationFrame(animate);
-//
-// 		now = Date.now();
-// 		elapsed = now - then;
-//
-// 		if(elapsed > fpsInterval){
-// 			then = now - (elapsed % fpsInterval);
-//
-// 			draw();
-// 		}
-// 		if($('.visual-mode.active').data('visual') !== 'Refract'){
-// 			console.log('clearMe');
-// 			window.cancelAnimationFrame(drawVisual);
-// 		}
-// 	}
-// }
