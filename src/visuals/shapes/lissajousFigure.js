@@ -46,14 +46,14 @@ const draw = ({
       freqX, freqY, modulated, modFreqX, modFreqY,
       phi} = ownSettings;
 
-		const da = dataArray[0];
-		const logda = (Math.log(da) / Math.log(1.2)).toFixed(2);
-		if(isFinite(logda) && logda !== 0){
-			freqX = logda * visualSettings.freqX.active;
-			freqY = logda * visualSettings.freqY.active;
-			modFreqX = logda * visualSettings.modFreqX.active;
-			modFreqY = logda * visualSettings.modFreqY.active;
-			phi = visualSettings.phi.active - logda;
+		const da = dataArray[0]/255;
+		const logda = da/255;//(Math.log(da) / Math.log(2)).toFixed(2);
+		if(isFinite(da) && da !== 0){
+			freqX = da * visualSettings.freqX.active;
+			freqY = da * visualSettings.freqY.active;
+			modFreqX = da * visualSettings.modFreqX.active;
+			modFreqY = da * visualSettings.modFreqY.active;
+			phi = visualSettings.phi.active - da;
 		}
 
 		canvasCtx.beginPath();
@@ -91,7 +91,7 @@ const draw = ({
     type: 'shape',
     settings: {
       freqX: {
-        active: 70,
+        active: 29,
         min: 1,
         max: 70
       },

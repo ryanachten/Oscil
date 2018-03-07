@@ -38,9 +38,13 @@ const draw = ({
 		let {maxRad, showRandomSeeds} = ownSettings;
 
 		//random params
-		const newR = (Math.random()*maxRad)+1;
+    const da = dataArray[0]/255;
+		const newR = (da*maxRad)+1;
 		const newX = (Math.random()*canvWidth-newR)+(0+newR);
 		const newY = (Math.random()*canvHeight-newR)+(0+newR);
+    const curColour = 'hsl('+ da*360 +',50%,70%)';
+
+
 		let closestDist = 100000000;
 		let closestIndex = 0;
 
@@ -57,12 +61,12 @@ const draw = ({
 			canvasCtx.beginPath();
 			canvasCtx.moveTo(newX, newY);
 			canvasCtx.arc(newX, newY, newR, 0, Math.PI*2);
-			canvasCtx.fillStyle = 'black';
+			canvasCtx.fillStyle = curColour;
 			canvasCtx.fill();
 			canvasCtx.moveTo(newX, newY);
 			canvasCtx.lineTo(x[closestIndex], y[closestIndex]);
 			canvasCtx.lineWidth = 1;
-			canvasCtx.strokeStyle = 'black';
+			canvasCtx.strokeStyle = curColour;
 			canvasCtx.stroke();
 			canvasCtx.closePath();
 		}
@@ -77,7 +81,7 @@ const draw = ({
 		canvasCtx.beginPath();
 		canvasCtx.moveTo(x[currentCount], y[currentCount]);
 		canvasCtx.arc(x[currentCount], y[currentCount], r[currentCount]*2, 0, Math.PI*2);
-		canvasCtx.fillStyle = 'black';
+		canvasCtx.fillStyle =  curColour;
 		canvasCtx.fill();
 		canvasCtx.closePath();
 

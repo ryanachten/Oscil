@@ -11,21 +11,21 @@ class AudioAnalyser extends React.Component{
   }
 
   componentWillMount(){
-    setupAudio.then( (analyser) => {
+    this.setupAudio.then( (analyser) => {
 
       analyser.fftSize = 256; //1024
       var bufferLength = analyser.frequencyBinCount;
     	var dataArray = new Uint8Array(bufferLength);
 
-      // send action to switch boolean and resolve visual promise
-      this.props.dispatch(
-        resolveAudio({bufferLength, dataArray})
-      );
-
       this.analyser = analyser;
       this.bufferLength = bufferLength;
       this.dataArray = dataArray;
       this.streamAudio();
+
+      // send action to switch boolean and resolve visual promise
+      this.props.dispatch(
+        resolveAudio({bufferLength, dataArray})
+      );
 
     }).catch( (reason) => {
         // send action to switch boolean and reject visual promise
@@ -37,16 +37,39 @@ class AudioAnalyser extends React.Component{
     );
   }
 
+  setupAudio = new Promise((resolve, reject) => {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const analyser = audioCtx.createAnalyser();
+
+    navigator.getUserMedia (
+      {
+        audio: true
+      },
+      function(stream) {
+        const source = audioCtx.createMediaStreamSource(stream);
+        source.connect(analyser);
+
+        resolve(analyser);
+      },
+      function(err) {
+        reject('The following gUM error occured: ' + err);
+      }
+    );
+  });
+
   updateAudioSettings(){
-    this.analyser.minDecibels = this.props.analyserSettings.minDb;
-    this.analyser.maxDecibels = this.props.analyserSettings.maxDb;
+    this.analyser.minDecibels = this.props.analyserSettings.minDb.toFixed(2);
+    this.analyser.maxDecibels = this.props.analyserSettings.maxDb.toFixed(2);
     this.analyser.smoothingTimeConstant = (this.props.analyserSettings.smoothing/100).toFixed(2);
+    const {minDecibels, maxDecibels, smoothingTimeConstant} = this.analyser;
   }
 
   streamAudio(){
     this.frameId = requestAnimationFrame(this.streamAudio);
     this.updateAudioSettings();
-    this.analyser.getByteTimeDomainData(this.dataArray);
+    // this.analyser.getByteTimeDomainData(this.dataArray);
+    this.analyser.getByteFrequencyData(this.dataArray);
+    // console.log(this.dataArray[0]);
 
     // send action to update dataArray and bufferLength
     // this.props.dispatch(
@@ -69,24 +92,3 @@ const mapStateToProps = ({audio: {analyserSettings}}) => {
 }
 
 export default connect(mapStateToProps)(AudioAnalyser);
-
-
-const setupAudio = new Promise((resolve, reject) => {
-  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  const analyser = audioCtx.createAnalyser();
-
-  navigator.getUserMedia (
-    {
-      audio: true
-    },
-    function(stream) {
-      const source = audioCtx.createMediaStreamSource(stream);
-      source.connect(analyser);
-
-      resolve(analyser);
-    },
-    function(err) {
-      reject('The following gUM error occured: ' + err);
-    }
-  );
-});

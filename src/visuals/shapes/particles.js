@@ -43,59 +43,49 @@ const particleDraw = ({
 
     const step = Math.floor(bufferLength/particles.length);
 
-    for (let j = 0; j < particles.length; j++) {
+    for(var i = 0; i < bufferLength; i+=20) {
+      for (let j = 0; j < particles.length; j++) {
 
-      let da = dataArray[j*step]/255.0;
-      // console.log(mapRange);
-      da = mapRange(da, 0, 1, -2, 2);
-      // console.log(da);
+        const da = dataArray[i];
 
-      const p = particles[j];
+        const p = particles[j];
 
-      canvasCtx.beginPath();
-      canvasCtx.arc(p.x, p.y, p.radius, 0, Math.PI*2, true);
-      canvasCtx.closePath();
+        canvasCtx.beginPath();
+        canvasCtx.arc(p.x, p.y, p.radius, 0, Math.PI*2, true);
+        canvasCtx.closePath();
 
-      let grad;
-      try {
-         grad = canvasCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
-      } catch (e) {
-        grad = canvasCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
-      } finally {
+        let grad;
+        try {
+           grad = canvasCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
+        } catch (e) {
+          grad = canvasCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
+        }
 
-      }
+        if (da !== 0){
+          p.hue = p.hue + 1;
+          p.colour = 'hsl(' + p.hue + ', 70%, 70%)';
 
-      if (da !== 0){
-        p.hue = p.hue + 1;
-        p.colour = 'hsl(' + p.hue + ', 70%, 70%)';
+          p.x += p.vx;
+          p.y += p.vy;
+        }
 
-        const switchX = Math.floor(Math.random()*2);
-        switchX === 0 ? p.vx -= da : p.vx += da;
+        grad.addColorStop(0, 'white');
+        grad.addColorStop(0.4, p.colour);
+        grad.addColorStop(0.4, 'white');
+        grad.addColorStop(1, p.colour);
 
-        const switchY = Math.floor(Math.random()*2);
-        switchY === 0 ? p.vy -= da : p.vy += da;
-        //
-        p.x += (p.vx);
-        p.y += (p.vy);
-      }
+        canvasCtx.fillStyle = grad;
+        canvasCtx.fill();
 
-      grad.addColorStop(0, 'white');
-      grad.addColorStop(0.4, p.colour);
-      grad.addColorStop(0.4, 'white');
-      grad.addColorStop(1, p.colour);
-
-      canvasCtx.fillStyle = grad;
-      canvasCtx.fill();
-
-      //Boundaries
-      if(p.y + p.vy > canvHeight || p.y + p.vy < 0){
-        p.vy = -p.vy;
-      }
-      if(p.x + p.vx > canvWidth || p.x + p.vx < 0){
-        p.vx = -p.vx;
-      }
+        //Boundaries
+        if(p.y + p.vy > canvHeight || p.y + p.vy < 0){
+          p.vy = -p.vy;
+        }
+        if(p.x + p.vx > canvWidth || p.x + p.vx < 0){
+          p.vx = -p.vx;
+        }
+    }
   }
-
   ownSettings.particles = particles;
   return ownSettings;
 }
