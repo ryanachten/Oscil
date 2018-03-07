@@ -98,8 +98,8 @@ export default {
   type: 'image',
   settings: {
     maxImgSize: {
-      active: 30,
-      min: 10,
+      active: 20,
+      min: 6,
       max: 50
     }
   },
