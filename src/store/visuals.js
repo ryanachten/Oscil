@@ -7,6 +7,7 @@ import concretePoetry from '../visuals/shapes/concretePoetry';
 import lissajousFigure from '../visuals/shapes/lissajousFigure';
 
 import refract from '../visuals/images/refract';
+import macroblocks from '../visuals/images/macroblocks';
 
 const visuals = {
   waveform,
@@ -17,7 +18,8 @@ const visuals = {
   concretePoetry,
   lissajousFigure,
 
-  refract
+  refract,
+  macroblocks
 };
 
 export default visuals;
