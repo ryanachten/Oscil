@@ -94,6 +94,7 @@ export default {
   init: particleInit,
   draw: particleDraw,
   type: 'shape',
+  renderer: 'html',
   settings: {
     particleCount : {
       active: 30,

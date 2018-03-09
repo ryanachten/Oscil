@@ -89,6 +89,7 @@ const draw = ({
     init,
     draw,
     type: 'shape',
+    renderer: 'html',
     settings: {
       freqX: {
         active: 29,

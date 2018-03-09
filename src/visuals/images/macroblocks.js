@@ -65,6 +65,7 @@ export default {
   init,
   draw,
   type: 'image',
+  renderer: 'html',
   settings: {
     sampleCount: {
       active : 8,

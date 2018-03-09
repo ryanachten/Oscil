@@ -1,8 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
+import { setVisual } from '../actions/visual';
 
 import AudioAnalyser from './AudioAnalyser';
 import VisualControlPanel from './VisualControlPanel';
-import VisualCanvas from '../components/VisualCanvas';
+import HtmlCanvas from '../components/HtmlCanvas';
+import P5Canvas from '../components/P5Canvas';
 
 class VisualPage extends React.Component{
 
@@ -10,15 +14,41 @@ class VisualPage extends React.Component{
     super(props);
   }
 
+  componentWillMount(){
+    console.log('componentWillMount');
+    // Sets store on first load if url request
+    this.props.dispatch(setVisual({visual: this.props.pathId}));
+  }
+
+  componentWillReceiveProps(nextProps){
+    console.log('componentWillReceiveProps');
+    // // Sets store after first load for url requests
+    if (nextProps.pathId !== this.props.pathId) {
+      this.props.dispatch(setVisual({visual: nextProps.pathId}));
+    }
+  }
+
   render(){
     return(
       <div>
         <VisualControlPanel />
         <AudioAnalyser />
-        <VisualCanvas pathId={this.props.pathId} />
+        {this.props.renderer === 'html' && (
+          <HtmlCanvas pathId={this.props.pathId} />
+        )}
+        {this.props.renderer === 'p5' && (
+          <P5Canvas pathId={this.props.pathId} />
+        )}
       </div>
     );
   }
 }
 
-export default VisualPage;
+const mapStateToProps = ({visual}) => {
+  console.log(visual.renderer);
+  return {
+    renderer: visual.renderer
+  };
+};
+
+export default connect(mapStateToProps)(VisualPage);

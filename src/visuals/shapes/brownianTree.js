@@ -101,6 +101,7 @@ export default {
   init,
   draw,
   type: 'shape',
+  renderer: 'html',
   settings: {
     showRandNode : {
       active: true,

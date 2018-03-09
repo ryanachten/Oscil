@@ -5,9 +5,9 @@ import setupCanvas from '../utilities/setupCanvas';
 import selectVisual from '../selectors/visual';
 import {checkAudioPermissions} from '../utilities/setupAudio';
 
-import { setVisual, resolveInit } from '../actions/visual';
+import {resolveInit} from '../actions/visual';
 
-class VisualCanvas extends React.Component{
+class HtmlCanvas extends React.Component{
 
   constructor(props){
     super(props);
@@ -18,18 +18,6 @@ class VisualCanvas extends React.Component{
     this.state = {
       canvWidth: undefined,
       canvHeight: undefined,
-    }
-  }
-
-  componentWillMount(){
-    // Sets store on first load if url request
-    this.props.dispatch(setVisual({visual: this.props.pathId}));
-  }
-
-  componentWillReceiveProps(nextProps){
-    // // Sets store after first load for url requests
-    if (nextProps.pathId !== this.props.pathId) {
-      this.props.dispatch(setVisual({visual: nextProps.pathId}));
     }
   }
 
@@ -62,6 +50,7 @@ class VisualCanvas extends React.Component{
   }
 
   componentWillUnmount(){
+    console.log('HtmlCanvas should unmount', this.frameId);
     cancelAnimationFrame(this.frameId);
     $('#visdat-gui').remove();
     window.removeEventListener("resize", this.resize);
@@ -100,6 +89,7 @@ class VisualCanvas extends React.Component{
 
   drawVisual(){
     this.frameId = requestAnimationFrame(this.drawVisual);
+    console.log('HtmlCanvas still drawing', this.frameId);
     this.ownSettings = this.props.visualDraw({
       canvasCtx: this.canvasCtx,
       visualSettings: this.props.visualSettings,
@@ -131,4 +121,4 @@ const mapStateToProps = ({visual, audio}) => {
   };
 };
 
-export default connect(mapStateToProps)(VisualCanvas);
+export default connect(mapStateToProps)(HtmlCanvas);

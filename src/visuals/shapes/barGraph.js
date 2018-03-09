@@ -26,5 +26,6 @@ const barGraphDraw = ({canvasCtx, canvWidth, canvHeight, bufferLength, dataArray
 export default {
   draw: barGraphDraw,
   type: 'shape',
+	renderer: 'html',
   thumbImg: 'https://c1.staticflickr.com/3/2912/14763226235_c97c9a4aba_q.jpg'
 }

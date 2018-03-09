@@ -106,6 +106,7 @@ export default {
   init,
   draw,
   type: 'shape',
+  renderer: 'html',
   settings: {
     textInput : {
       active: 'there is always soma, delicious soma, half a gramme for a half-holiday, a gramme for a week-end, two grammes for a trip to the gorgeous East, three for a dark eternity on the moon',

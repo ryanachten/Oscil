@@ -28,6 +28,7 @@ const gradientDraw = ({canvasCtx, visualSettings, canvWidth, canvHeight, bufferL
 
 export default {
   draw: gradientDraw,
+  renderer: 'html',
   type: 'shape',
   settings: {
     gradMode : {

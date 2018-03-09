@@ -9,6 +9,8 @@ import lissajousFigure from '../visuals/shapes/lissajousFigure';
 import refract from '../visuals/images/refract';
 import macroblocks from '../visuals/images/macroblocks';
 
+import videoFeedback from '../visuals/video/videoFeedback';
+
 const visuals = {
   waveform,
   barGraph,
@@ -19,7 +21,9 @@ const visuals = {
   lissajousFigure,
 
   refract,
-  macroblocks
+  macroblocks,
+
+  videoFeedback
 };
 
 export default visuals;

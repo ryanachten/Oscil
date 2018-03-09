@@ -96,6 +96,7 @@ export default {
   init,
   draw,
   type: 'image',
+  renderer: 'html',
   settings: {
     maxImgSize: {
       active: 20,
