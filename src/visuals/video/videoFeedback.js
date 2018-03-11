@@ -1,48 +1,31 @@
-import p5 from 'p5';
-
-// Add to component
-/*
-var canvas = p.createCanvas(canvWidth, canvHeight);
-canvas.id('p5-canvas');
-video = p.createCapture( p.VIDEO );
-video.id('videoCapture');
-video.size(320, 240);
-video.hide();
-
-$('#visualiser').hide();
-
-function resetCanv(){
-  var newVis = $('.visual-mode.active').data('visual');
-  if( newVis !== 'DrosteVideo'){
-    removeP5Canvas(newVis);
-    $('.visual-mode').off('click', resetCanv);
-  }
-}
-$('.visual-mode').on('click', resetCanv);
-
-var myp5 = new p5(p5Init, 'container');
-*/
-
-
-const init = ({canvasCtx, visualSettings, canvWidth, canvHeight}) => {
+const init = ({p, visualSettings, canvWidth, canvHeight, video}) => {
 
   return new Promise(function(resolve, reject) {
-    let xoff = 0.01;
-    let yoff = 10.01;
-    ownSettings = {
-      xoff, yoff, video
-    }
 
-    resolve(ownSettings);
+    p.setup = () => {
+
+      video.size(320, 240);
+
+      p.createCanvas(canvWidth, canvHeight);
+
+      let xoff = 0.01;
+      let yoff = 10.01;
+      let ownSettings = {
+        xoff, yoff, video
+      }
+
+      resolve(ownSettings);
+    }
   });
 }
 
-
 const draw = ({
-    canvasCtx, visualSettings, ownSettings,
+    p, visualSettings, ownSettings,
     canvWidth, canvHeight,
     bufferLength, dataArray
   }) => {
+
+  let { xoff, yoff, video } = ownSettings;
 
   var da = dataArray[0]/255;
   if(da!==0){
@@ -51,7 +34,7 @@ const draw = ({
   }
 
   // Fixed postion mode
-  switch (visSettings.positionMode.active) {
+  switch (visualSettings.positionMode.active) {
     case 'fixed':
       p.image(video, canvWidth/2-vWidth/2, canvHeight/2-vHeight/2, vWidth, vHeight);
       break;
@@ -63,8 +46,8 @@ const draw = ({
     case 'perlin':
       const noiseX = p.noise(xoff)*(canvWidth+vWidth);
       const noiseY = p.noise(yoff)*(canvHeight+vHeight);
-      xoff+=visGuiSettings.perlinScale;
-      yoff+=visGuiSettings.perlinScale;
+      xoff+=visualSettings.perlinScale.active;
+      yoff+=visualSettings.perlinScale.active;
       p.image(video, noiseX-vWidth, noiseY-vHeight, vWidth, vHeight);
       break;
 
@@ -72,9 +55,15 @@ const draw = ({
       p.image(video, canvWidth/2-vWidth/2, canvHeight/2-vHeight/2, vWidth, vHeight);
       break;
   }
+
+  return ownSettings = {
+    xoff, yoff, video
+  }
 };
 
 export default {
+  init,
+  draw,
   type: 'video',
   renderer: 'p5',
   settings: {

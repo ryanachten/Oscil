@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import $ from 'jquery';
 import p5 from 'p5';
+import 'p5/lib/addons/p5.dom';
 
 import setupCanvas from '../utilities/setupCanvas';
 import selectVisual from '../selectors/visual';
@@ -14,7 +15,8 @@ class P5Canvas extends React.Component{
   constructor(props){
     super(props);
 
-    // this.drawVisual = this.drawVisual.bind(this);
+    this.initVisual = this.initVisual.bind(this);
+    this.drawVisual = this.drawVisual.bind(this);
     // this.resize = this.resize.bind(this);
 
     this.state = {
@@ -30,14 +32,25 @@ class P5Canvas extends React.Component{
 
   componentDidMount(){
 
+    const canvWidth = $(window).width();
+    const canvHeight = $(window).height();
+    this.setState(() => ({ canvWidth, canvHeight }));
+
+
     // FIXME: This promise is technically a duplicate of what takes places in the AudioAnalyser component
     checkAudioPermissions.then( (analyser) => {
 
       const myP5 = new p5( (p) => {
         return p;
-      }, this.canvas);
+      }, this.container);
 
-      console.log(myP5);
+      this.myP5 = myP5;
+      const video = myP5.createCapture( myP5.VIDEO );
+      video.id('videoCapture');
+      video.hide();
+      this.video = video;
+
+      this.initVisual();
 
     }).catch( (reason) => {
         // Do something
@@ -49,20 +62,35 @@ class P5Canvas extends React.Component{
   componentWillUnmount(){
     cancelAnimationFrame(this.frameId);
     $('#visdat-gui').remove();
-    window.removeEventListener("resize", this.resize);
-    this.canvIsMounted = false;
+    $('#videoCapture').remove();
   }
 
 
   initVisual(){
+    if (!this.props.visualInit) {
+      console.log('!this.props.visualInit');
+    }
+    else{
 
-    console.log('init');
+      this.props.dispatch(resolveInit());
+      this.props.visualInit({
+        p: this.myP5,
+        video: this.video,
+        visualSettings: this.props.visualSettings,
+        canvWidth: this.state.canvWidth,
+        canvHeight: this.state.canvHeight,
+      }).then((ownSettings) => {
+        this.ownSettings = ownSettings;
+        this.drawVisual();
+      });
+
+    }
   }
 
   drawVisual(){
     this.frameId = requestAnimationFrame(this.drawVisual);
     this.ownSettings = this.props.visualDraw({
-      canvasCtx: this.canvasCtx,
+      p: this.myP5,
       visualSettings: this.props.visualSettings,
       canvWidth: this.state.canvWidth,
       canvHeight: this.state.canvHeight,
@@ -74,10 +102,10 @@ class P5Canvas extends React.Component{
 
   render(){
     return(
-      <canvas
+      <div
         width={this.state.canvWidth}
         height={this.state.canvHeight}
-        ref={(canvas) => {this.canvas = canvas}}></canvas>
+        ref={(container) => {this.container = container}}></div>
     );
   }
 }

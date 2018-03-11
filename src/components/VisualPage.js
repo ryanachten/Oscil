@@ -15,13 +15,11 @@ class VisualPage extends React.Component{
   }
 
   componentWillMount(){
-    console.log('componentWillMount');
     // Sets store on first load if url request
     this.props.dispatch(setVisual({visual: this.props.pathId}));
   }
 
   componentWillReceiveProps(nextProps){
-    console.log('componentWillReceiveProps');
     // // Sets store after first load for url requests
     if (nextProps.pathId !== this.props.pathId) {
       this.props.dispatch(setVisual({visual: nextProps.pathId}));
@@ -45,7 +43,6 @@ class VisualPage extends React.Component{
 }
 
 const mapStateToProps = ({visual}) => {
-  console.log(visual.renderer);
   return {
     renderer: visual.renderer
   };

@@ -50,7 +50,6 @@ class HtmlCanvas extends React.Component{
   }
 
   componentWillUnmount(){
-    console.log('HtmlCanvas should unmount', this.frameId);
     cancelAnimationFrame(this.frameId);
     $('#visdat-gui').remove();
     window.removeEventListener("resize", this.resize);
@@ -89,7 +88,6 @@ class HtmlCanvas extends React.Component{
 
   drawVisual(){
     this.frameId = requestAnimationFrame(this.drawVisual);
-    console.log('HtmlCanvas still drawing', this.frameId);
     this.ownSettings = this.props.visualDraw({
       canvasCtx: this.canvasCtx,
       visualSettings: this.props.visualSettings,
