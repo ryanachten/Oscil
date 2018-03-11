@@ -10,6 +10,7 @@ import refract from '../visuals/images/refract';
 import macroblocks from '../visuals/images/macroblocks';
 
 import videoFeedback from '../visuals/video/videoFeedback';
+import muybridge from '../visuals/video/muybridge';
 
 const visuals = {
   waveform,
@@ -23,7 +24,8 @@ const visuals = {
   refract,
   macroblocks,
 
-  videoFeedback
+  videoFeedback,
+  muybridge
 };
 
 export default visuals;

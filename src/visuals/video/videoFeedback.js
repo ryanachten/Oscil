@@ -27,11 +27,9 @@ const draw = ({
 
   let { xoff, yoff, video } = ownSettings;
 
-  var da = dataArray[0]/255;
-  if(da!==0){
-    var vWidth = p.map(da, 0, 1, 0, canvWidth);
-    var vHeight = p.map(da, 0, 1, 0, canvHeight);
-  }
+  const da = dataArray[0]/255;
+  const vWidth = p.map(da, 0, 1, 0, canvWidth);
+  const vHeight = p.map(da, 0, 1, 0, canvHeight);
 
   // Fixed postion mode
   switch (visualSettings.positionMode.active) {
