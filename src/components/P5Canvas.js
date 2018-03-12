@@ -27,7 +27,10 @@ class P5Canvas extends React.Component{
 
   componentDidUpdate(prevProps){
     // Resets visual if dat gui sends requiresInit in action
-    // this.initVisual();
+    if (this.canvIsMounted) {
+      console.log('componentDidUpdate');
+      this.initVisual();
+    }
   }
 
   componentDidMount(){
@@ -36,6 +39,7 @@ class P5Canvas extends React.Component{
     const canvHeight = $(window).height();
     this.setState(() => ({ canvWidth, canvHeight }));
 
+    // window.addEventListener("resize", this.resize);
 
     // FIXME: This promise is technically a duplicate of what takes places in the AudioAnalyser component
     checkAudioPermissions.then( (analyser) => {
@@ -51,6 +55,7 @@ class P5Canvas extends React.Component{
       this.video = video;
 
       this.initVisual();
+      this.canvIsMounted = true;
 
     }).catch( (reason) => {
         // Do something
@@ -58,6 +63,13 @@ class P5Canvas extends React.Component{
       }
     );
   }
+
+  // resize(){
+  //   this.setState({
+  //     canvWidth: $(window).width(),
+  //     canvHeight: $(window).height()
+  //   });
+  // }
 
   componentWillUnmount(){
     cancelAnimationFrame(this.frameId);
