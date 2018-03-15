@@ -51,6 +51,7 @@ class P5Canvas extends React.Component{
       this.myP5 = myP5;
       const video = myP5.createCapture( myP5.VIDEO );
       video.id('videoCapture');
+      video.size(320, 240);
       video.hide();
       this.video = video;
 
@@ -79,37 +80,33 @@ class P5Canvas extends React.Component{
 
 
   initVisual(){
-    if (!this.props.visualInit) {
-      console.log('!this.props.visualInit');
-    }
-    else{
-
-      this.props.dispatch(resolveInit());
-      this.props.visualInit({
-        p: this.myP5,
-        video: this.video,
-        visualSettings: this.props.visualSettings,
-        canvWidth: this.state.canvWidth,
-        canvHeight: this.state.canvHeight,
-      }).then((ownSettings) => {
-        this.ownSettings = ownSettings;
-        this.drawVisual();
-      });
-
-    }
-  }
-
-  drawVisual(){
-    this.frameId = requestAnimationFrame(this.drawVisual);
-    this.ownSettings = this.props.visualDraw({
+    this.props.visualInit({
       p: this.myP5,
+      video: this.video,
       visualSettings: this.props.visualSettings,
       canvWidth: this.state.canvWidth,
       canvHeight: this.state.canvHeight,
-      bufferLength: this.props.bufferLength,
-      dataArray: this.props.dataArray,
-      ownSettings: this.ownSettings
+    }).then((ownSettings) => {
+      this.ownSettings = ownSettings;
+      console.log(this.myP5);
+      this.drawVisual();
     });
+  }
+
+  drawVisual(){
+    // this.frameId = requestAnimationFrame(this.drawVisual);
+    this.myP5.draw = () => {
+      this.ownSettings = this.props.visualDraw({
+        p: this.myP5,
+        visualSettings: this.props.visualSettings,
+        canvWidth: this.state.canvWidth,
+        canvHeight: this.state.canvHeight,
+        bufferLength: this.props.bufferLength,
+        dataArray: this.props.dataArray,
+        ownSettings: this.ownSettings
+      });
+    }
+
   }
 
   render(){

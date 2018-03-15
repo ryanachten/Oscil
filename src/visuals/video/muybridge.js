@@ -9,8 +9,9 @@ const init = ({p, visualSettings, canvWidth, canvHeight, video}) => {
       let counter = 0;
       let prevTileCount = Math.round(visualSettings.tileCount.active);
 
-      video.size(320, 240);
+
       p.createCanvas(canvWidth, canvHeight);
+      p.frameRate(15);
 
       const ownSettings = {
         total, snapshots, counter,
@@ -82,7 +83,7 @@ export default {
   renderer: 'p5',
   settings: {
       tileCount: {
-        active: 10,
+        active: 4,
         min: 2,
         max: 20
       }
