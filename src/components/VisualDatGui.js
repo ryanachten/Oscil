@@ -13,7 +13,6 @@ class VisualDatGui extends React.Component{
 
   componentWillReceiveProps({currentVisual, settings}){
     if (currentVisual !== this.props.currentVisual) {
-      console.log('New visual - update settings');
       this.removeSettings();
       this.addSettings(settings);
     }

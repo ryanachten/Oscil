@@ -2,7 +2,6 @@ import allVisualData from '../store/visuals';
 
 export const setVisual = ({ visual }) => {
   let requiresInit = false;
-  console.log(visual);
   if (allVisualData[visual].init) {
     requiresInit = true;
   }

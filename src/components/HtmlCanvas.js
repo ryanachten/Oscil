@@ -23,7 +23,9 @@ class HtmlCanvas extends React.Component{
 
   componentDidUpdate(prevProps){
     // Resets visual if dat gui sends requiresInit in action
-    if (this.props.requiresInit && this.canvIsMounted) {
+    if (this.props.requiresInit && this.canvIsMounted
+        // prevents executing visual during render transitions
+        && this.props.renderer === 'html') {
       cancelAnimationFrame(this.frameId);
       this.initVisual();
     }
@@ -32,6 +34,7 @@ class HtmlCanvas extends React.Component{
   componentDidMount(){
     const {canvWidth, canvHeight, canvasCtx} = setupCanvas(this.canvas);
     this.canvasCtx = canvasCtx;
+    console.log('componentDidMount', canvasCtx);
 
     this.setState(() => ({ canvWidth, canvHeight }));
 
@@ -110,9 +113,11 @@ class HtmlCanvas extends React.Component{
 }
 
 const mapStateToProps = ({visual, audio}) => {
+  const renderer = visual.renderer;
   const {dataArray, bufferLength} = audio;
   const {visualInit, visualDraw, visualSettings, requiresInit} = selectVisual(visual);
   return {
+    renderer,
     visualInit, visualDraw, visualSettings,
     requiresInit,
     dataArray, bufferLength,

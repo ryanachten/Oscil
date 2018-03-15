@@ -5,7 +5,6 @@ const particleInit = ({canvasCtx, visualSettings, canvWidth, canvHeight}) => {
   return new Promise(function(resolve, reject) {
     canvasCtx.globalCompositeOperation = 'source-over';
     const count = Math.round(visualSettings.particleCount.active);
-    console.log('particle count:', count);
     let particles = [];
     for (let i = 0; i < count; i++) {
       particles.push(new create_particle(count));

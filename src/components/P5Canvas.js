@@ -25,9 +25,10 @@ class P5Canvas extends React.Component{
   }
 
   componentDidUpdate(prevProps){
-    // Resets visual if dat gui sends requiresInit in action
-    if (this.canvIsMounted) {
-      console.log('componentDidUpdate');
+    // Prevents execution on page load
+    if (this.canvIsMounted &&
+      // prevents executing visual during render transitions
+       this.props.renderer === 'p5') {
       this.initVisual();
     }
   }
@@ -68,7 +69,6 @@ class P5Canvas extends React.Component{
   }
 
   resize(){
-    console.log('resize p5 canv');
     this.setState({
       canvWidth: $(window).width(),
       canvHeight: $(window).height()
@@ -83,6 +83,7 @@ class P5Canvas extends React.Component{
     this.myP5.remove();
     $('#visdat-gui').remove();
     $('#videoCapture').remove();
+    window.removeEventListener("resize", this.resize);
   }
 
 
@@ -95,7 +96,6 @@ class P5Canvas extends React.Component{
       canvHeight: this.state.canvHeight,
     }).then((ownSettings) => {
       this.ownSettings = ownSettings;
-      console.log(this.myP5);
       this.drawVisual();
     });
   }
@@ -126,9 +126,11 @@ class P5Canvas extends React.Component{
 }
 
 const mapStateToProps = ({visual, audio}) => {
+  const renderer = visual.renderer;
   const {dataArray, bufferLength} = audio;
   const {visualInit, visualDraw, visualSettings, requiresInit} = selectVisual(visual);
   return {
+    renderer,
     visualInit, visualDraw, visualSettings,
     requiresInit,
     dataArray, bufferLength,

@@ -32,10 +32,10 @@ class VisualPage extends React.Component{
         <VisualControlPanel />
         <AudioAnalyser />
         {this.props.renderer === 'html' && (
-          <HtmlCanvas pathId={this.props.pathId} />
+          <HtmlCanvas pathId={this.props.visual} />
         )}
         {this.props.renderer === 'p5' && (
-          <P5Canvas pathId={this.props.pathId} />
+          <P5Canvas pathId={this.props.visual} />
         )}
       </div>
     );
@@ -44,6 +44,7 @@ class VisualPage extends React.Component{
 
 const mapStateToProps = ({visual}) => {
   return {
+    visual: visual.currentVisual,
     renderer: visual.renderer
   };
 };
