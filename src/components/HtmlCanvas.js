@@ -34,7 +34,6 @@ class HtmlCanvas extends React.Component{
   componentDidMount(){
     const {canvWidth, canvHeight, canvasCtx} = setupCanvas(this.canvas);
     this.canvasCtx = canvasCtx;
-    console.log('componentDidMount', canvasCtx);
 
     this.setState(() => ({ canvWidth, canvHeight }));
 
