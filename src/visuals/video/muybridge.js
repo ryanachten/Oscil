@@ -2,8 +2,6 @@ const init = ({p, visualSettings, canvWidth, canvHeight, video}) => {
 
   return new Promise(function(resolve, reject) {
 
-    p.setup = () => {
-
       let total = 0;
       let snapshots = [];
       let counter = 0;
@@ -19,7 +17,6 @@ const init = ({p, visualSettings, canvWidth, canvHeight, video}) => {
       };
 
       resolve(ownSettings);
-    }
   });
 }
 

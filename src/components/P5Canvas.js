@@ -4,7 +4,6 @@ import $ from 'jquery';
 import p5 from 'p5';
 import 'p5/lib/addons/p5.dom';
 
-import setupCanvas from '../utilities/setupCanvas';
 import selectVisual from '../selectors/visual';
 import {checkAudioPermissions} from '../utilities/setupAudio';
 
@@ -17,7 +16,7 @@ class P5Canvas extends React.Component{
 
     this.initVisual = this.initVisual.bind(this);
     this.drawVisual = this.drawVisual.bind(this);
-    // this.resize = this.resize.bind(this);
+    this.resize = this.resize.bind(this);
 
     this.state = {
       canvWidth: undefined,
@@ -39,10 +38,13 @@ class P5Canvas extends React.Component{
     const canvHeight = $(window).height();
     this.setState(() => ({ canvWidth, canvHeight }));
 
-    // window.addEventListener("resize", this.resize);
+    window.addEventListener("resize", this.resize);
 
     // FIXME: This promise is technically a duplicate of what takes places in the AudioAnalyser component
     checkAudioPermissions.then( (analyser) => {
+
+      // Hide that annoying image() friendly error msg
+      p5.disableFriendlyErrors = true;
 
       const myP5 = new p5( (p) => {
         return p;
@@ -65,15 +67,20 @@ class P5Canvas extends React.Component{
     );
   }
 
-  // resize(){
-  //   this.setState({
-  //     canvWidth: $(window).width(),
-  //     canvHeight: $(window).height()
-  //   });
-  // }
+  resize(){
+    console.log('resize p5 canv');
+    this.setState({
+      canvWidth: $(window).width(),
+      canvHeight: $(window).height()
+    });
+    this.myP5.resizeCanvas(
+      this.state.canvWidth, this.state.canvHeight
+    );
+  }
 
   componentWillUnmount(){
-    cancelAnimationFrame(this.frameId);
+    this.myP5.noLoop();
+    this.myP5.remove();
     $('#visdat-gui').remove();
     $('#videoCapture').remove();
   }
@@ -94,7 +101,6 @@ class P5Canvas extends React.Component{
   }
 
   drawVisual(){
-    // this.frameId = requestAnimationFrame(this.drawVisual);
     this.myP5.draw = () => {
       this.ownSettings = this.props.visualDraw({
         p: this.myP5,

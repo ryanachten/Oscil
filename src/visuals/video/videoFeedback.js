@@ -2,11 +2,6 @@ const init = ({p, visualSettings, canvWidth, canvHeight, video}) => {
 
   return new Promise(function(resolve, reject) {
 
-    // p.setup = () => {
-    console.log('feedback setup');
-
-      // video.size(320, 240);
-
       p.createCanvas(canvWidth, canvHeight);
       // p.frameRate(15);
 
@@ -17,7 +12,6 @@ const init = ({p, visualSettings, canvWidth, canvHeight, video}) => {
       }
 
       resolve(ownSettings);
-    // }
   });
 }
 
