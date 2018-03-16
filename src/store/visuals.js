@@ -11,6 +11,7 @@ import macroblocks from '../visuals/images/macroblocks';
 
 import videoFeedback from '../visuals/video/videoFeedback';
 import muybridge from '../visuals/video/muybridge';
+import rippleTank from '../visuals/video/rippleTank';
 
 const visuals = {
   waveform,
@@ -25,7 +26,8 @@ const visuals = {
   macroblocks,
 
   videoFeedback,
-  muybridge
+  muybridge,
+  rippleTank
 };
 
 export default visuals;

@@ -51,6 +51,9 @@ class P5Canvas extends React.Component{
         return p;
       }, this.container);
 
+      // for retina displays
+      myP5.pixelDensity(1);
+
       this.myP5 = myP5;
       const video = myP5.createCapture( myP5.VIDEO );
       video.id('videoCapture');

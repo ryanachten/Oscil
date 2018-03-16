@@ -8,7 +8,8 @@ const init = ({p, visualSettings, canvWidth, canvHeight, video}) => {
       let prevTileCount = Math.round(visualSettings.tileCount.active);
 
 
-      p.createCanvas(canvWidth, canvHeight);
+      const canvas = p.createCanvas(canvWidth, canvHeight);
+      canvas.id('p5-canvas');
       p.frameRate(15);
 
       const ownSettings = {
