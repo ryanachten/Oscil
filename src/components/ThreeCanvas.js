@@ -39,6 +39,8 @@ class ThreeCanvas extends React.Component{
     const {stats, renderer, canvWidth, canvHeight} = setupThreeCanvas();
     this.setState(() => ({ canvWidth, canvHeight }));
     this.stats = stats;
+    renderer.domElement.id = 'three-canvas';
+    this.canvas.appendChild(renderer.domElement);
     this.renderer = renderer;
 
     // FIXME: This promise is technically a duplicate of what takes places in the AudioAnalyser component
