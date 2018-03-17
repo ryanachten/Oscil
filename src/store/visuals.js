@@ -14,6 +14,7 @@ import muybridge from '../visuals/video/muybridge';
 import rippleTank from '../visuals/video/rippleTank';
 
 import threeTest from '../visuals/three/threeTest';
+import mengerSponge from '../visuals/three/mengerSponge';
 
 const visuals = {
   waveform,
@@ -30,7 +31,9 @@ const visuals = {
   videoFeedback,
   muybridge,
   rippleTank,
-  threeTest
+
+  threeTest,
+  mengerSponge
 };
 
 export default visuals;
