@@ -13,6 +13,8 @@ import videoFeedback from '../visuals/video/videoFeedback';
 import muybridge from '../visuals/video/muybridge';
 import rippleTank from '../visuals/video/rippleTank';
 
+import threeTest from '../visuals/three/threeTest';
+
 const visuals = {
   waveform,
   barGraph,
@@ -27,7 +29,8 @@ const visuals = {
 
   videoFeedback,
   muybridge,
-  rippleTank
+  rippleTank,
+  threeTest
 };
 
 export default visuals;

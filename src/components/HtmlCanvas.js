@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import $ from 'jquery';
-import setupCanvas from '../utilities/setupCanvas';
+
+import {setupHtmlCanvas} from '../utilities/setupCanvas';
 import selectVisual from '../selectors/visual';
 import {checkAudioPermissions} from '../utilities/setupAudio';
-
 import {resolveInit} from '../actions/visual';
 
 class HtmlCanvas extends React.Component{
@@ -32,7 +32,7 @@ class HtmlCanvas extends React.Component{
   }
 
   componentDidMount(){
-    const {canvWidth, canvHeight, canvasCtx} = setupCanvas(this.canvas);
+    const {canvWidth, canvHeight, canvasCtx} = setupHtmlCanvas(this.canvas);
     this.canvasCtx = canvasCtx;
 
     this.setState(() => ({ canvWidth, canvHeight }));
@@ -53,7 +53,6 @@ class HtmlCanvas extends React.Component{
 
   componentWillUnmount(){
     cancelAnimationFrame(this.frameId);
-    $('#visdat-gui').remove();
     window.removeEventListener("resize", this.resize);
     this.canvIsMounted = false;
   }

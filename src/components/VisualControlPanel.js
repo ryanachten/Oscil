@@ -16,7 +16,7 @@ class VisualControlPanel extends React.Component{
         {value: 'shape', label: 'Shape'},
         {value: 'image', label: 'Image'},
         {value: 'video', label: 'Video'},
-        {value: '3D', label: '3D'}
+        {value: 'three', label: '3D'}
       ]
     }
   }

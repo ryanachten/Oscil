@@ -7,6 +7,7 @@ import AudioAnalyser from './AudioAnalyser';
 import VisualControlPanel from './VisualControlPanel';
 import HtmlCanvas from '../components/HtmlCanvas';
 import P5Canvas from '../components/P5Canvas';
+import ThreeCanvas from '../components/ThreeCanvas';
 
 class VisualPage extends React.Component{
 
@@ -36,6 +37,9 @@ class VisualPage extends React.Component{
         )}
         {this.props.renderer === 'p5' && (
           <P5Canvas pathId={this.props.visual} />
+        )}
+        {this.props.renderer === 'three' && (
+          <ThreeCanvas pathId={this.props.visual} />
         )}
       </div>
     );
