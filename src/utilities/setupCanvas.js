@@ -23,6 +23,7 @@ export const setupHtmlCanvas = (canvas) => {
 export const setupThreeCanvas = () => {
   // Stats performance visualiser
   const stats = Stats();
+  stats.domElement.id = 'stats-graph';
   stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
   document.body.appendChild( stats.domElement );
   stats.domElement.style.position = 'absolute';

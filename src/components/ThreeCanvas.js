@@ -57,6 +57,8 @@ class ThreeCanvas extends React.Component{
 
   componentWillUnmount(){
     cancelAnimationFrame(this.frameId);
+    const statsCanvas = document.getElementById('stats-graph');
+    statsCanvas.remove();
     window.removeEventListener("resize", this.resize);
     this.canvIsMounted = false;
   }
@@ -76,7 +78,6 @@ class ThreeCanvas extends React.Component{
       canvHeight: this.state.canvHeight
     }).then((ownSettings) => {
 
-      console.log('init');
       this.ownSettings = ownSettings;
 
       this.drawVisual();

@@ -77,8 +77,7 @@ const init = ({visualSettings, canvWidth, canvHeight}) => {
     var reactParticles = new THREE.Object3D();
 
     var particleGridGeo = new THREE.DodecahedronGeometry(500, 0);
-    particleGridGeo.computeLineDistances();
-    console.log(particleGridGeo);
+    // particleGridGeo.computeLineDistances();
 
     var particleGridMat = new THREE.LineDashedMaterial({ color: 0xffffff, linewidth: 100, scale: 100, dashSize: 100, gapSize: 100 });
 
