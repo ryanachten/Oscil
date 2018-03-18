@@ -3,43 +3,43 @@ import OrbitControls from 'orbit-controls-es6';
 import {mapRange} from '../../utilities/visualUtilities';
 
 function superShapeRadius(theta, m, n1, n2, n3){
-  var a = 1;
-  var b = 1;
+  const a = 1;
+  const b = 1;
 
-  var t1 = Math.abs((1/a) * Math.cos(m * theta /4));
+  let t1 = Math.abs((1/a) * Math.cos(m * theta /4));
   t1 = Math.pow(t1, n2);
 
-  var t2 = Math.abs((1/b) * Math.sin(m * theta /4));
+  let t2 = Math.abs((1/b) * Math.sin(m * theta /4));
   t2 = Math.pow(t2, n3);
 
-  var t3 = t1 + t2;
-  var r = Math.pow(t3, -1/n1);
+  const t3 = t1 + t2;
+  const r = Math.pow(t3, -1/n1);
 
-  // var r = 1; == sphere
+  // const r = 1; == sphere
   return r;
 }
 
 function calcSphere(radius, detailLevel, latSuperRadForumla, longSuperRadForumla){
 
-  var globePoints = [];
+  const globePoints = [];
 
-  for (var i = 0; i < detailLevel+1; i++) { //latitude
-    var lat = mapRange(i, 0, detailLevel, -Math.PI/2, Math.PI/2);
+  for (let i = 0; i < detailLevel+1; i++) { //latitude
+    const lat = mapRange(i, 0, detailLevel, -Math.PI/2, Math.PI/2);
     // get lat supershape radius based off formula
-    var f = latSuperRadForumla;
-    var r2 = superShapeRadius(lat, f.m, f.n1, f.n2, f.n3);
+    const f = latSuperRadForumla;
+    const r2 = superShapeRadius(lat, f.m, f.n1, f.n2, f.n3);
 
-    var latPoints = [];
-    for (var j = 0; j < detailLevel+1; j++) { //longitude
-      var long = mapRange(j, 0, detailLevel, -Math.PI, Math.PI);
+    const latPoints = [];
+    for (let j = 0; j < detailLevel+1; j++) { //longitude
+      const long = mapRange(j, 0, detailLevel, -Math.PI, Math.PI);
       // get lat supershape radius based off formula
-      var f = longSuperRadForumla;
-      var r1 = superShapeRadius(long, f.m, f.n1, f.n2, f.n3);
+      const f = longSuperRadForumla;
+      const r1 = superShapeRadius(long, f.m, f.n1, f.n2, f.n3);
 
       // convert lat and long to cartesian coords
-      var x = radius * r1 * Math.cos(long) * r2 * Math.cos(lat);
-      var y = radius * r1 * Math.sin(long) * r2 *  Math.cos(lat);
-      var z = radius * r2 * Math.sin(lat);
+      const x = radius * r1 * Math.cos(long) * r2 * Math.cos(lat);
+      const y = radius * r1 * Math.sin(long) * r2 *  Math.cos(lat);
+      const z = radius * r2 * Math.sin(lat);
 
       latPoints.push({x, y, z});
     }
@@ -50,30 +50,30 @@ function calcSphere(radius, detailLevel, latSuperRadForumla, longSuperRadForumla
 
 function buildSphere(globePoints, sphereGeo) {
 
-  for (var i = 0; i < globePoints.length-1; i++) {
+  for (let i = 0; i < globePoints.length-1; i++) {
 
-    var hue = mapRange(i, 0, globePoints.length-1, 0, 360*6);
+    const hue = mapRange(i, 0, globePoints.length-1, 0, 360*6);
 
-    for (var j = 0; j < globePoints[i].length-1; j++) {
+    for (let j = 0; j < globePoints[i].length-1; j++) {
 
-        var curIndex = sphereGeo.vertices.length; //used for tracking cur location in vertices array
+        const curIndex = sphereGeo.vertices.length; //used for tracking cur location in vertices array
 
-        var v1 = globePoints[i][j];
-        var v2 = globePoints[i+1][j];
-        var v3 = globePoints[i][j+1];
-        var v4 = globePoints[i+1][j+1];
+        const v1 = globePoints[i][j];
+        const v2 = globePoints[i+1][j];
+        const v3 = globePoints[i][j+1];
+        const v4 = globePoints[i+1][j+1];
 
         sphereGeo.vertices.push( new THREE.Vector3(v1.x, v1.y, v1.z) );
         sphereGeo.vertices.push( new THREE.Vector3(v2.x, v2.y, v2.z) );
         sphereGeo.vertices.push( new THREE.Vector3(v3.x, v3.y, v3.z) );
         sphereGeo.vertices.push( new THREE.Vector3(v4.x, v4.y, v4.z) );
 
-        var f1 = new THREE.Face3(
+        const f1 = new THREE.Face3(
           curIndex+0,
           curIndex+1,
           curIndex+2);
           f1.color = new THREE.Color("hsl("+(hue%360)+", 100%, 50%)");
-        var f2 = new THREE.Face3(
+        const f2 = new THREE.Face3(
           curIndex+1,
           curIndex+2,
           curIndex+3);
@@ -90,61 +90,56 @@ const init = ({visualSettings, canvWidth, canvHeight}) => {
 
   return new Promise(function(resolve, reject) {
     // Camera setup
-    var camera = new THREE.PerspectiveCamera(35,
+    const camera = new THREE.PerspectiveCamera(35,
       canvWidth / canvHeight, 0.1, 3000);
 
     camera.position.set(0, 0, 1000);
     const controls = new OrbitControls(camera);
 
-
-    // Scene setup
-    var scene,
-    ambientLight, pointLight, worldMesh;
-
-    var latSuperRadForumla = {
+    const latSuperRadForumla = {
       m: 2,
       n1: 10,
       n2: 10,
       n3: 10,
     };
 
-    var longSuperRadForumla = {
+    const longSuperRadForumla = {
       m: 8,
       n1: 60,
       n2: 100,
       n3: 30,
     };
 
-    var sphereGeo = new THREE.Geometry();
-    var sphereMat = new THREE.MeshLambertMaterial({vertexColors: THREE.FaceColors});
+    let sphereGeo = new THREE.Geometry();
+    const sphereMat = new THREE.MeshLambertMaterial({vertexColors: THREE.FaceColors});
     sphereMat.side = THREE.DoubleSide;
-    var sphereMesh = new THREE.Mesh(sphereGeo, sphereMat);
+    const sphereMesh = new THREE.Mesh(sphereGeo, sphereMat);
 
-    scene = new THREE.Scene();
+    const scene = new THREE.Scene();
 
-    ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     ambientLight.position.set(0, 0, 0);
     scene.add(ambientLight);
 
-    pointLight = new THREE.PointLight(0xffffff, 0.5);
+    const pointLight = new THREE.PointLight(0xffffff, 0.5);
     pointLight.position.set(0, 1000, 1000);
     // scene.add(pointLight);
 
-    var worldGeo = new THREE.SphereGeometry(1000, 20, 20);
-    var worldMat = new THREE.MeshLambertMaterial({ color: 0xef4773, side: THREE.BackSide });
-    var worldMesh = new THREE.Mesh(worldGeo, worldMat);
+    const worldGeo = new THREE.SphereGeometry(1000, 20, 20);
+    const worldMat = new THREE.MeshLambertMaterial({ color: 0xef4773, side: THREE.BackSide });
+    const worldMesh = new THREE.Mesh(worldGeo, worldMat);
     scene.add(worldMesh);
 
     scene.fog = new THREE.Fog( 0xefd1b5, 0.1, 2000 );
 
-    var spherePoints = calcSphere(200, 20, latSuperRadForumla, longSuperRadForumla);
+    const spherePoints = calcSphere(200, 20, latSuperRadForumla, longSuperRadForumla);
     sphereGeo = buildSphere(spherePoints, sphereGeo);
     scene.add(sphereMesh);
 
 
     sphereGeo.computeFaceNormals();
 
-    var colOffset = 1;
+    const colOffset = 1;
 
     const ownSettings = {
         scene, camera, controls,
@@ -169,18 +164,18 @@ const draw = ({
 
   function updateSphere(globePoints) {
 
-    var newPoints = [];
+    const newPoints = [];
 
-    for (var i = 0; i < globePoints.length-1; i++) {
+    for (let i = 0; i < globePoints.length-1; i++) {
 
-      var hue = mapRange(i, 0, globePoints.length-1, 0, 360*6);
+      const hue = mapRange(i, 0, globePoints.length-1, 0, 360*6);
 
-      for (var j = 0; j < globePoints[i].length-1; j++) {
+      for (let j = 0; j < globePoints[i].length-1; j++) {
 
-          var v1 = globePoints[i][j];
-          var v2 = globePoints[i+1][j];
-          var v3 = globePoints[i][j+1];
-          var v4 = globePoints[i+1][j+1];
+          const v1 = globePoints[i][j];
+          const v2 = globePoints[i+1][j];
+          const v3 = globePoints[i][j+1];
+          const v4 = globePoints[i+1][j+1];
 
           // sphereGeo.vertices.push( new THREE.Vector3(v1.x, v1.y, v1.z) );
           newPoints.push( {x: v1.x, y: v1.y, z: v1.z} );
@@ -191,16 +186,16 @@ const draw = ({
       }
     }
 
-    for (var i = 0; i < sphereGeo.vertices.length; i++) {
+    for (let i = 0; i < sphereGeo.vertices.length; i++) {
 
       sphereGeo.vertices[i].set(newPoints[i].x, newPoints[i].y, newPoints[i].z);
     }
     sphereGeo.verticesNeedUpdate = true;
 
-    for (var i = 0; i < sphereGeo.faces.length; i++) {
-      var hue = mapRange(i, 0, sphereGeo.faces.length, 0, 360*visualSettings.colorCycle.active);
+    for (let i = 0; i < sphereGeo.faces.length; i++) {
+      const hue = mapRange(i, 0, sphereGeo.faces.length, 0, 360*visualSettings.colorCycle.active);
 
-      var newCol = new THREE.Color("hsl("+((hue+colOffset)%360)+", 100%, 50%)");
+      const newCol = new THREE.Color("hsl("+((hue+colOffset)%360)+", 100%, 50%)");
       sphereGeo.faces[i].color.copy(newCol)
     }
     colOffset += 5;
@@ -211,7 +206,7 @@ const draw = ({
 
   controls.update();
 
-  var da = dataArray[0];
+  const da = dataArray[0];
 
   if (visualSettings.react_lat_m.active) {
     latSuperRadForumla.m = (da/255) * visualSettings.lat_m.active;
@@ -256,7 +251,7 @@ const draw = ({
   }
 
 
-  var spherePoints = calcSphere(200, 20, latSuperRadForumla, longSuperRadForumla);
+  const spherePoints = calcSphere(200, 20, latSuperRadForumla, longSuperRadForumla);
   updateSphere(spherePoints);
 
   sphereMesh.rotation.x += 0.01;
