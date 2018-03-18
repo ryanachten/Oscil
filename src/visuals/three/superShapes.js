@@ -91,7 +91,7 @@ const init = ({visualSettings, canvWidth, canvHeight}) => {
   return new Promise(function(resolve, reject) {
     // Camera setup
     var camera = new THREE.PerspectiveCamera(35,
-      window.innerWidth / window.innerHeight, 0.1, 3000);
+      canvWidth / canvHeight, 0.1, 3000);
 
     camera.position.set(0, 0, 1000);
     const controls = new OrbitControls(camera);

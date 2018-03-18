@@ -16,6 +16,7 @@ import rippleTank from '../visuals/video/rippleTank';
 import threeTest from '../visuals/three/threeTest';
 import mengerSponge from '../visuals/three/mengerSponge';
 import superShapes from '../visuals/three/superShapes';
+import terrainGen from '../visuals/three/terrainGen';
 
 const visuals = {
   waveform,
@@ -35,7 +36,8 @@ const visuals = {
 
   threeTest,
   mengerSponge,
-  superShapes
+  superShapes,
+  terrainGen
 };
 
 export default visuals;
