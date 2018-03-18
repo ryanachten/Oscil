@@ -76,6 +76,7 @@ class ThreeCanvas extends React.Component{
       canvHeight: this.state.canvHeight
     }).then((ownSettings) => {
 
+      console.log('init');
       this.ownSettings = ownSettings;
 
       this.drawVisual();

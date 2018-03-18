@@ -42,7 +42,8 @@ const init = ({visualSettings, canvWidth, canvHeight}) => {
       this.r = r;
 
       var boxGeo = new THREE.BoxGeometry(this.r, this.r, this.r);
-      boxGeo.computeLineDistances();
+      // THREE.Line.computeLineDistances
+      // boxGeo.computeLineDistances();
 
       var boxMat = new THREE.MeshPhongMaterial({ color: 0xffffff, specular: 0xffffff, wireframe: false, transparent: true, opacity: 0.5, side: THREE.DoubleSide });
       var boxMesh = new THREE.Mesh(boxGeo, boxMat);
@@ -99,9 +100,14 @@ const init = ({visualSettings, canvWidth, canvHeight}) => {
     }
     scene.add(sponge);
 
+    var delta = 0.01;
+
     const ownSettings = {
-      sponge, worldMat
+      scene, camera,
+      sponge, worldMat, delta
     };
+
+    resolve(ownSettings);
   });
 
 }
@@ -115,6 +121,9 @@ const draw = ({
   }) => {
 
   stats.begin();
+
+  let { scene, camera,
+    sponge, worldMat, delta } = ownSettings;
 
   var da = dataArray[0]/255;
 
@@ -160,6 +169,11 @@ const draw = ({
   scene.fog.color= new THREE.Color("hsl(" + (Math.abs(50+hue)) + ", 20%, 80%)");
 
   renderer.render(scene, camera);
+
+  return  {
+    scene, camera,
+    sponge, worldMat, delta
+  };
 
   stats.end();
 }
