@@ -21,8 +21,6 @@ function superShapeRadius(theta, m, n1, n2, n3){
 
 function calcSphere(radius, detailLevel, latSuperRadForumla, longSuperRadForumla){
 
-  console.log(latSuperRadForumla);
-
   var globePoints = [];
 
   for (var i = 0; i < detailLevel+1; i++) { //latitude
@@ -150,7 +148,7 @@ const init = ({visualSettings, canvWidth, canvHeight}) => {
 
     const ownSettings = {
         scene, camera, controls,
-        colOffset, sphereGeo,
+        colOffset, sphereGeo, sphereMesh,
         latSuperRadForumla, longSuperRadForumla
     }
 
@@ -166,7 +164,8 @@ const draw = ({
   }) => {
 
   let { scene, camera, controls,
-      colOffset, sphereGeo, latSuperRadForumla, longSuperRadForumla } = ownSettings;
+      colOffset, sphereGeo, sphereMesh,
+      latSuperRadForumla, longSuperRadForumla } = ownSettings;
 
   function updateSphere(globePoints) {
 
@@ -257,7 +256,7 @@ const draw = ({
   }
 
 
-  var spherePoints = calcSphere(200, 20);
+  var spherePoints = calcSphere(200, 20, latSuperRadForumla, longSuperRadForumla);
   updateSphere(spherePoints);
 
   sphereMesh.rotation.x += 0.01;
@@ -267,12 +266,10 @@ const draw = ({
 
   stats.end();
 
-  console.log(latSuperRadForumla, longSuperRadForumla);
-
   ownSettings = {
-      scene, camera, controls,
-      colOffset, sphereGeo,
-      latSuperRadForumla, longSuperRadForumla
+    scene, camera, controls,
+    colOffset, sphereGeo, sphereMesh,
+    latSuperRadForumla, longSuperRadForumla
   }
 
   return ownSettings;
