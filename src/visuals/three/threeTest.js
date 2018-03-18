@@ -13,25 +13,25 @@ const init = ({visualSettings, canvWidth, canvHeight}) => {
     const controls = new OrbitControls(camera);
 
     // Scene setup
-    var scene = new THREE.Scene();
+    const scene = new THREE.Scene();
 
     scene.fog = new THREE.Fog( 0xefd1b5, 0.1, 2000 );
 
     // Light setup
       // light( colour, strength)
-    var ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
     ambientLight.position.set(0, 0, 0);
     scene.add(ambientLight);
 
-    var pointLight = new THREE.PointLight(0xffffff, 0.3);
+    const pointLight = new THREE.PointLight(0xffffff, 0.3);
     pointLight.position.set(0, 1000, 1000);
     scene.add(pointLight);
 
 
     // Geometry
-    var worldGeo = new THREE.SphereGeometry(1100, 32, 32);
-    var worldMat = new THREE.MeshLambertMaterial({ color: 0xef4773, side: THREE.BackSide });
-    var worldMesh = new THREE.Mesh(worldGeo, worldMat);
+    const worldGeo = new THREE.SphereGeometry(1100, 32, 32);
+    const worldMat = new THREE.MeshLambertMaterial({ color: 0xef4773, side: THREE.BackSide });
+    const worldMesh = new THREE.Mesh(worldGeo, worldMat);
     worldMesh.name = 'worldMesh';
     scene.add(worldMesh);
 
@@ -39,33 +39,33 @@ const init = ({visualSettings, canvWidth, canvHeight}) => {
     // React Particle system
 
     function createReactParticle(){
-      var reactParticle = new THREE.Object3D();
+      const reactParticle = new THREE.Object3D();
       reactParticle.name = 'reactParticle';
 
       // Particle nucleus
-      var nucleusGeo = new THREE.IcosahedronGeometry(50, 1);
-      var nucleusMat = new THREE.MeshStandardMaterial(
+      const nucleusGeo = new THREE.IcosahedronGeometry(50, 1);
+      const nucleusMat = new THREE.MeshStandardMaterial(
         { color: 0xbd95ef, metalness: 1, roughness: 0.50, transparent: true, opacity: 0.7} );
-      var nucleusMesh = new THREE.Mesh(nucleusGeo, nucleusMat);
+      const nucleusMesh = new THREE.Mesh(nucleusGeo, nucleusMat);
       nucleusMesh.name = 'nucleusMesh';
       reactParticle.add(nucleusMesh);
 
 
-      var particleLight = new THREE.PointLight(0xffffff, 0.5, 300, 2);
+      const particleLight = new THREE.PointLight(0xffffff, 0.5, 300, 2);
       particleLight.position.set(nucleusMesh.position.x, nucleusMesh.position.y, nucleusMesh.position.z);
       reactParticle.add(particleLight);
 
       // Particle outer dust
-      var sphereParticles = new THREE.Object3D();
+      const sphereParticles = new THREE.Object3D();
       sphereParticles.name = 'sphereParticles';
 
-      for (var i = 0; i < nucleusGeo.vertices.length; i++){
-        var tempVert = new THREE.Vector3(nucleusGeo.vertices[i].x, nucleusGeo.vertices[i].y, nucleusGeo.vertices[i].z);
+      for (let i = 0; i < nucleusGeo.vertices.length; i++){
+        const tempVert = new THREE.Vector3(nucleusGeo.vertices[i].x, nucleusGeo.vertices[i].y, nucleusGeo.vertices[i].z);
 
-        var tempSphereGeo = new THREE.SphereGeometry(5, 10, 10)
-        var tempSphereMat = new THREE.MeshLambertMaterial(
+        const tempSphereGeo = new THREE.SphereGeometry(5, 10, 10)
+        const tempSphereMat = new THREE.MeshLambertMaterial(
           { color: 0x47d0ef });
-        var tempSphereMesh = new THREE.Mesh(tempSphereGeo, tempSphereMat);
+        const tempSphereMesh = new THREE.Mesh(tempSphereGeo, tempSphereMat);
         tempSphereMesh.position.set(tempVert.x, tempVert.y, tempVert.z);
         sphereParticles.add(tempSphereMesh);
       }
@@ -74,20 +74,20 @@ const init = ({visualSettings, canvWidth, canvHeight}) => {
       return reactParticle;
     }
 
-    var reactParticles = new THREE.Object3D();
+    const reactParticles = new THREE.Object3D();
 
-    var particleGridGeo = new THREE.DodecahedronGeometry(500, 0);
+    const particleGridGeo = new THREE.DodecahedronGeometry(500, 0);
     // particleGridGeo.computeLineDistances();
 
-    var particleGridMat = new THREE.LineDashedMaterial({ color: 0xffffff, linewidth: 100, scale: 100, dashSize: 100, gapSize: 100 });
+    const particleGridMat = new THREE.LineDashedMaterial({ color: 0xffffff, linewidth: 100, scale: 100, dashSize: 100, gapSize: 100 });
 
-    var particleGridLines = new THREE.LineSegments(particleGridGeo, particleGridMat);
+    const particleGridLines = new THREE.LineSegments(particleGridGeo, particleGridMat);
     particleGridLines.name = 'particleGrid';
 
 
-    for (var i = 0; i < particleGridGeo.vertices.length; i++) {
-      var tempPart = createReactParticle();
-      var tempPos = particleGridGeo.vertices[i];
+    for (let i = 0; i < particleGridGeo.vertices.length; i++) {
+      const tempPart = createReactParticle();
+      const tempPos = particleGridGeo.vertices[i];
       tempPart.position.set(tempPos.x, tempPos.y, tempPos.z);
       reactParticles.add(tempPart);
     }
@@ -98,10 +98,10 @@ const init = ({visualSettings, canvWidth, canvHeight}) => {
 
     // Central Torus
       //r, t, ts, rs, p, q
-    var centralTorusGeo = new THREE.TorusKnotGeometry(250, 5, 50, 4, 2, 5);
-    var centralTorusMat = new THREE.MeshStandardMaterial(
+    const centralTorusGeo = new THREE.TorusKnotGeometry(250, 5, 50, 4, 2, 5);
+    const centralTorusMat = new THREE.MeshStandardMaterial(
       { color: 0xbd95ef, metalness: 1, roughness: 0.50, transparent: true, opacity: 0.7} );
-    var centralTorusMesh = new THREE.Mesh(centralTorusGeo, centralTorusMat);
+    const centralTorusMesh = new THREE.Mesh(centralTorusGeo, centralTorusMat);
     scene.add(centralTorusMesh);
 
 
@@ -142,12 +142,12 @@ const draw = ({
 
     // console.log(particle);
     // debugger;
-    var nucleus = particle.children[0];
-    var sphereParticles = particle.children[2];
+    const nucleus = particle.children[0];
+    const sphereParticles = particle.children[2];
 
     sphereParticles.scale.x = sphereParticles.scale.y = sphereParticles.scale.z = 1+curDa;
 
-    for (var i = 0; i < sphereParticles.children.length; i++) {
+    for (let i = 0; i < sphereParticles.children.length; i++) {
       sphereParticles.children[i].scale.x = sphereParticles.children[i].scale.y = sphereParticles.children[i].scale.z = 1-curDa;
     }
     sphereParticles.rotation.x -= 0.01;
@@ -160,9 +160,9 @@ const draw = ({
     nucleus.rotation.z += 0.01;
   }
 
-  var indexIncrement = Math.floor(dataArray.length / reactParticles.children.length);
-  for (var i = 0; i < reactParticles.children.length; i++) {
-    var da = dataArray[i*indexIncrement]/255 +0.01;
+  const indexIncrement = Math.floor(dataArray.length / reactParticles.children.length);
+  for (let i = 0; i < reactParticles.children.length; i++) {
+    const da = dataArray[i*indexIncrement]/255 +0.01;
     if(reactParticles.children[i].name !== 'particleGrid'){
         updateReactParticle(reactParticles.children[i], da);
     }
@@ -170,7 +170,7 @@ const draw = ({
   }
 
   // Update environment
-  var hue = (dataArray[0]/255)
+  const hue = (dataArray[0]/255)
             *40 //range
             +172; //base colour
   scene.fog.color = new THREE.Color('hsl('+hue+', 50%, 79%)');

@@ -6,7 +6,7 @@ const init = ({visualSettings, canvWidth, canvHeight}) => {
   return new Promise(function(resolve, reject) {
     // Camera setup
       //PerspectiveCamera( fieldOfView, aspectRatio, minDist, maxDist)
-    var camera = new THREE.PerspectiveCamera(75,
+    const camera = new THREE.PerspectiveCamera(75,
       window.innerWidth / window.innerHeight, 0.1, 3000);
 
     camera.position.set(0, 0, 500);
@@ -14,26 +14,26 @@ const init = ({visualSettings, canvWidth, canvHeight}) => {
 
 
     // Scene setup
-    var scene = new THREE.Scene();
+    const scene = new THREE.Scene();
     scene.fog = new THREE.Fog( 0xefd1b5, 0.1, 2000 );
 
-    var worldGeo = new THREE.SphereGeometry(1100, 32, 32);
-    var worldMat = new THREE.MeshLambertMaterial({ color: 0xef4773, side: THREE.BackSide });
-    var worldMesh = new THREE.Mesh(worldGeo, worldMat);
+    const worldGeo = new THREE.SphereGeometry(1100, 32, 32);
+    const worldMat = new THREE.MeshLambertMaterial({ color: 0xef4773, side: THREE.BackSide });
+    const worldMesh = new THREE.Mesh(worldGeo, worldMat);
     worldMesh.name = 'worldMesh';
     scene.add(worldMesh);
 
     // Light setup
       // light( colour, strength)
-    var ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     ambientLight.position.set(0, 0, 0);
     // scene.add(ambientLight);
 
-    var pointLight = new THREE.PointLight(0xffffff, 0.5);
+    const pointLight = new THREE.PointLight(0xffffff, 0.5);
     pointLight.position.set(0, 1000, 1000);
     scene.add(pointLight);
 
-    var hemisphereLight = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
+    const hemisphereLight = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
     scene.add(hemisphereLight);
 
     // Geometry
@@ -41,14 +41,14 @@ const init = ({visualSettings, canvWidth, canvHeight}) => {
       this.pos = new THREE.Vector3( x, y, z);
       this.r = r;
 
-      var boxGeo = new THREE.BoxGeometry(this.r, this.r, this.r);
+      const boxGeo = new THREE.BoxGeometry(this.r, this.r, this.r);
       // THREE.Line.computeLineDistances
       // boxGeo.computeLineDistances();
 
-      var boxMat = new THREE.MeshPhongMaterial({ color: 0xffffff, specular: 0xffffff, wireframe: false, transparent: true, opacity: 0.5, side: THREE.DoubleSide });
-      var boxMesh = new THREE.Mesh(boxGeo, boxMat);
+      const boxMat = new THREE.MeshPhongMaterial({ color: 0xffffff, specular: 0xffffff, wireframe: false, transparent: true, opacity: 0.5, side: THREE.DoubleSide });
+      const boxMesh = new THREE.Mesh(boxGeo, boxMat);
 
-      var boxObj = new THREE.Object3D();
+      const boxObj = new THREE.Object3D();
       boxObj.add(boxMesh);
       boxObj.position.set( x, y, z );
 
@@ -64,17 +64,17 @@ const init = ({visualSettings, canvWidth, canvHeight}) => {
       // scene.add(this.mesh);
 
       this.generate = function(){
-          var boxes = [];
-          for (var x = -1; x < 2; x++) {
-            for (var y = -1; y < 2; y++) {
-              for (var z = -1; z < 2; z++) {
+          const boxes = [];
+          for (let x = -1; x < 2; x++) {
+            for (let y = -1; y < 2; y++) {
+              for (let z = -1; z < 2; z++) {
 
                 // Find the holes for the sponge
-                var sum = Math.abs(x) + Math.abs(y) + Math.abs(z);
-                var newR = this.r /3; //reduces size for ea. fractal step
+                const sum = Math.abs(x) + Math.abs(y) + Math.abs(z);
+                const newR = this.r /3; //reduces size for ea. fractal step
                 if (sum > 1) {
-                  // var b = new Box( Math.random() * 60, Math.random() * 60, Math.random() * 60, newR);
-                  var b = new Box( this.pos.x + x * newR, this.pos.y + y * newR, this.pos.z + z * newR, newR);
+                  // const b = new Box( Math.random() * 60, Math.random() * 60, Math.random() * 60, newR);
+                  const b = new Box( this.pos.x + x * newR, this.pos.y + y * newR, this.pos.z + z * newR, newR);
                   boxes.push(b);
                 }
               }
@@ -84,23 +84,23 @@ const init = ({visualSettings, canvWidth, canvHeight}) => {
       }
     }
 
-    var a = 0;
-    var sponge = new THREE.Object3D();
+    const a = 0;
+    const sponge = new THREE.Object3D();
 
-    var starterBox = new Box(0, 0, 0, 200);
-    var gen2boxes = starterBox.generate();
-    var gen3boxes = [];
-    for (var i = 0; i < gen2boxes.length; i++) {
+    const starterBox = new Box(0, 0, 0, 200);
+    const gen2boxes = starterBox.generate();
+    const gen3boxes = [];
+    for (let i = 0; i < gen2boxes.length; i++) {
       gen3boxes.push(gen2boxes[i].generate());
     }
-    for (var i = 0; i < gen3boxes.length; i++) {
-      for (var j = 0; j < gen3boxes[i].length; j++) {
+    for (let i = 0; i < gen3boxes.length; i++) {
+      for (let j = 0; j < gen3boxes[i].length; j++) {
         sponge.add(gen3boxes[i][j].mesh);
       }
     }
     scene.add(sponge);
 
-    var delta = 0.01;
+    const delta = 0.01;
 
     const ownSettings = {
       scene, camera,
@@ -125,18 +125,20 @@ const draw = ({
   let { scene, camera,
     sponge, worldMat, delta } = ownSettings;
 
-  var da = dataArray[0]/255;
+  const da = dataArray[0]/255;
 
-  var sinSize = Math.sin(delta);
+  const sinSize = Math.sin(delta);
   delta += 0.001;
 
   sponge.rotation.x += 0.01;
   sponge.rotation.y += 0.01;
 
-  for (var i = 0; i < sponge.children.length; i++) {
+  let hue = undefined;
 
-    var len = sinSize * 500;
-    var scl = Math.abs(
+  for (let i = 0; i < sponge.children.length; i++) {
+
+    const len = sinSize * 500;
+    const scl = Math.abs(
         3*(1-da) //music reaction scale
         * sinSize //scaled according boxes distance
         + 0.1 ); //prevents errors from being too small
@@ -147,21 +149,22 @@ const draw = ({
     sponge.children[i].rotation.x -= 0.01;
     sponge.children[i].rotation.y -= 0.01;
 
-    var originalPos = sponge.children[i].userData;
+    let originalPos = sponge.children[i].userData;
     originalPos = new THREE.Vector3(originalPos.posX, originalPos.posY, originalPos.posZ);
-    var oldLength = originalPos.length();
+    const oldLength = originalPos.length();
 
     if ( oldLength !== 0 ) {
         originalPos.multiplyScalar( 1 + ( len / oldLength ) );
         sponge.children[i].position.copy(originalPos);
     }
 
-    var hue = Math.abs(((45/sponge.children.length) * i + 90)
+    hue = Math.abs(((45/sponge.children.length) * i + 90)
               + (sinSize*180));
-    var tempColor = new THREE.Color("hsl(" + hue + ", 70%, 50%)");
+    // console.log(hue);
+    const tempColor = new THREE.Color("hsl(" + hue + ", 70%, 50%)");
     sponge.children[i].children[0].material.color = tempColor;
 
-    var tempSpecular = new THREE.Color("hsl(" + (Math.abs(180-hue)) + ", 70%, 50%)");
+    const tempSpecular = new THREE.Color("hsl(" + (Math.abs(180-hue)) + ", 70%, 50%)");
     sponge.children[i].children[0].material.specular = tempColor;
   }
 
