@@ -23,6 +23,7 @@ const draw = ({
   }) => {
 
   let { xoff, yoff, video } = ownSettings;
+  video.loadPixels();
 
   const da = dataArray[0]/255;
   const vWidth = p.map(da, 0, 1, 0, canvWidth);
