@@ -6,7 +6,7 @@ const init = ({canvasCtx, visualSettings, canvWidth, canvHeight}) => {
 
 		const {offsetY, offsetX} = offsetRand(canvWidth, canvHeight);
 
-    var img = new Image();
+    const img = new Image();
     img.src = 'https://upload.wikimedia.org/wikipedia/commons/4/44/Jelly_cc11.jpg' + '?' + new Date().getTime();
     img.setAttribute('crossOrigin', '');
 
@@ -23,7 +23,7 @@ const init = ({canvasCtx, visualSettings, canvWidth, canvHeight}) => {
   });
 };
 
-function offsetRand(canvWidth, canvHeight){
+const offsetRand = (canvWidth, canvHeight) => {
   const offsetY = Math.floor((Math.random() * canvHeight) +1);
   const offsetX = Math.floor((Math.random() * canvWidth) +1);
   return {offsetY, offsetX};
@@ -49,16 +49,16 @@ const draw = ({
 
   canvasCtx.drawImage(img, 0,0 , canvWidth, canvHeight);
 
-  var imgdata = canvasCtx.getImageData(0,0, canvWidth, canvHeight);
-  var data = imgdata.data;
-  var modWidth = visualSettings.modifyWidth.active;
+  const imgdata = canvasCtx.getImageData(0,0, canvWidth, canvHeight);
+  const data = imgdata.data;
+  const modWidth = visualSettings.modifyWidth.active;
 
-  for(var i = 0; i < bufferLength; i+=50) {
+  for(let i = 0; i < bufferLength; i+=50) {
 
-    var da = dataArray[i];
-    var da2 = dataArray[i+10];
-    var da3 = dataArray[i+20];
-    var logda, logda2, logda3;
+    const da = dataArray[i];
+    const da2 = dataArray[i+10];
+    const da3 = dataArray[i+20];
+    let logda, logda2, logda3;
 
     if (da !== 0){
       logda = Math.floor(Math.log(da) / Math.log(1.05));
@@ -71,7 +71,7 @@ const draw = ({
     }
 
     function repeatY(){
-      var sampleY;
+      let sampleY;
         if(isNaN(logda) || logda == 0 || !isFinite(offsetY)){
           sampleY = canvHeight/2;
         }else{
@@ -82,23 +82,23 @@ const draw = ({
           }
         }
 
-      var sampleHeight;
+      let sampleHeight;
         if(isNaN(logda2) || logda2 == 0 || !modWidth){
           sampleHeight = 1;
         }else{
           sampleHeight = Math.abs(logda2);
         }
 
-      var frstRow = canvasCtx.getImageData(0,sampleY, canvWidth, sampleHeight);
+      const frstRow = canvasCtx.getImageData(0,sampleY, canvWidth, sampleHeight);
       canvasCtx.clearRect(0,0, canvWidth, canvHeight);
 
-      for (var i = 0; i < (canvHeight/sampleHeight); i++) {
+      for (let i = 0; i < (canvHeight/sampleHeight); i++) {
         canvasCtx.putImageData(frstRow, 0,(i*sampleHeight));
       }
     }
 
     function repeatX(){
-      var sampleX;
+      let sampleX;
         if(isNaN(logda) || logda == 0 || !isFinite(offsetX)){
           sampleX = canvWidth/2;
         }else{
@@ -109,17 +109,17 @@ const draw = ({
           }
         }
 
-      var sampleWidth;
+      let sampleWidth;
         if(isNaN(logda2) || logda2 == 0 || !modWidth){
           sampleWidth = 1;
         }else{
           sampleWidth = Math.abs(logda2);
         }
 
-      var frstCol = canvasCtx.getImageData(sampleX,0, sampleWidth, canvHeight);
+      const frstCol = canvasCtx.getImageData(sampleX,0, sampleWidth, canvHeight);
       canvasCtx.clearRect(0,0, canvWidth, canvHeight);
 
-      for (var i = 0; i < (canvWidth/sampleWidth); i++) {
+      for (let i = 0; i < (canvWidth/sampleWidth); i++) {
         canvasCtx.putImageData(frstCol, (i*sampleWidth), 0);
       }
     }
