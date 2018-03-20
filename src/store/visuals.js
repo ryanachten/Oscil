@@ -11,6 +11,7 @@ import lissajousFigure from '../visuals/shapes/lissajousFigure';
 import refract from '../visuals/images/refract';
 import macroblocks from '../visuals/images/macroblocks';
 import repeatPix from '../visuals/images/repeatPix';
+import imgShuffle from '../visuals/images/imgShuffle';
 
 // Video visuals
 import videoFeedback from '../visuals/video/videoFeedback';
@@ -37,6 +38,7 @@ const visuals = {
   refract,
   macroblocks,
   repeatPix,
+  imgShuffle,
 
   videoFeedback,
   muybridge,
