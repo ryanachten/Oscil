@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import OrbitControls from 'orbit-controls-es6';
+import OrbitControls from 'three-orbitcontrols';
 import {mapRange} from '../../utilities/visualUtilities';
 
 function superShapeRadius(theta, m, n1, n2, n3){

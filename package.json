@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "serve": "live-server public/",
-    "build": "webpack",
+    "build:dev": "webpack",
+    "build:prod": "webpack -p --env production",
     "dev-server": "webpack-dev-server"
   },
   "dependencies": {
@@ -23,7 +24,6 @@
     "live-server": "^1.2.0",
     "node-sass": "4.5.3",
     "normalize.css": "7.0.0",
-    "orbit-controls-es6": "1.0.11",
     "p5": "0.6.0",
     "react": "16.0.0",
     "react-dom": "16.0.0",
@@ -36,6 +36,7 @@
     "style-loader": "0.18.2",
     "svg-url-loader": "2.3.1",
     "three": "0.91.0",
+    "three-orbitcontrols": "2.0.0",
     "validator": "8.0.0",
     "webpack": "3.1.0",
     "webpack-dev-server": "2.5.1"
