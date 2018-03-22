@@ -157,5 +157,6 @@ export default {
       active: 'vertical',
       options: ['vertical', 'horizontal', 'both']
     },
-  }
+  },
+  thumbImg: 'https://c2.staticflickr.com/4/3863/14577192530_190923db3c_q.jpg'
 }

@@ -6,6 +6,7 @@ import particles from '../visuals/shapes/particles';
 import brownianTree from '../visuals/shapes/brownianTree';
 import concretePoetry from '../visuals/shapes/concretePoetry';
 import lissajousFigure from '../visuals/shapes/lissajousFigure';
+import lissajousWebs from '../visuals/shapes/lissajousWebs';
 
 // Image visuals
 import refract from '../visuals/images/refract';
@@ -34,6 +35,7 @@ const visuals = {
   brownianTree,
   concretePoetry,
   lissajousFigure,
+  lissajousWebs,
 
   refract,
   macroblocks,
