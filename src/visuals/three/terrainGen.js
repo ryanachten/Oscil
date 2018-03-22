@@ -115,5 +115,5 @@ export default {
   draw,
   type: 'three',
   renderer: 'three',
-  thumbImg: 'https://c1.staticflickr.com/9/8888/18438501761_c26ec73209_q.jpg'
+  thumbImg: 'https://c1.staticflickr.com/9/8663/16531600749_8969f842a0_q.jpg'
 }

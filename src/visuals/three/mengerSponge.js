@@ -186,5 +186,5 @@ export default {
   draw,
   type: 'three',
   renderer: 'three',
-  thumbImg: 'https://c1.staticflickr.com/9/8888/18438501761_c26ec73209_q.jpg'
+  thumbImg: 'https://c2.staticflickr.com/4/3858/14765126015_92224cd569_q.jpg'
 };
