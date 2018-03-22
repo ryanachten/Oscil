@@ -7,6 +7,7 @@ import brownianTree from '../visuals/shapes/brownianTree';
 import concretePoetry from '../visuals/shapes/concretePoetry';
 import lissajousFigure from '../visuals/shapes/lissajousFigure';
 import lissajousWebs from '../visuals/shapes/lissajousWebs';
+import nodeAttraction from '../visuals/shapes/nodeAttraction';
 
 // Image visuals
 import refract from '../visuals/images/refract';
@@ -36,6 +37,7 @@ const visuals = {
   concretePoetry,
   lissajousFigure,
   lissajousWebs,
+  nodeAttraction,
 
   refract,
   macroblocks,
