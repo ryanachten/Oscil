@@ -119,8 +119,6 @@ const init = ({canvasCtx, visualSettings, canvWidth, canvHeight}) => {
 		canvasCtx.lineWidth = 1;
 		canvasCtx.strokeStyle = 'black';
 
-		// const xPos, yPos;
-
 		for(let x = 0; x < xCount; x++){
 			for(let y = 0; y < yCount; y++){
 				let xPos = gridStepX *x;
@@ -160,14 +158,6 @@ const draw = ({
 
 
   attractor.mode = visualSettings.mode.active;
-
-  // if(visualSettings.mode.active === 'smooth'){
-  //   attractor.mode = 'smooth';
-  // }else if(visGuiSettings.mode === 'twirl'){
-  //   attractor.mode = 'twirl';
-  // }else{
-  //   attractor.mode = 'basic';
-  // }
 
   const da = dataArray[0];
 
