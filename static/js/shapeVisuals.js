@@ -1463,370 +1463,369 @@ function chladniPlate(dataArray, bufferLength){
 		}
 	}
 
+function fractalTree(dataArray, bufferLength){
 
-	function fractalTree(dataArray, bufferLength){
+  $('#visualiser').hide();
 
-	  $('#visualiser').hide();
-
-	  function resetCanv(){
-	    var newVis = $('.visual-mode.active').data('visual');
-			if( newVis !== 'FractalTree'){
-				removeP5Canvas(newVis);
-				$('.visual-mode').off('click', resetCanv);
-			}
+  function resetCanv(){
+    var newVis = $('.visual-mode.active').data('visual');
+		if( newVis !== 'FractalTree'){
+			removeP5Canvas(newVis);
+			$('.visual-mode').off('click', resetCanv);
 		}
-		$('.visual-mode').on('click', resetCanv);
+	}
+	$('.visual-mode').on('click', resetCanv);
 
-	  var visGui = new dat.GUI({ autoPlace: false });
-		visGui.domElement.id = 'visdat-gui';
-		$('#visual-options').append(visGui.domElement);
-		var visGuiSettings = {
-			treeCount : 12,
-			reactTreeNum : true,
-			branchCount : 200,
-			reactBranchNum : true,
-			branchLength : 100,
-			reactLength : true,
-			branchDecay : 67,
-			reactDecay : false,
+  var visGui = new dat.GUI({ autoPlace: false });
+	visGui.domElement.id = 'visdat-gui';
+	$('#visual-options').append(visGui.domElement);
+	var visGuiSettings = {
+		treeCount : 12,
+		reactTreeNum : true,
+		branchCount : 200,
+		reactBranchNum : true,
+		branchLength : 100,
+		reactLength : true,
+		branchDecay : 67,
+		reactDecay : false,
+	};
+	visGui.add(visGuiSettings, 'treeCount').min(0).max(24).step(4);
+	visGui.add(visGuiSettings, 'reactTreeNum');
+	visGui.add(visGuiSettings, 'branchCount').min(0).max(500);
+	visGui.add(visGuiSettings, 'reactBranchNum');
+	visGui.add(visGuiSettings, 'branchLength').min(0).max(1000);
+	visGui.add(visGuiSettings, 'reactLength');
+	visGui.add(visGuiSettings, 'branchDecay').min(0).max(100);
+	visGui.add(visGuiSettings, 'reactDecay');
+
+  var p5Init = function( p ) {
+
+		var tree = [];
+		var da;
+
+    p.setup = function() {
+      var canvas = p.createCanvas(canvWidth, canvHeight);
+      canvas.id('p5-canvas');
+			p.colorMode(p.HSB);
+    };
+
+    p.draw = function() {
+
+			analyser.getByteFrequencyData(dataArray);
+			da = p.map(dataArray[0], 0, 255, 0, 1);
+			console.log(dataArray[0]);
+
+			var treeCount = visGuiSettings.treeCount;
+			if (visGuiSettings.reactTreeNum) {
+				treeCount = treeCount * da + (treeCount/2);
+			}
+
+			p.background(bgColor);
+			var branchCount = visGuiSettings.branchCount;
+			if (visGuiSettings.reactBranchNum) {
+				branchCount = branchCount * da;
+			}
+
+			p.translate(canvWidth/2, canvHeight/2);
+
+			for (var i = 0; i < treeCount; i++) {
+				drawTree(branchCount);
+				p.rotate((Math.PI/180)*(360/treeCount));
+			}
 		};
-		visGui.add(visGuiSettings, 'treeCount').min(0).max(24).step(4);
-		visGui.add(visGuiSettings, 'reactTreeNum');
-		visGui.add(visGuiSettings, 'branchCount').min(0).max(500);
-		visGui.add(visGuiSettings, 'reactBranchNum');
-		visGui.add(visGuiSettings, 'branchLength').min(0).max(1000);
-		visGui.add(visGuiSettings, 'reactLength');
-		visGui.add(visGuiSettings, 'branchDecay').min(0).max(100);
-		visGui.add(visGuiSettings, 'reactDecay');
 
-	  var p5Init = function( p ) {
-
-			var tree = [];
-			var da;
-
-	    p.setup = function() {
-	      var canvas = p.createCanvas(canvWidth, canvHeight);
-	      canvas.id('p5-canvas');
-				p.colorMode(p.HSB);
-	    };
-
-	    p.draw = function() {
-
-				analyser.getByteFrequencyData(dataArray);
-				da = p.map(dataArray[0], 0, 255, 0, 1);
-				console.log(dataArray[0]);
-
-				var treeCount = visGuiSettings.treeCount;
-				if (visGuiSettings.reactTreeNum) {
-					treeCount = treeCount * da + (treeCount/2);
-				}
-
-				p.background(bgColor);
-				var branchCount = visGuiSettings.branchCount;
-				if (visGuiSettings.reactBranchNum) {
-					branchCount = branchCount * da;
-				}
-
-				p.translate(canvWidth/2, canvHeight/2);
-
-				for (var i = 0; i < treeCount; i++) {
-					drawTree(branchCount);
-					p.rotate((Math.PI/180)*(360/treeCount));
-				}
-			};
-
-			function drawTree(branchCount){
-				tree = [];
-				var a = p.createVector(0, 0);
-				var branchLength = visGuiSettings.branchLength;
-				if(visGuiSettings.reactLength){
-					branchLength = branchLength*da+(branchLength/2);
-				}
-				var b = p.createVector(0, 0 -branchLength);
-
-				tree[0] = new Branch(a, b);
-
-				for (var i = 0; i < branchCount/2; i++) {
-					if(!tree[i].finished){
-						tree.push(tree[i].branchA());
-						tree.push(tree[i].branchB());
-						tree[i].finished = true;
-					}
-					tree[i].hue += 20;
-					tree[i].show();
-				}
+		function drawTree(branchCount){
+			tree = [];
+			var a = p.createVector(0, 0);
+			var branchLength = visGuiSettings.branchLength;
+			if(visGuiSettings.reactLength){
+				branchLength = branchLength*da+(branchLength/2);
 			}
+			var b = p.createVector(0, 0 -branchLength);
 
-			function Branch(start, end){
-				this.hue = 200;
-				this.begin = start;
-				this.end = end;
-				this.finished = false;
-				this.show = function(){
-					p.stroke(this.hue, 100, 50);
-					p.line( this.begin.x, this.begin.y, this.end.x, this.end.y);
+			tree[0] = new Branch(a, b);
+
+			for (var i = 0; i < branchCount/2; i++) {
+				if(!tree[i].finished){
+					tree.push(tree[i].branchA());
+					tree.push(tree[i].branchB());
+					tree[i].finished = true;
 				}
-				this.branchA = function(){
-					var dir = p5.Vector.sub(this.end, this.begin);
-					dir.rotate(p.PI/4);
-					var branchDecay = visGuiSettings.branchDecay;
-					if (visGuiSettings.reactDecay) {
-						branchDecay = branchDecay*(1-da) + branchDecay/2;
-					}
-					dir.mult(branchDecay/100);
-					var newEnd = p5.Vector.add(this.end, dir);
-					var right = new Branch(this.end, newEnd);
-					return right;
-				}
-				this.branchB = function(){
-					var dir = p5.Vector.sub(this.end, this.begin);
-					dir.rotate(-p.PI/4);
-					var branchDecay = visGuiSettings.branchDecay;
-					if (visGuiSettings.reactDecay) {
-						branchDecay = branchDecay*(1-da) + branchDecay/2;
-					}
-					dir.mult(branchDecay/100);
-					var newEnd = p5.Vector.add(this.end, dir);
-					var left = new Branch(this.end, newEnd);
-					return left;
-				}
-			}
-
-	  };
-
-	  var myp5 = new p5(p5Init, 'container');
-	}
-
-	function lSystem(dataArray, bufferLength){
-
-	  $('#visualiser').hide();
-
-	  function resetCanv(){
-	    var newVis = $('.visual-mode.active').data('visual');
-			if( newVis !== 'Lsystem'){
-				removeP5Canvas(newVis);
-				$('.visual-mode').off('click', resetCanv);
+				tree[i].hue += 20;
+				tree[i].show();
 			}
 		}
-		$('.visual-mode').on('click', resetCanv);
 
-	  // var visGui = new dat.GUI({ autoPlace: false });
-		// visGui.domElement.id = 'visdat-gui';
-		// $('#visual-options').append(visGui.domElement);
-		// var visGuiSettings = {
-		// 	treeCount : 12,
-		// 	reactTreeNum : true,
-		// 	branchCount : 200,
-		// 	reactBranchNum : true,
-		// 	branchLength : 100,
-		// 	reactLength : true,
-		// 	branchDecay : 67,
-		// 	reactDecay : false,
-		// };
-		// visGui.add(visGuiSettings, 'treeCount').min(0).max(24).step(4);
-		// visGui.add(visGuiSettings, 'reactTreeNum');
-		// visGui.add(visGuiSettings, 'branchCount').min(0).max(500);
-		// visGui.add(visGuiSettings, 'reactBranchNum');
-		// visGui.add(visGuiSettings, 'branchLength').min(0).max(1000);
-		// visGui.add(visGuiSettings, 'reactLength');
-		// visGui.add(visGuiSettings, 'branchDecay').min(0).max(100);
-		// visGui.add(visGuiSettings, 'reactDecay');
-
-	  var p5Init = function( p ) {
-
-	    p.setup = function() {
-	      var canvas = p.createCanvas(canvWidth, canvHeight);
-	      canvas.id('p5-canvas');
-				p.background(51);
-				p.stroke(255);
-	    };
-
-			var axiom = "F";
-			var sentence = axiom;
-			var rules = [];
-			rules[0] = {
-				a : 'F',
-				b : 'FF+[+F-F-F]-[-F+F+F]'
+		function Branch(start, end){
+			this.hue = 200;
+			this.begin = start;
+			this.end = end;
+			this.finished = false;
+			this.show = function(){
+				p.stroke(this.hue, 100, 50);
+				p.line( this.begin.x, this.begin.y, this.end.x, this.end.y);
 			}
-
-			var len = 1000;
-
-			function generate(){
-				// Looks at every letter in the 'sentence' / axiom
-				// and replaces according to the rule
-
-				var nextSentence = "";
-				len *= 0.5;
-
-				for (var i = 0; i < sentence.length; i++) {
-
-					var found = false;
-					var current = sentence.charAt(i);
-
-					for (var j = 0; j < rules.length; j++) {
-							if( current == rules[j].a ){
-								nextSentence += rules[j].b
-								found = true;
-								break;
-							}
-					}
-					if (!found) {
-						nextSentence += current;
-					}
+			this.branchA = function(){
+				var dir = p5.Vector.sub(this.end, this.begin);
+				dir.rotate(p.PI/4);
+				var branchDecay = visGuiSettings.branchDecay;
+				if (visGuiSettings.reactDecay) {
+					branchDecay = branchDecay*(1-da) + branchDecay/2;
 				}
-				sentence = nextSentence;
-				turtle();
+				dir.mult(branchDecay/100);
+				var newEnd = p5.Vector.add(this.end, dir);
+				var right = new Branch(this.end, newEnd);
+				return right;
 			}
-
-			function turtle(){
-				//parse each letter as a drawing instruction
-				//based off the rudimentary Turtle drawer
-
-				p.background(51);
-				p.resetMatrix();
-				p.translate(canvWidth/2, canvHeight);
-
-				for (var i = 0; i < sentence.length; i++) {
-					var current = sentence.charAt(i);
-
-					if (current == 'F') {
-						p.line(0,0,0, -len);
-						p.translate(0, -len);
-					}else if (current == '+') {
-						p.rotate(p.PI/6);
-					}else if (current == '-') {
-						p.rotate(-p.PI/6);
-					}else if (current == '[') {
-						p.push();
-					}else if (current == ']') {
-						p.pop();
-					}
-
+			this.branchB = function(){
+				var dir = p5.Vector.sub(this.end, this.begin);
+				dir.rotate(-p.PI/4);
+				var branchDecay = visGuiSettings.branchDecay;
+				if (visGuiSettings.reactDecay) {
+					branchDecay = branchDecay*(1-da) + branchDecay/2;
 				}
-			}
-
-			$('body').click(function(){
-				generate();
-			});
-
-
-	    p.draw = function() {
-
-			};
-	  };
-
-	  var myp5 = new p5(p5Init, 'container');
-	}
-
-	function julia8bit(dataArray, bufferLength){
-
-	  $('#visualiser').hide();
-
-	  function resetCanv(){
-	    var newVis = $('.visual-mode.active').data('visual');
-			if( newVis !== 'Julia8bit'){
-				removeP5Canvas(newVis);
-				$('.visual-mode').off('click', resetCanv);
+				dir.mult(branchDecay/100);
+				var newEnd = p5.Vector.add(this.end, dir);
+				var left = new Branch(this.end, newEnd);
+				return left;
 			}
 		}
-		$('.visual-mode').on('click', resetCanv);
 
-	  var visGui = new dat.GUI({ autoPlace: false });
-		visGui.domElement.id = 'visdat-gui';
-		$('#visual-options').append(visGui.domElement);
-		var visGuiSettings = {
-			sampleRes : 140,
-			maxIterations : 35,
-			aConst: -0.70176,
-			bConst: - 0.02,
-			minPos : -1.6,
-			maxPos : 1.7,
+  };
+
+  var myp5 = new p5(p5Init, 'container');
+}
+
+function lSystem(dataArray, bufferLength){
+
+  $('#visualiser').hide();
+
+  function resetCanv(){
+    var newVis = $('.visual-mode.active').data('visual');
+		if( newVis !== 'Lsystem'){
+			removeP5Canvas(newVis);
+			$('.visual-mode').off('click', resetCanv);
+		}
+	}
+	$('.visual-mode').on('click', resetCanv);
+
+  // var visGui = new dat.GUI({ autoPlace: false });
+	// visGui.domElement.id = 'visdat-gui';
+	// $('#visual-options').append(visGui.domElement);
+	// var visGuiSettings = {
+	// 	treeCount : 12,
+	// 	reactTreeNum : true,
+	// 	branchCount : 200,
+	// 	reactBranchNum : true,
+	// 	branchLength : 100,
+	// 	reactLength : true,
+	// 	branchDecay : 67,
+	// 	reactDecay : false,
+	// };
+	// visGui.add(visGuiSettings, 'treeCount').min(0).max(24).step(4);
+	// visGui.add(visGuiSettings, 'reactTreeNum');
+	// visGui.add(visGuiSettings, 'branchCount').min(0).max(500);
+	// visGui.add(visGuiSettings, 'reactBranchNum');
+	// visGui.add(visGuiSettings, 'branchLength').min(0).max(1000);
+	// visGui.add(visGuiSettings, 'reactLength');
+	// visGui.add(visGuiSettings, 'branchDecay').min(0).max(100);
+	// visGui.add(visGuiSettings, 'reactDecay');
+
+  var p5Init = function( p ) {
+
+    p.setup = function() {
+      var canvas = p.createCanvas(canvWidth, canvHeight);
+      canvas.id('p5-canvas');
+			p.background(51);
+			p.stroke(255);
+    };
+
+		var axiom = "F";
+		var sentence = axiom;
+		var rules = [];
+		rules[0] = {
+			a : 'F',
+			b : 'FF+[+F-F-F]-[-F+F+F]'
+		}
+
+		var len = 1000;
+
+		function generate(){
+			// Looks at every letter in the 'sentence' / axiom
+			// and replaces according to the rule
+
+			var nextSentence = "";
+			len *= 0.5;
+
+			for (var i = 0; i < sentence.length; i++) {
+
+				var found = false;
+				var current = sentence.charAt(i);
+
+				for (var j = 0; j < rules.length; j++) {
+						if( current == rules[j].a ){
+							nextSentence += rules[j].b
+							found = true;
+							break;
+						}
+				}
+				if (!found) {
+					nextSentence += current;
+				}
+			}
+			sentence = nextSentence;
+			turtle();
+		}
+
+		function turtle(){
+			//parse each letter as a drawing instruction
+			//based off the rudimentary Turtle drawer
+
+			p.background(51);
+			p.resetMatrix();
+			p.translate(canvWidth/2, canvHeight);
+
+			for (var i = 0; i < sentence.length; i++) {
+				var current = sentence.charAt(i);
+
+				if (current == 'F') {
+					p.line(0,0,0, -len);
+					p.translate(0, -len);
+				}else if (current == '+') {
+					p.rotate(p.PI/6);
+				}else if (current == '-') {
+					p.rotate(-p.PI/6);
+				}else if (current == '[') {
+					p.push();
+				}else if (current == ']') {
+					p.pop();
+				}
+
+			}
+		}
+
+		$('body').click(function(){
+			generate();
+		});
+
+
+    p.draw = function() {
+
 		};
-		visGui.add(visGuiSettings, 'sampleRes').min(0).max(500).step(1);
-		visGui.add(visGuiSettings, 'maxIterations').min(0).max(100).step(1);
-		visGui.add(visGuiSettings, 'minPos').min(-2.5).max(2.5);
-		visGui.add(visGuiSettings, 'maxPos').min(-2.5).max(2.5);
-		visGui.add(visGuiSettings, 'aConst').min(-2.50000).max(2.50000);
-		visGui.add(visGuiSettings, 'bConst').min(-2.50000).max(2.50000);
+  };
 
-	  var p5Init = function( p ) {
+  var myp5 = new p5(p5Init, 'container');
+}
 
-	    p.setup = function() {
-	      var canvas = p.createCanvas(canvWidth, canvHeight);
-	      canvas.id('p5-canvas');
-				p.pixelDensity(1);
-				p.noStroke();
-				p.colorMode(p.HSB, 255);
-	    };
+function julia8bit(dataArray, bufferLength){
 
-	    p.draw = function() {
+  $('#visualiser').hide();
 
-				p.background(0);
-
-				analyser.getByteFrequencyData(dataArray);
-
-				var sampleSize = visGuiSettings.sampleRes;
-				var sampleWidth = p.width/sampleSize;
-				var sampleHeight = p.height/sampleSize;
-
-				var da = p.map(dataArray[0], 0, 255, -2.5, 2.5);
-				// console.log(da);
-
-				for(var x = 0; x < sampleSize; x++){
-					for(var y = 0; y < sampleSize; y++){
-
-						var a = p.map( x*sampleWidth, 0, sampleWidth*sampleSize, visGuiSettings.minPos, visGuiSettings.maxPos );
-						var b = p.map( y*sampleHeight, 0, sampleHeight*sampleSize, visGuiSettings.minPos, visGuiSettings.maxPos );
-
-						var ca = a;
-						var cb = b;
-
-						var maxIterations = visGuiSettings.maxIterations + da;
-						var n = 0; //tracks the number of iterations
-
-
-						//  complex numbers which does not diverge when iterated
-						while (n < maxIterations) {
-
-							// mandelbrot
-							// var aa = a * a - b * b;
-							// var bb = 2 * a * b;
-							// a = aa + ca;
-							// b = bb + cb;
-
-							// mandelbrot
-							// var escapeTime = 4;
-							// if (a * a + b * b > escapeTime) { //ensures result doesn't tend towards infinity
-
-							// julia
-							var aa = a * a;
-							var bb = b * b;
-							// julia
-							var escapeTime = 4;
-							if (aa + bb > escapeTime){
-
-								break;
-							}
-							var twoab = 2.0 * a * b;
-							a = aa - bb + (visGuiSettings.aConst + da);
-							b = twoab + visGuiSettings.bConst;
-
-
-							n++;
-						}
-
-						var bright = p.map(n, 0, maxIterations, 0, 255);
-						// // check if n is inside of the mandelbrot set
-						if (n === maxIterations) {
-							bright = 0;
-						}
-						p.fill(Math.sin(bright)*255, 200, Math.sin(bright)*255);
-						p.ellipseMode(p.CENTER);
-						p.ellipse(x*sampleWidth, y*sampleHeight, sampleWidth, sampleHeight);
-					}
-				}
-	    };
-	  };
-
-	  var myp5 = new p5(p5Init, 'container');
+  function resetCanv(){
+    var newVis = $('.visual-mode.active').data('visual');
+		if( newVis !== 'Julia8bit'){
+			removeP5Canvas(newVis);
+			$('.visual-mode').off('click', resetCanv);
+		}
 	}
+	$('.visual-mode').on('click', resetCanv);
+
+  var visGui = new dat.GUI({ autoPlace: false });
+	visGui.domElement.id = 'visdat-gui';
+	$('#visual-options').append(visGui.domElement);
+	var visGuiSettings = {
+		sampleRes : 140,
+		maxIterations : 35,
+		aConst: -0.70176,
+		bConst: - 0.02,
+		minPos : -1.6,
+		maxPos : 1.7,
+	};
+	visGui.add(visGuiSettings, 'sampleRes').min(0).max(500).step(1);
+	visGui.add(visGuiSettings, 'maxIterations').min(0).max(100).step(1);
+	visGui.add(visGuiSettings, 'minPos').min(-2.5).max(2.5);
+	visGui.add(visGuiSettings, 'maxPos').min(-2.5).max(2.5);
+	visGui.add(visGuiSettings, 'aConst').min(-2.50000).max(2.50000);
+	visGui.add(visGuiSettings, 'bConst').min(-2.50000).max(2.50000);
+
+  var p5Init = function( p ) {
+
+    p.setup = function() {
+      var canvas = p.createCanvas(canvWidth, canvHeight);
+      canvas.id('p5-canvas');
+			p.pixelDensity(1);
+			p.noStroke();
+			p.colorMode(p.HSB, 255);
+    };
+
+    p.draw = function() {
+
+			p.background(0);
+
+			analyser.getByteFrequencyData(dataArray);
+
+			var sampleSize = visGuiSettings.sampleRes;
+			var sampleWidth = p.width/sampleSize;
+			var sampleHeight = p.height/sampleSize;
+
+			var da = p.map(dataArray[0], 0, 255, -2.5, 2.5);
+			// console.log(da);
+
+			for(var x = 0; x < sampleSize; x++){
+				for(var y = 0; y < sampleSize; y++){
+
+					var a = p.map( x*sampleWidth, 0, sampleWidth*sampleSize, visGuiSettings.minPos, visGuiSettings.maxPos );
+					var b = p.map( y*sampleHeight, 0, sampleHeight*sampleSize, visGuiSettings.minPos, visGuiSettings.maxPos );
+
+					var ca = a;
+					var cb = b;
+
+					var maxIterations = visGuiSettings.maxIterations + da;
+					var n = 0; //tracks the number of iterations
+
+
+					//  complex numbers which does not diverge when iterated
+					while (n < maxIterations) {
+
+						// mandelbrot
+						// var aa = a * a - b * b;
+						// var bb = 2 * a * b;
+						// a = aa + ca;
+						// b = bb + cb;
+
+						// mandelbrot
+						// var escapeTime = 4;
+						// if (a * a + b * b > escapeTime) { //ensures result doesn't tend towards infinity
+
+						// julia
+						var aa = a * a;
+						var bb = b * b;
+						// julia
+						var escapeTime = 4;
+						if (aa + bb > escapeTime){
+
+							break;
+						}
+						var twoab = 2.0 * a * b;
+						a = aa - bb + (visGuiSettings.aConst + da);
+						b = twoab + visGuiSettings.bConst;
+
+
+						n++;
+					}
+
+					var bright = p.map(n, 0, maxIterations, 0, 255);
+					// // check if n is inside of the mandelbrot set
+					if (n === maxIterations) {
+						bright = 0;
+					}
+					p.fill(Math.sin(bright)*255, 200, Math.sin(bright)*255);
+					p.ellipseMode(p.CENTER);
+					p.ellipse(x*sampleWidth, y*sampleHeight, sampleWidth, sampleHeight);
+				}
+			}
+    };
+  };
+
+  var myp5 = new p5(p5Init, 'container');
+}

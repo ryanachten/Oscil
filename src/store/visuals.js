@@ -8,6 +8,7 @@ import concretePoetry from '../visuals/shapes/concretePoetry';
 import lissajousFigure from '../visuals/shapes/lissajousFigure';
 import lissajousWebs from '../visuals/shapes/lissajousWebs';
 import nodeAttraction from '../visuals/shapes/nodeAttraction';
+import chladniPlate from '../visuals/shapes/chladniPlate';
 
 // Image visuals
 import refract from '../visuals/images/refract';
@@ -38,6 +39,7 @@ const visuals = {
   lissajousFigure,
   lissajousWebs,
   nodeAttraction,
+  chladniPlate,
 
   refract,
   macroblocks,

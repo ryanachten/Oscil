@@ -1,6 +1,5 @@
 const init = ({canvasCtx, visualSettings, canvWidth, canvHeight}) => {
 
-
   const Attractor = (function(x, y){
 
   	this.x = x;
