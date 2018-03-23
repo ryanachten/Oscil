@@ -54,6 +54,7 @@ class HtmlCanvas extends React.Component{
   componentWillUnmount(){
     cancelAnimationFrame(this.frameId);
     window.removeEventListener("resize", this.resize);
+    $('#hiddenHtmlCanvas').remove();
     this.canvIsMounted = false;
   }
 
@@ -103,6 +104,7 @@ class HtmlCanvas extends React.Component{
   render(){
     return(
       <canvas
+        id="HtmlCanvas"
         width={this.state.canvWidth}
         height={this.state.canvHeight}
         ref={(canvas) => {this.canvas = canvas}}></canvas>
