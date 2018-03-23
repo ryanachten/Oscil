@@ -9,6 +9,7 @@ import lissajousFigure from '../visuals/shapes/lissajousFigure';
 import lissajousWebs from '../visuals/shapes/lissajousWebs';
 import nodeAttraction from '../visuals/shapes/nodeAttraction';
 import chladniPlate from '../visuals/shapes/chladniPlate';
+import julia8bit from '../visuals/shapes/julia8bit';
 
 // Image visuals
 import refract from '../visuals/images/refract';
@@ -40,6 +41,7 @@ const visuals = {
   lissajousWebs,
   nodeAttraction,
   chladniPlate,
+  julia8bit,
 
   refract,
   macroblocks,
