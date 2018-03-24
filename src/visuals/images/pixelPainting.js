@@ -19,19 +19,19 @@ const init = ({canvasCtx, visualSettings, canvWidth, canvHeight}) => {
       canv2Height = canvas2.height;
     }
 
-    var canvas2Ctx = canvas2.getContext('2d');
+    const canvas2Ctx = canvas2.getContext('2d');
     document.getElementById('HtmlCanvas').appendChild(canvas2);
     canvas2.style.display = 'none';
 
-    var imgUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Antonio_de_Pereda_-_El_sue%C3%B1o_del_caballero_-_Google_Art_Project.jpg/640px-Antonio_de_Pereda_-_El_sue%C3%B1o_del_caballero_-_Google_Art_Project.jpg';
+    let imgUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Antonio_de_Pereda_-_El_sue%C3%B1o_del_caballero_-_Google_Art_Project.jpg/640px-Antonio_de_Pereda_-_El_sue%C3%B1o_del_caballero_-_Google_Art_Project.jpg';
     imgUrl += ('?' + new Date().getTime());
-    var img = new Image();
+    const img = new Image();
     img.src = imgUrl;
     img.width = canv2Width;
     img.height = canv2Height;
     img.setAttribute('crossOrigin', '');
 
-    var imgData, data;
+    let imgData, data;
     img.onload = function(){
       canvas2Ctx.drawImage(img, 0,0, canvWidth,canvHeight);
 
@@ -41,18 +41,18 @@ const init = ({canvasCtx, visualSettings, canvWidth, canvHeight}) => {
 
       const shapeDataAr = [];
 
-      var sampleCount = visualSettings.sampleSize.active;
+      const sampleCount = visualSettings.sampleSize.active;
       const maxSize = visualSettings.maxSize.active;
       const minSize = 0;
 
-      for (var i = 0; i < canvWidth; i+=sampleCount) {
-        for (var j = 0; j < canvHeight; j+=sampleCount) {
+      for (let i = 0; i < canvWidth; i+=sampleCount) {
+        for (let j = 0; j < canvHeight; j+=sampleCount) {
           imgData = canvas2Ctx.getImageData(i,j, 1,1);
-          var data = imgData.data;
-          var avg = (data[0] + data[1] + data[2])/3;
-          var size = (avg/255)*maxSize+minSize;
+          const data = imgData.data;
+          const avg = (data[0] + data[1] + data[2])/3;
+          const size = (avg/255)*maxSize+minSize;
 
-          var shapeData = {	r: data[0],	g: data[1], b: data[2],
+          const shapeData = {	r: data[0],	g: data[1], b: data[2],
                     avg: avg,
                     size: size,
                     x: i, y: j
@@ -96,12 +96,12 @@ const draw = ({
 
 	const da = dataArray[0];
 
-	var sizeRand;
+	let sizeRand;
 	if(!randPerPixel){
 		sizeRand = Math.floor(Math.random()*(da/randMax)+(da/randMax)/2);
 	}
 
-	for(var i = 0; i < shapeDataAr.length; i++){
+	for(let i = 0; i < shapeDataAr.length; i++){
 
 		if(shapeMode === 'ellipse'){
 			ellipseMode(i);
@@ -114,7 +114,7 @@ const draw = ({
 		if(randPerPixel){
 			sizeRand = Math.floor(Math.random()*(da/randMax)+(da/randMax)/2);
 		}
-		var tempSize = shapeDataAr[i].size + sizeRand;
+		const tempSize = shapeDataAr[i].size + sizeRand;
 
 		canvasCtx.beginPath();
 		canvasCtx.arc(shapeDataAr[i].x+(tempSize),shapeDataAr[i].y+(tempSize),tempSize, 0, Math.PI*2);
@@ -127,7 +127,7 @@ const draw = ({
 		if(randPerPixel){
 			sizeRand = Math.floor(Math.random()*(da/randMax)+(da/randMax)/2);
 		}
-		var tempSize = shapeDataAr[i].size + sizeRand;
+		const tempSize = shapeDataAr[i].size + sizeRand;
 		canvasCtx.lineWidth = tempSize;
 		canvasCtx.beginPath();
 		canvasCtx.moveTo(shapeDataAr[i].x,shapeDataAr[i].y);

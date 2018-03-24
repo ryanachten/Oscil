@@ -4,10 +4,10 @@ const init = ({
 
   return new Promise(function(resolve, reject) {
 
-    var xPos = 0;
-    var soundIndex = 0;
+    const xPos = 0;
+    const soundIndex = 0;
 
-    var canvas = p.createCanvas(canvWidth, canvHeight);
+    const canvas = p.createCanvas(canvWidth, canvHeight);
     canvas.id('p5-canvas');
 
     p.background('white');
@@ -29,7 +29,7 @@ const draw = ({
   const { video, canvas } = ownSettings;
   let { xPos, soundIndex } = ownSettings;
 
-  var soundWidth = p.map(dataArray[0], 0, 255, 1, visualSettings.maxWidth.active);
+  const soundWidth = p.map(dataArray[0], 0, 255, 1, visualSettings.maxWidth.active);
 
   video.loadPixels();
   //(src, x, w, y, h, xD, wD, yD, hD)
