@@ -23,6 +23,7 @@ import videoFeedback from '../visuals/video/videoFeedback';
 import muybridge from '../visuals/video/muybridge';
 import rippleTank from '../visuals/video/rippleTank';
 import tesserae from '../visuals/video/tesserae';
+import slitScan from '../visuals/video/slitScan';
 
 // 3D visuals
 import threeTest from '../visuals/three/threeTest';
@@ -54,6 +55,7 @@ const visuals = {
   muybridge,
   rippleTank,
   tesserae,
+  slitScan,
 
   threeTest,
   mengerSponge,
