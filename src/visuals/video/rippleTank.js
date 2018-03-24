@@ -40,8 +40,8 @@ const draw = ({
     const minCell = Math.floor(visualSettings.minCellSize.active);
     const maxCell = Math.floor(visualSettings.maxCellSize.active);
 
-    for (let y = 0; y < video.height; y++) {
-      for (let x = 0; x < video.width; x++) {
+    for (let y = 0; y < video.height; y+=2) {
+      for (let x = 0; x < video.width; x+=2) {
         var index = (x + y * video.width) *4;
         const r = video.pixels[index +0];
         const g = video.pixels[index +1];

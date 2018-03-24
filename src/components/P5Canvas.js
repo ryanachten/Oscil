@@ -120,6 +120,7 @@ class P5Canvas extends React.Component{
   render(){
     return(
       <div
+        id="P5Canvas"
         width={this.state.canvWidth}
         height={this.state.canvHeight}
         ref={(container) => {this.container = container}}></div>
