@@ -7,10 +7,8 @@ const init = ({canvasCtx, visualSettings, canvWidth, canvHeight}) => {
     let canvas2, canv2Width, canv2Height;
 
     if ($('#hiddenHtmlCanvas').length > 0) {
-      console.log('hiddenHtmlCanvas exists');
       canvas2 = $('#hiddenHtmlCanvas')[0];
     }else{
-      console.log('create hiddenHtmlCanvas');
       canvas2 = document.createElement('canvas');
       canvas2.id = 'hiddenHtmlCanvas';
       canvas2.width = $(window).width();

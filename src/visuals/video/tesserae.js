@@ -36,22 +36,19 @@ const draw = ({
 
   var threshold = visualSettings.threshold.active;
 
-  const minCell = Math.floor(visualSettings.minCellSize.active);
-  const maxCell = Math.floor(visualSettings.maxCellSize.active);
+  const da = p.map(dataArray[0], 0, 255, 0, 1);
 
-  for (var y = 0; y < video.height; y++) {
-    for (var x = 0; x < video.width; x++) {
+  const minCell = Math.floor(visualSettings.minCellSize.active * da);
+  const maxCell = Math.floor(visualSettings.maxCellSize.active * da);
+
+  for (var y = 0; y < video.height; y+=4) {
+    for (var x = 0; x < video.width; x+=4) {
       var index = (x + y * video.width) *4;
       var r = video.pixels[index +0];
       var g = video.pixels[index +1];
       var b = video.pixels[index +2];
 
       var bright = (r + g + b) /3;
-      var da = p.map(dataArray[p.floor(x/2)], 0, 255, 0, 1);
-
-      // const cellSize = p.map(bright, 0, 255,
-      //   visualSettings.minCellSize.active,
-      //   da*visualSettings.maxCellSize.active);
 
       p.noStroke();
       if( bright > threshold ){
@@ -62,19 +59,20 @@ const draw = ({
       }
       p.rectMode(p.CENTER);
 
+
       const cellSizeX = p.map(
         bright,
         0, 255,
-        vScale.width* minCell,
-        vScale.width* maxCell +da);
+        minCell,
+        maxCell);
 
       const cellSizeY = p.map(
         bright,
         0, 255,
-        vScale.height* minCell,
-        vScale.height* maxCell +da);
+        minCell,
+        maxCell);
 
-      p.rect(x*vScale.width, y*vScale.height, cellSizeX, cellSizeY);
+      p.rect(x*vScale.width, y*vScale.height, vScale.width*cellSizeX, vScale.height*cellSizeY);
     }
   }
 
@@ -98,7 +96,7 @@ export default {
       max: 200
     },
     maxCellSize: {
-      active: 90,
+      active: 60,
       min: 0,
       max: 200
     }
