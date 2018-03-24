@@ -82,7 +82,7 @@ class AudioAnalyser extends React.Component{
 
   render(){
     return(
-      <div></div>
+      <div id="AudioAnalyser"></div>
     );
   }
 }

@@ -29,7 +29,7 @@ class VisualPage extends React.Component{
 
   render(){
     return(
-      <div>
+      <div id="VisualPage">
         <VisualControlPanel />
         <AudioAnalyser />
         {this.props.renderer === 'html' && (
