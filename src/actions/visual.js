@@ -8,6 +8,7 @@ export const setVisual = ({ visual }) => {
   return{
     type: 'SET_VISUAL',
     visual,
+    visualType: allVisualData[visual].type,
     renderer: allVisualData[visual].renderer,
     settings: allVisualData[visual].settings,
     requiresInit

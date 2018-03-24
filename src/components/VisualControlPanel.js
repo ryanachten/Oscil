@@ -11,7 +11,7 @@ class VisualControlPanel extends React.Component{
     super(props);
 
     this.state = {
-      currentType: 'shape',
+      currentType: props.currentType,
       allTypes: [
         {value: 'shape', label: 'Shape'},
         {value: 'image', label: 'Image'},
@@ -56,6 +56,7 @@ class VisualControlPanel extends React.Component{
 
 const mapStateToProps = ({visual}) => {
   return{
+    currentType: visual.visualType,
     settings: visual.visualSettings
   }
 }

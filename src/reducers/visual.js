@@ -10,6 +10,7 @@ export default (state = visualReducerDefaultState, action) => {
         return {
           ...state,
           currentVisual: action.visual,
+          visualType: action.visualType,
           renderer: action.renderer,
           visualSettings: action.settings,
           requiresInit: action.requiresInit
