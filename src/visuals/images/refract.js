@@ -1,9 +1,12 @@
-const init = ({canvasCtx, visualSettings, canvWidth, canvHeight}) => {
+const init = ({
+  canvasCtx, visualSettings,
+  canvWidth, canvHeight, bgColour
+}) => {
 
   return new Promise(function(resolve, reject) {
 
     canvasCtx.clearRect(0,0,canvWidth,canvHeight);
-    canvasCtx.fillStyle = 'white';
+    canvasCtx.fillStyle = bgColour;
     canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
     const img = new Image();

@@ -1,10 +1,13 @@
-const init = ({canvasCtx, visualSettings, canvWidth, canvHeight}) => {
+const init = ({
+  canvasCtx, visualSettings,
+  canvWidth, canvHeight, bgColour
+}) => {
 
   return new Promise(function(resolve, reject) {
     var imgMode;
   	var counter, initialised, tileCoords; //move mode vars
 
-		canvasCtx.fillStyle = 'white';
+		canvasCtx.fillStyle = bgColour;
 		canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
 		const tileCount = 10; //add to GUI
