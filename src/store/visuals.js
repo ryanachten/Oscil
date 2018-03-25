@@ -16,7 +16,7 @@ import refract from '../visuals/images/refract';
 import macroblocks from '../visuals/images/macroblocks';
 import repeatPix from '../visuals/images/repeatPix';
 import imgShuffle from '../visuals/images/imgShuffle';
-import pixelPainting from '../visuals/images/pixelPainting';
+import pointillism from '../visuals/images/pointillism';
 
 // Video visuals
 import videoFeedback from '../visuals/video/videoFeedback';
@@ -49,7 +49,7 @@ const visuals = {
   macroblocks,
   repeatPix,
   imgShuffle,
-  pixelPainting,
+  pointillism,
 
   videoFeedback,
   muybridge,
