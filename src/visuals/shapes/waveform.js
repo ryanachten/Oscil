@@ -1,8 +1,11 @@
 import {mapRange} from '../../utilities/visualUtilities';
 
-const waveformDraw = ({canvasCtx, canvWidth, canvHeight, bufferLength, dataArray}) => {
-  // canvasCtx.fillStyle = 'white';
-  // canvasCtx.fillRect(0,0, canvWidth, canvHeight);
+const waveformDraw = ({
+  canvasCtx, canvWidth, canvHeight, bgColour,
+  bufferLength, dataArray
+}) => {
+  canvasCtx.fillStyle = bgColour;
+  canvasCtx.fillRect(0,0, canvWidth, canvHeight);
   canvasCtx.lineWidth = 2;
 
   canvasCtx.beginPath();

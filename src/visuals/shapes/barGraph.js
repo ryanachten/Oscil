@@ -1,17 +1,17 @@
-const barGraphDraw = ({canvasCtx, canvWidth, canvHeight, bufferLength, dataArray}) => {
+const barGraphDraw = ({
+		canvasCtx, canvWidth, canvHeight, bgColour,
+		bufferLength, dataArray
+	}) => {
 
-	  canvasCtx.fillStyle = 'white';
+	  canvasCtx.fillStyle = bgColour;
 	  canvasCtx.fillRect(0, 0, canvWidth, canvHeight);
 
 	  var barWidth = (canvWidth / bufferLength) * 2;
 	  var x = 0;
 
-    // console.log(dataArray[0]/255);
-
 	  for(var i = 0; i < bufferLength; i++) {
       const da = dataArray[i]/255;
 		  const barHeight = dataArray[i]*3; //heres where you increase the barheight size bitch
-
 
   		var y = canvHeight/2-barHeight/2;
 
@@ -20,7 +20,6 @@ const barGraphDraw = ({canvasCtx, canvWidth, canvHeight, bufferLength, dataArray
 
   		x += barWidth;
 	  }
-	// };
 }
 
 export default {

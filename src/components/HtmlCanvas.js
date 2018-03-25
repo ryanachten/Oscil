@@ -77,6 +77,7 @@ class HtmlCanvas extends React.Component{
         visualSettings: this.props.visualSettings,
         canvWidth: this.state.canvWidth,
         canvHeight: this.state.canvHeight,
+        bgColour: '#ede6e0'
       }).then((ownSettings) => {
 
         this.ownSettings = ownSettings;
@@ -97,7 +98,8 @@ class HtmlCanvas extends React.Component{
       canvHeight: this.state.canvHeight,
       bufferLength: this.props.bufferLength,
       dataArray: this.props.dataArray,
-      ownSettings: this.ownSettings
+      ownSettings: this.ownSettings,
+      bgColour: '#ede6e0'
     });
   }
 

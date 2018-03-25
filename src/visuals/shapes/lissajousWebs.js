@@ -17,7 +17,7 @@ const init = ({canvasCtx, visualSettings, canvWidth, canvHeight}) => {
 
 const draw = ({
     canvasCtx, visualSettings, ownSettings,
-    canvWidth, canvHeight,
+    canvWidth, canvHeight, bgColour,
     bufferLength, dataArray
   }) => {
 
@@ -28,7 +28,7 @@ const draw = ({
   const connectionRadius = 100;
 
   canvasCtx.clearRect(0,0, canvWidth, canvHeight);
-  canvasCtx.fillStyle = 'white';
+  canvasCtx.fillStyle = bgColour;
   canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
   const da = dataArray[0];
