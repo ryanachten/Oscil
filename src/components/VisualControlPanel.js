@@ -34,7 +34,7 @@ class VisualControlPanel extends React.Component{
             return(
               <button
                 key={type.value}
-                className="visual-type-toggle"
+                className={this.state.currentType === type.value ? "visual-type-toggle active" : "visual-type-toggle"}
                 onClick={() => this.setState(() => ({
                   currentType: type.value
                 }))}>{type.label}</button>
