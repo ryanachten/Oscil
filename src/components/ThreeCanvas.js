@@ -20,7 +20,7 @@ class ThreeCanvas extends React.Component{
     this.state = {
       canvWidth: undefined,
       canvHeight: undefined,
-      bgColour: '#ede6e0'
+      bgColour: this.props.bgColour
     }
   }
 

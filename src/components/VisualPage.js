@@ -13,6 +13,10 @@ class VisualPage extends React.Component{
 
   constructor(props){
     super(props);
+
+    this.state = {
+      bgColour: '#ede6e0'
+    }
   }
 
   componentWillMount(){
@@ -33,13 +37,19 @@ class VisualPage extends React.Component{
         <VisualControlPanel />
         <AudioAnalyser />
         {this.props.renderer === 'html' && (
-          <HtmlCanvas pathId={this.props.visual} />
+          <HtmlCanvas
+            pathId={this.props.visual}
+            bgColour={this.state.bgColour}/>
         )}
         {this.props.renderer === 'p5' && (
-          <P5Canvas pathId={this.props.visual} />
+          <P5Canvas
+            pathId={this.props.visual}
+            bgColour={this.state.bgColour}/>
         )}
         {this.props.renderer === 'three' && (
-          <ThreeCanvas pathId={this.props.visual} />
+          <ThreeCanvas
+            pathId={this.props.visual}
+            bgColour={this.state.bgColour}/>
         )}
       </div>
     );

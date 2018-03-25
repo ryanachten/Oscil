@@ -21,6 +21,7 @@ class P5Canvas extends React.Component{
     this.state = {
       canvWidth: undefined,
       canvHeight: undefined,
+      bgColour: this.props.bgColour
     }
   }
 
@@ -96,7 +97,7 @@ class P5Canvas extends React.Component{
       visualSettings: this.props.visualSettings,
       canvWidth: this.state.canvWidth,
       canvHeight: this.state.canvHeight,
-      bgColour: '#ede6e0',
+      bgColour: this.state.bgColour,
     }).then((ownSettings) => {
       this.ownSettings = ownSettings;
       this.drawVisual();
@@ -113,7 +114,7 @@ class P5Canvas extends React.Component{
         bufferLength: this.props.bufferLength,
         dataArray: this.props.dataArray,
         ownSettings: this.ownSettings,
-        bgColour: '#ede6e0'
+        bgColour: this.state.bgColour,
       });
     }
 
