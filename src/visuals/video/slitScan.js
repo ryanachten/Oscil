@@ -1,5 +1,5 @@
 const init = ({
-  p, visualSettings, canvWidth, canvHeight, video
+  p, visualSettings, canvWidth, canvHeight, bgColour, video
 }) => {
 
   return new Promise(function(resolve, reject) {
@@ -10,7 +10,7 @@ const init = ({
     const canvas = p.createCanvas(canvWidth, canvHeight);
     canvas.id('p5-canvas');
 
-    p.background('white');
+    p.background(bgColour);
 
     const ownSettings = {
       video, canvas,

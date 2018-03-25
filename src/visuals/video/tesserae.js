@@ -23,13 +23,13 @@ const init = ({
 
 const draw = ({
     p, visualSettings, ownSettings,
-    canvWidth, canvHeight,
+    canvWidth, canvHeight, bgColour,
     bufferLength, dataArray
   }) => {
 
   const {video, vScale} = ownSettings;
 
-  p.background('white');
+  p.background(bgColour);
 
   video.loadPixels();
   p.loadPixels();
@@ -55,7 +55,7 @@ const draw = ({
         p.fill(r, g, b);
       }
       else{
-        p.fill('white');
+        p.fill(bgColour);
       }
       p.rectMode(p.CENTER);
 

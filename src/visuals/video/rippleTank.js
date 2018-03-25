@@ -27,10 +27,10 @@ const init = ({
 
 const draw = ({
     p, visualSettings, ownSettings,
-    canvWidth, canvHeight,
+    canvWidth, canvHeight, bgColour,
     bufferLength, dataArray
   }) => {
-    p.background('white');
+    p.background(bgColour);
 
     const {video, vScale} = ownSettings;
 

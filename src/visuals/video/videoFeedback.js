@@ -1,10 +1,11 @@
-const init = ({p, visualSettings, canvWidth, canvHeight, video}) => {
+const init = ({p, visualSettings, canvWidth, canvHeight, video, bgColour}) => {
 
   return new Promise(function(resolve, reject) {
 
       const canvas = p.createCanvas(canvWidth, canvHeight);
       canvas.id('p5-canvas');
       // p.frameRate(15);
+      p.background(bgColour);
 
       let xoff = 0.01;
       let yoff = 10.01;
