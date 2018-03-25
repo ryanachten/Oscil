@@ -20,6 +20,7 @@ class ThreeCanvas extends React.Component{
     this.state = {
       canvWidth: undefined,
       canvHeight: undefined,
+      bgColour: '#ede6e0'
     }
   }
 
@@ -75,7 +76,9 @@ class ThreeCanvas extends React.Component{
     this.props.visualInit({
       visualSettings: this.props.visualSettings,
       canvWidth: this.state.canvWidth,
-      canvHeight: this.state.canvHeight
+      canvHeight: this.state.canvHeight,
+      // Converts from hex string to hex int
+      bgColour: parseInt(this.state.bgColour.replace('#', '0x'))
     }).then((ownSettings) => {
 
       this.ownSettings = ownSettings;

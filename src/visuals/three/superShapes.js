@@ -86,7 +86,7 @@ function buildSphere(globePoints, sphereGeo) {
   return sphereGeo;
 }
 
-const init = ({visualSettings, canvWidth, canvHeight}) => {
+const init = ({visualSettings, canvWidth, canvHeight, bgColour}) => {
 
   return new Promise(function(resolve, reject) {
     // Camera setup
@@ -126,11 +126,11 @@ const init = ({visualSettings, canvWidth, canvHeight}) => {
     // scene.add(pointLight);
 
     const worldGeo = new THREE.SphereGeometry(1000, 20, 20);
-    const worldMat = new THREE.MeshLambertMaterial({ color: 0xef4773, side: THREE.BackSide });
+    const worldMat = new THREE.MeshLambertMaterial({ color: bgColour, side: THREE.BackSide });
     const worldMesh = new THREE.Mesh(worldGeo, worldMat);
     scene.add(worldMesh);
 
-    scene.fog = new THREE.Fog( 0xefd1b5, 0.1, 2000 );
+    scene.fog = new THREE.Fog( bgColour, 0.1, 2000 );
 
     const spherePoints = calcSphere(200, 20, latSuperRadForumla, longSuperRadForumla);
     sphereGeo = buildSphere(spherePoints, sphereGeo);

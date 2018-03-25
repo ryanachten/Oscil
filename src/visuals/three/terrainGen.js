@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import OrbitControls from 'three-orbitcontrols';
 import SimplexNoise from 'simplex-noise';
 
-const init = ({visualSettings, canvWidth, canvHeight}) => {
+const init = ({visualSettings, canvWidth, canvHeight, bgColour}) => {
 
   return new Promise(function(resolve, reject) {
     const camera = new THREE.PerspectiveCamera(35,
@@ -18,12 +18,12 @@ const init = ({visualSettings, canvWidth, canvHeight}) => {
     scene.add(pointLight);
 
     const pointLightHelper = new THREE.PointLightHelper( pointLight, 10, 0xff0000);
-    console.log(pointLightHelper);
     scene.add( pointLightHelper );
 
     const hemisphere = new THREE.HemisphereLight( 0xffffbb, 0x080820, 0.5 );
     scene.add(hemisphere);
 
+    scene.background = new THREE.Color(bgColour);
     scene.fog = new THREE.Fog( 0xff4da0, 0.1, 3000 );
 
     function setupTerrain(width, height, scale){
