@@ -35,8 +35,10 @@ class VisualPage extends React.Component{
   render(){
     return(
       <div id="VisualPage">
-        <Header currentPage="visual" />
-        <VisualControlPanel />
+        <div id="visualPage--overlay">
+          <Header currentPage="visual" />
+          <VisualControlPanel />
+        </div>
         <AudioAnalyser />
         {this.props.renderer === 'html' && (
           <HtmlCanvas

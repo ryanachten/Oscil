@@ -33,5 +33,6 @@ export default {
   draw: waveformDraw,
   type: 'shape',
   renderer: 'html',
+  description: 'Waveform for testing and calibrating audio',
   thumbImg: 'https://c2.staticflickr.com/4/3900/14784363445_fc54b8cb85_q.jpg'
 }
