@@ -20,7 +20,7 @@
   justify-content: center;
 }
 .thumbnail--info{
-  background: #343434;
+  background: $background-colour;
   width: 100%;
   margin: 10px;
   color: $main-color;
@@ -31,6 +31,7 @@
 .thumbnail--title{
   font-weight: bold;
 }
+
 @mixin thumbIcon {
   background-repeat: no-repeat;
   background-position: center;
@@ -38,7 +39,7 @@
   height: 25px;
   width: 25px;
   display: inline-block;
-  margin: 0 10px;
+  margin-right: 20px;
 }
 .thumbnail--type{
   @include thumbIcon;
@@ -55,7 +56,6 @@
     background-image: url('../img/icons/oscil_type_three.svg');
   }
 }
-
 .thumbnail--renderer{
   @include thumbIcon;
   &.html{

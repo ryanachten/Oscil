@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter, Route, Switch, Link, NavLink } from 'react-router-dom';
 import allVisualData from '../store/visuals';
 
-import Header from '../components/Header';
 import HomePage from '../components/HomePage';
 import NotFoundPage from '../components/NotFoundPage';
 import VisualPage from '../components/VisualPage';
