@@ -5,22 +5,29 @@
 }
 
 .thumbnail--item{
-  width: 20%;
-  min-width: 250px;
-  height: 200px;
+  width: 300px;
+  height: 300px;
   background-repeat: no-repeat;
   background-position: center;
   margin: 10px;
 }
-
 .thumbnail--background{
   height: 100%;
   text-align: center;
+  // Align content at bottom of thumb:
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
 }
-.thumbnail--label{
+.thumbnail--info{
+  background: #343434;
+  width: 100%;
   margin: 10px;
+  color: $main-color;
+  font-family: $type-body;
+  text-align: left;
   padding: 10px;
-  background: white;
-  text-align: center;
-  display: inline-block;
+}
+.thumbnail--title{
+  font-weight: bold;
 }

@@ -115,5 +115,6 @@ export default {
   draw,
   type: 'three',
   renderer: 'three',
+  description: 'Simplex noise generative terrain',
   thumbImg: 'https://c1.staticflickr.com/9/8663/16531600749_8969f842a0_q.jpg'
 }

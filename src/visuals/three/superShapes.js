@@ -276,6 +276,7 @@ export default {
   draw,
   type: 'three',
   renderer: 'three',
+  description: 'Parametric surface from multiplying two superformulas',
   thumbImg: 'https://c2.staticflickr.com/4/3870/14761003966_3319fc22e0_q.jpg',
   settings: {
     colorCycle: {

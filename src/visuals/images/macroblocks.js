@@ -74,5 +74,6 @@ export default {
       requiresInitOnChange: true
     }
   },
+  description: 'Images represented by dots of colour',
   thumbImg: 'https://c1.staticflickr.com/3/2901/14753635394_87f63d7464_q.jpg'
 };

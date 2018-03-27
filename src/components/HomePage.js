@@ -16,7 +16,11 @@ class HomePage extends React.Component{
               <Link className="thumbnail--item" key={visual} to={`/${visual}`}>
                 <div className="thumbnail--background"
                   style={{backgroundImage: `url(${currentVis.thumbImg})`}}>
-                  <p className="thumbnail--label">{visual}</p>
+                  <div className="thumbnail--info">
+                    <h3 className="thumbnail--title">{visual[0].toUpperCase() + visual.slice(1)}</h3>
+                    <p>{currentVis.description}</p>
+                    <div>{currentVis.type}{currentVis.renderer}</div>
+                  </div>
                 </div>
               </Link>
             )

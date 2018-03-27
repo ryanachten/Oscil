@@ -158,5 +158,6 @@ export default {
       options: ['vertical', 'horizontal', 'both']
     },
   },
+  description: 'Pixels repeated and stretched',
   thumbImg: 'https://c2.staticflickr.com/4/3863/14577192530_190923db3c_q.jpg'
 }

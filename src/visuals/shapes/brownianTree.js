@@ -117,5 +117,6 @@ export default {
       requiresInitOnChange: true
     }
   },
+  description: 'Mathematical models of dendritic structures',
   thumbImg: 'https://c2.staticflickr.com/4/3848/14584335338_a6ca360f22_q.jpg'
 };
