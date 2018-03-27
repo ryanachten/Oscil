@@ -1,5 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import $ from 'jquery';
+
 import { getVisualInfo } from '../selectors/visual';
 
 import VisualSelection from './VisualSelection';
@@ -20,25 +22,50 @@ class VisualControlPanel extends React.Component{
     //     {value: 'three', label: '3D'}
     //   ]
     // }
+    this.state = {
+      activeMenu: 'settings'
+    };
   }
+
+  onMenuChange = (e) => {
+    const buttonClasses = e.target.className;
+    let activeMenu = undefined;
+    if (buttonClasses === 'viscontrol--menubuttons settings') {
+      activeMenu = 'settings';
+    }
+    else if (buttonClasses === 'viscontrol--menubuttons select') {
+      activeMenu = 'select';
+    }
+    this.setState( () => ({activeMenu}));
+  };
+
 
   render(){
 
     return(
       <div id="VisualControlPanel">
-        <div className="ui-section">
 
-          <h1>{this.props.title}</h1>
-          <hr />
-          <div>{`${this.props.type} | ${this.props.renderer}`}</div>
-          <p>{this.props.description}</p>
+        <button className="viscontrol--menubuttons settings"
+          onClick={this.onMenuChange}></button>
+        <button className="viscontrol--menubuttons select"
+          onClick={this.onMenuChange}></button>
 
-          { this.props.settings && (
-              <VisualDatGui />
-          )}
+        {this.state.activeMenu === 'settings' && (
+          <div className="viscontrol--settingsmenu ui-section">
 
-          <AudioDatGui />
+            <h1>{this.props.title}</h1>
+            <hr />
+            <div>{`${this.props.type} | ${this.props.renderer}`}</div>
+            <p>{this.props.description}</p>
 
+            { this.props.settings && (
+                <VisualDatGui />
+            )}
+
+            <AudioDatGui />
+
+          </div>
+        )}
           {/* { this.state.allTypes.map((type) => {
             return(
               <button
@@ -53,7 +80,7 @@ class VisualControlPanel extends React.Component{
           {/* <VisualSelection type={this.state.currentType}/> */}
 
 
-        </div>
+
       </div>
     )
   }

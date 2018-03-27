@@ -1,8 +1,30 @@
 #VisualControlPanel{
-  background: $background-colour;
-  color: $main-colour;
   margin: 20px;
-  padding: 20px;
   position: relative;
   top: 100px;
+}
+
+.viscontrol--menubuttons{
+  background: none;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  border: none;
+  height: 60px;
+  width: 60px;
+  margin-right: 20px;
+
+  &.settings{
+    background-image: url('../img/icons/oscil_controlpanel_settings.svg');
+  }
+  &.select{
+    background-image: url('../img/icons/oscil_controlpanel_select.svg');
+  }
+}
+
+.viscontrol--settingsmenu{
+  background: $background-colour;
+  color: $main-colour;
+  padding: 20px;
+  padding-bottom: 40px;
 }
