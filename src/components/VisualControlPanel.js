@@ -12,16 +12,7 @@ class VisualControlPanel extends React.Component{
 
   constructor(props){
     super(props);
-    //
-    // this.state = {
-    //   currentType: props.currentType,
-    //   allTypes: [
-    //     {value: 'shape', label: 'Shape'},
-    //     {value: 'image', label: 'Image'},
-    //     {value: 'video', label: 'Video'},
-    //     {value: 'three', label: '3D'}
-    //   ]
-    // }
+
     this.state = {
       activeMenu: 'settings'
     };
@@ -74,23 +65,17 @@ class VisualControlPanel extends React.Component{
         )}
 
         {this.state.activeMenu === 'select' && (
-          <div>Select menu, coming soon!</div>
+          <div className="viscontrol--menu select">
+
+            <button className="viscontrol--menubuttons interior settings"
+              onClick={this.onMenuChange}></button>
+
+            <button className="viscontrol--menubuttons interior close"
+              onClick={this.onMenuChange}></button>
+
+            <VisualSelection type={this.props.type}/>
+          </div>
         )}
-
-          {/* { this.state.allTypes.map((type) => {
-            return(
-              <button
-                key={type.value}
-                className={this.state.currentType === type.value ? "visual-type-toggle active" : "visual-type-toggle"}
-                onClick={() => this.setState(() => ({
-                  currentType: type.value
-                }))}>{type.label}</button>
-            );
-          })} */}
-
-          {/* <VisualSelection type={this.state.currentType}/> */}
-
-
 
       </div>
     )

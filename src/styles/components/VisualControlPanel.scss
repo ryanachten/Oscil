@@ -35,6 +35,12 @@
     width: 25px;
     background-image: url('../img/icons/oscil_controlpanel_select.svg');
   }
+  &.settings{
+    float: left;
+    height: 25px;
+    width: 25px;
+    background-image: url('../img/icons/oscil_controlpanel_settings.svg');
+  }
   &.close{
     @include imgButton;
     background-image: url('../img/icons/oscil_controlpanel_close.svg');
