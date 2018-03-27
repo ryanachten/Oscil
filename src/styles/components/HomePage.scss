@@ -31,3 +31,40 @@
 .thumbnail--title{
   font-weight: bold;
 }
+@mixin thumbIcon {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  height: 25px;
+  width: 25px;
+  display: inline-block;
+  margin: 0 10px;
+}
+.thumbnail--type{
+  @include thumbIcon;
+  &.shape{
+    background-image: url('../img/icons/oscil_type_shape.svg');
+  }
+  &.image{
+    background-image: url('../img/icons/oscil_type_image.svg');
+  }
+  &.video{
+    background-image: url('../img/icons/oscil_type_video.svg');
+  }
+  &.three{
+    background-image: url('../img/icons/oscil_type_three.svg');
+  }
+}
+
+.thumbnail--renderer{
+  @include thumbIcon;
+  &.html{
+    background-image: url('../img/icons/oscil_renderer_html.svg');
+  }
+  &.p5{
+    background-image: url('../img/icons/oscil_renderer_p5.svg');
+  }
+  &.three{
+    background-image: url('../img/icons/oscil_renderer_three.svg');
+  }
+}
