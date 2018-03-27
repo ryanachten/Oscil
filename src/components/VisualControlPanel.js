@@ -28,12 +28,12 @@ class VisualControlPanel extends React.Component{
   }
 
   onMenuChange = (e) => {
-    const buttonClasses = e.target.className;
+    const clickedButton = e.target;
     let activeMenu = undefined;
-    if (buttonClasses === 'viscontrol--menubuttons settings') {
+    if ($(clickedButton).hasClass('settings')) {
       activeMenu = 'settings';
     }
-    else if (buttonClasses === 'viscontrol--menubuttons select') {
+    else if ($(clickedButton).hasClass('select')) {
       activeMenu = 'select';
     }
     this.setState( () => ({activeMenu}));
@@ -45,13 +45,20 @@ class VisualControlPanel extends React.Component{
     return(
       <div id="VisualControlPanel">
 
-        <button className="viscontrol--menubuttons settings"
+        <button className="viscontrol--menubuttons exterior settings"
           onClick={this.onMenuChange}></button>
-        <button className="viscontrol--menubuttons select"
+        <button className="viscontrol--menubuttons exterior select"
           onClick={this.onMenuChange}></button>
 
         {this.state.activeMenu === 'settings' && (
-          <div className="viscontrol--settingsmenu ui-section">
+          //TODO: remove ui-section class
+          <div className="viscontrol--menu settings ui-section">
+
+            <button className="viscontrol--menubuttons interior select"
+              onClick={this.onMenuChange}></button>
+
+            <button className="viscontrol--menubuttons interior close"
+              onClick={this.onMenuChange}></button>
 
             <h1>{this.props.title}</h1>
             <hr />
@@ -63,9 +70,13 @@ class VisualControlPanel extends React.Component{
             )}
 
             <AudioDatGui />
-
           </div>
         )}
+
+        {this.state.activeMenu === 'select' && (
+          <div>Select menu, coming soon!</div>
+        )}
+
           {/* { this.state.allTypes.map((type) => {
             return(
               <button
