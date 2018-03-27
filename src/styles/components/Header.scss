@@ -1,8 +1,41 @@
+#topnav--container{
+  padding: 20px;
+  display: flex;
+  align-items: center;
+}
+
 #topnav--oscillogo{
   display: inline-block;
-  background-image: url('../img/icons/oscil_logo_white.svg');
   background-size: contain;
   background-repeat: no-repeat;
-  height: 30px;
-  width: 30px;
+  height: $xl-size;
+  width: $xl-size;
+  margin-right: 20px;
+}
+#topnav--oscillogotype{
+  font-family: $type-logo;
+  font-size: $l-size;
+  text-decoration: none;
+}
+
+.topnav__home{
+  #topnav--oscillogo{
+    background-image: url('../img/icons/oscil_logo_light.svg');
+  }
+  #topnav--oscillogotype{
+    color: $main-color;
+  }
+}
+
+
+.topnav__visual{
+
+  position: absolute;
+
+  #topnav--oscillogo{
+    background-image: url('../img/icons/oscil_logo_dark.svg');
+  }
+  #topnav--oscillogotype{
+    color: $background-colour;
+  }
 }

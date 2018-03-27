@@ -12,7 +12,6 @@ const AppRouter = (props) => {
   return(
     <BrowserRouter>
       <div>
-      <Header />
         <Switch>
           <Route path="/" component={HomePage} exact={true} />
             <Route path="/:id"

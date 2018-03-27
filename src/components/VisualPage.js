@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import { setVisual } from '../actions/visual';
 
+import Header from './Header';
 import AudioAnalyser from './AudioAnalyser';
 import VisualControlPanel from './VisualControlPanel';
 import HtmlCanvas from '../components/HtmlCanvas';
@@ -34,6 +35,7 @@ class VisualPage extends React.Component{
   render(){
     return(
       <div id="VisualPage">
+        <Header currentPage="visual" />
         <VisualControlPanel />
         <AudioAnalyser />
         {this.props.renderer === 'html' && (

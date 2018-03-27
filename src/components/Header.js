@@ -1,14 +1,20 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-const Header = () => {
+const Header = (props) => {
+
+    const {currentPage} = props;
+
     return(
-      <header>
+      // Toggle nav colour scheme based on page via classes
+      <header id="topnav--container" className={`topnav__${currentPage}`}>
         <NavLink
           id="topnav--oscillogo"
-          to="/" activeClassName="is-active" exact={true}>
+          to="/" exact={true}>
         </NavLink>
-        <NavLink to="/" activeClassName="is-active" exact={true}>oscil</NavLink>
+        <NavLink
+          id="topnav--oscillogotype"
+          to="/" exact={true}>oscil</NavLink>
       </header>
     )
 };
