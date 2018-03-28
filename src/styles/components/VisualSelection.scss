@@ -1,6 +1,7 @@
 .visselect--info{
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .visselect--typeicon{
@@ -33,4 +34,8 @@
   background-image: url('../img/icons/oscil_controlpanel_expand.svg');
   height: 20px;
   width: 20px;
+
+  &.active{
+    background-image: url('../img/icons/oscil_controlpanel_collapse.svg');
+  }
 }

@@ -26,6 +26,10 @@ button:disabled{
   background-position: center;
   background-size: contain;
   border: none;
+
+  &:focus{
+    outline: none;
+  }
 }
 
 @mixin thumbIcon {
