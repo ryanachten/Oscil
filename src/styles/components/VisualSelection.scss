@@ -1,0 +1,36 @@
+.visselect--info{
+  display: flex;
+  justify-content: space-between;
+}
+
+.visselect--typeicon{
+  @include thumbIcon;
+
+  display: inline-block;
+  height: 30px;
+  width: 30px;
+
+  &.shape{
+    background-image: url('../img/icons/oscil_type_shape.svg');
+  }
+  &.image{
+    background-image: url('../img/icons/oscil_type_image.svg');
+  }
+  &.video{
+    background-image: url('../img/icons/oscil_type_video.svg');
+  }
+  &.three{
+    background-image: url('../img/icons/oscil_type_three.svg');
+  }
+}
+.visselect--title{
+  display: inline-block;
+  margin: auto 20px;
+}
+
+.visselect--toggle{
+  @include imgButton;
+  background-image: url('../img/icons/oscil_controlpanel_expand.svg');
+  height: 20px;
+  width: 20px;
+}

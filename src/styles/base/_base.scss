@@ -19,3 +19,18 @@ button:disabled{
 .is-active{
   font-weight: bold;
 }
+
+@mixin imgButton {
+  background: none;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  border: none;
+}
+
+@mixin thumbIcon {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  display: inline-block;
+}

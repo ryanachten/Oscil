@@ -4,14 +4,6 @@
   top: 100px;
 }
 
-@mixin imgButton {
-  background: none;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  border: none;
-}
-
 .viscontrol--menubuttons{
   @include imgButton;
   &.settings{
@@ -50,11 +42,16 @@
   }
 }
 
-
-
 .viscontrol--menu{
   background: $background-colour;
   color: $main-colour;
   padding: 20px;
   padding-bottom: 40px;
+  width: 250px
+}
+
+.viscontrol--menubuttoncontainer{
+  margin-bottom: 20px;
+  display: inline-block;
+  width: 100%;
 }

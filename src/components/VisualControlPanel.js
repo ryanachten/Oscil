@@ -14,7 +14,7 @@ class VisualControlPanel extends React.Component{
     super(props);
 
     this.state = {
-      activeMenu: 'settings'
+      activeMenu: 'select'
     };
   }
 
@@ -36,20 +36,25 @@ class VisualControlPanel extends React.Component{
     return(
       <div id="VisualControlPanel">
 
-        <button className="viscontrol--menubuttons exterior settings"
-          onClick={this.onMenuChange}></button>
-        <button className="viscontrol--menubuttons exterior select"
-          onClick={this.onMenuChange}></button>
+        {this.state.activeMenu === undefined && (
+          <div>
+            <button className="viscontrol--menubuttons exterior settings"
+              onClick={this.onMenuChange}></button>
+            <button className="viscontrol--menubuttons exterior select"
+              onClick={this.onMenuChange}></button>
+          </div>
+        )}
 
         {this.state.activeMenu === 'settings' && (
           //TODO: remove ui-section class
           <div className="viscontrol--menu settings ui-section">
 
-            <button className="viscontrol--menubuttons interior select"
+            <div className="viscontrol--menubuttoncontainer">
+              <button className="viscontrol--menubuttons interior select"
+                onClick={this.onMenuChange}></button>
+              <button className="viscontrol--menubuttons interior close"
               onClick={this.onMenuChange}></button>
-
-            <button className="viscontrol--menubuttons interior close"
-              onClick={this.onMenuChange}></button>
+            </div>
 
             <h1>{this.props.title}</h1>
             <hr />
@@ -67,11 +72,12 @@ class VisualControlPanel extends React.Component{
         {this.state.activeMenu === 'select' && (
           <div className="viscontrol--menu select">
 
-            <button className="viscontrol--menubuttons interior settings"
+            <div className="viscontrol--menubuttoncontainer">
+              <button className="viscontrol--menubuttons interior settings"
+                onClick={this.onMenuChange}></button>
+              <button className="viscontrol--menubuttons interior close"
               onClick={this.onMenuChange}></button>
-
-            <button className="viscontrol--menubuttons interior close"
-              onClick={this.onMenuChange}></button>
+            </div>
 
             <VisualSelection type={this.props.type}/>
           </div>
