@@ -14,7 +14,7 @@ class VisualControlPanel extends React.Component{
     super(props);
 
     this.state = {
-      activeMenu: 'select'
+      activeMenu: 'settings'
     };
   }
 
