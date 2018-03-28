@@ -78,7 +78,9 @@ class VisualDatGui extends React.Component{
 
   render(){
     return(
-      <div ref={(div) => {this.container = div}}></div>
+      <div
+        id="VisualDatGui"
+        ref={(div) => {this.container = div}}></div>
     );
   }
 }

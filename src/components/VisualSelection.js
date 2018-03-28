@@ -46,16 +46,15 @@ class VisualSelection extends React.Component{
               </div>
 
               {type.value === this.state.openPanelType && (
-                <div>
+                <div className="visselect--thumbcontainer">
                   {Object.keys(visuals).map((visual) => {
                    const currentVis = visuals[visual];
                    if (currentVis.type === type.value) {
                      return(
-                       <Link key={visual} to={`/${visual}`}>
-                         <div className="visual-mode"
-                           style={{backgroundImage: `url(${currentVis.thumbImg})`}}>
-                           <p>{visual}</p>
-                         </div>
+                       <Link key={visual} to={`/${visual}`}
+                       className="visselect--thumbitem"
+                       style={{backgroundImage: `url(${currentVis.thumbImg})`}}>
+                          <h3>{visual}</h3>
                        </Link>
                      )
                    }})}

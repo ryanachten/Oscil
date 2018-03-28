@@ -14,7 +14,7 @@ class VisualControlPanel extends React.Component{
     super(props);
 
     this.state = {
-      activeMenu: 'settings'
+      activeMenu: 'select'
     };
   }
 
@@ -56,14 +56,14 @@ class VisualControlPanel extends React.Component{
               onClick={this.onMenuChange}></button>
             </div>
 
-            <h1>{this.props.title}</h1>
+            <h1 className="viscontrol--vistitle">{this.props.title}</h1>
             <hr />
             <div className={`viscontrol--typeicon ${this.props.type}`}></div>
             <div className={`viscontrol--renderericon ${this.props.renderer}`}></div>
             <p>{this.props.description}</p>
 
             { this.props.settings && (
-              <div>
+              <div className="viscontrol--settingscontainer visual">
                 <div className="viscontrol--settingsheader">
                   <div className="viscontrol--settingsicon visual"></div>
                   <h3 className="viscontrol--settingstitle">Settings</h3>

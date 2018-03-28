@@ -15,9 +15,9 @@
 }
 
 .viscontrol--menubuttons.exterior{
-  height: 60px;
-  width: 60px;
-  margin-right: 20px;
+  height: 40px;
+  width: 40px;
+  margin: auto 20px;
 }
 
 .viscontrol--menubuttons.interior{
@@ -54,6 +54,10 @@
   margin-bottom: 20px;
   display: inline-block;
   width: 100%;
+}
+
+.viscontrol--vistitle{
+  margin-top: 0px;
 }
 
 .viscontrol--typeicon{

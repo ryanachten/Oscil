@@ -2,6 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 10px;
 }
 
 .visselect--typeicon{
@@ -38,4 +39,20 @@
   &.active{
     background-image: url('../img/icons/oscil_controlpanel_collapse.svg');
   }
+}
+
+.visselect--thumbitem{
+  align-items: center;
+  background-position: center;
+  background-size: cover;
+  color: $main-colour;
+  display: flex;
+  justify-content: center;
+  height: 70px;
+  text-decoration: none;
+}
+
+.visselect--thumbcontainer{
+  max-height: 250px;
+  overflow-y: auto;
 }

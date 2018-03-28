@@ -15,6 +15,7 @@ class AudioDatGui extends React.Component{
   componentDidMount(){
     const audioGui = new dat.GUI({ autoPlace: false });
     audioGui.domElement.id = 'audiodat-gui';
+    audioGui.close();
     $(this.container).append(audioGui.domElement);
     this.audioGui = audioGui;
     this.addSettings(this.props.analyserSettings);
