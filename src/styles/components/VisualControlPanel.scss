@@ -55,3 +55,65 @@
   display: inline-block;
   width: 100%;
 }
+
+.viscontrol--typeicon{
+  @include thumbIcon;
+  height: 25px;
+  width: 25px;
+  margin-right: 20px;
+
+  &.shape{
+    background-image: url('../img/icons/oscil_type_shape.svg');
+  }
+  &.image{
+    background-image: url('../img/icons/oscil_type_image.svg');
+  }
+  &.video{
+    background-image: url('../img/icons/oscil_type_video.svg');
+  }
+  &.three{
+    background-image: url('../img/icons/oscil_type_three.svg');
+  }
+}
+
+.viscontrol--renderericon{
+  @include thumbIcon;
+  height: 25px;
+  width: 25px;
+
+  &.html{
+    background-image: url('../img/icons/oscil_renderer_html.svg');
+  }
+  &.p5{
+    background-image: url('../img/icons/oscil_renderer_p5.svg');
+  }
+  &.three{
+    background-image: url('../img/icons/oscil_renderer_three.svg');
+  }
+}
+
+.viscontrol--settingsheader{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.viscontrol--settingsicon{
+  @include thumbIcon;
+  width: 25px;
+  height: 25px;
+  margin-right: 20px;
+  display: inline-block;
+
+  &.audio{
+    background-image: url('../img/icons/oscil_controlpanel_audio.svg');
+  }
+  &.visual{
+    background-image: url('../img/icons/oscil_controlpanel_visual.svg');
+  }
+}
+
+.viscontrol--settingstitle{
+  display: inline-block;
+}
