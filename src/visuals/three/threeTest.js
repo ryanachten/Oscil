@@ -106,7 +106,7 @@ const init = ({visualSettings, canvWidth, canvHeight}) => {
 
 
     const ownSettings = {
-        scene, camera,
+        scene, camera, controls,
         centralTorusMesh, reactParticles
     };
 

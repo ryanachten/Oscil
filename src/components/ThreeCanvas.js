@@ -60,6 +60,12 @@ class ThreeCanvas extends React.Component{
     cancelAnimationFrame(this.frameId);
     const statsCanvas = document.getElementById('stats-graph');
     statsCanvas.remove();
+
+    const controls = this.ownSettings.controls;
+    if (controls) {
+        controls.dispose();
+    }
+
     window.removeEventListener("resize", this.resize);
     this.canvIsMounted = false;
   }

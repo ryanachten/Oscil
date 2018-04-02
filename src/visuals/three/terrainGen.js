@@ -39,6 +39,7 @@ const init = ({visualSettings, canvWidth, canvHeight, bgColour}) => {
       terrainGeo.computeFaceNormals();
 
       scene.add(terrainMesh);
+      // controls.dispose();
     }
 
     let terrainGeo, terrainMesh, simplex;

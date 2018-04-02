@@ -103,7 +103,7 @@ const init = ({visualSettings, canvWidth, canvHeight}) => {
     const delta = 0.01;
 
     const ownSettings = {
-      scene, camera,
+      scene, camera, controls,
       sponge, worldMat, delta
     };
 
@@ -172,6 +172,7 @@ const draw = ({
   renderer.render(scene, camera);
 
   return  {
+    ...ownSettings,
     scene, camera,
     sponge, worldMat, delta
   };

@@ -9,7 +9,6 @@ import {unsetVisual} from '../actions/visual';
 class HomePage extends React.Component{
 
   componentWillMount(){
-    console.log(this.props);
     this.props.dispatch(unsetVisual());
   }
 
