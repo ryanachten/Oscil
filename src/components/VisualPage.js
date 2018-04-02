@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import $ from 'jquery';
 
 import { setVisual } from '../actions/visual';
 
@@ -23,6 +24,8 @@ class VisualPage extends React.Component{
   componentWillMount(){
     // Sets store on first load if url request
     this.props.dispatch(setVisual({visual: this.props.pathId}));
+
+    $('body').addClass('visual-page');
   }
 
   componentWillReceiveProps(nextProps){
@@ -30,6 +33,10 @@ class VisualPage extends React.Component{
     if (nextProps.pathId !== this.props.pathId) {
       this.props.dispatch(setVisual({visual: nextProps.pathId}));
     }
+  }
+
+  componentWillUnmount(){
+    $('body').removeClass('visual-page');
   }
 
   render(){
