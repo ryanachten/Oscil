@@ -3,9 +3,10 @@ import allVisualData from '../store/visuals';
 export default ({currentVisual, visualSettings, requiresInit}) => {
   const visualInit = allVisualData[currentVisual].init;
   const visualDraw = allVisualData[currentVisual].draw;
+  const frameRate = allVisualData[currentVisual].frameRate;
   return {visualSettings,
           visualInit, visualDraw,
-          requiresInit
+          requiresInit, frameRate
         };
 };
 

@@ -83,6 +83,12 @@ class HtmlCanvas extends React.Component{
 
         this.ownSettings = ownSettings;
 
+        // Use framerate if defined
+        if (this.props.frameRate) {
+          const fps = this.props.frameRate;
+          this.fpsInterval = 1000/fps;
+          this.then = Date.now();
+        }
         this.drawVisual();
 
       });
@@ -92,6 +98,19 @@ class HtmlCanvas extends React.Component{
 
   drawVisual(){
     this.frameId = requestAnimationFrame(this.drawVisual);
+
+    // Use framerate if defined
+    if (this.props.frameRate) {
+      const now = Date.now();
+      const elapsed = now - this.then;
+      if (elapsed > this.fpsInterval) {
+        this.then = now - (elapsed % this.fpsInterval);
+      }
+      else{
+        return;
+      }
+    }
+
     this.ownSettings = this.props.visualDraw({
       canvasCtx: this.canvasCtx,
       visualSettings: this.props.visualSettings,
@@ -118,11 +137,11 @@ class HtmlCanvas extends React.Component{
 const mapStateToProps = ({visual, audio}) => {
   const renderer = visual.renderer;
   const {dataArray, bufferLength} = audio;
-  const {visualInit, visualDraw, visualSettings, requiresInit} = selectVisual(visual);
+  const {visualInit, visualDraw, visualSettings, requiresInit, frameRate} = selectVisual(visual);
   return {
     renderer,
     visualInit, visualDraw, visualSettings,
-    requiresInit,
+    requiresInit, frameRate,
     dataArray, bufferLength,
   };
 };

@@ -88,6 +88,7 @@ export default {
   draw,
   type: 'shape',
   renderer: 'html',
+  frameRate: 10,
   settings: {
     freqX: {
       active: 7,
