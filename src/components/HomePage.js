@@ -1,9 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+
 import Header from './Header';
 import visuals from '../store/visuals';
+import {unsetVisual} from '../actions/visual';
 
 class HomePage extends React.Component{
+
+  componentWillMount(){
+    console.log(this.props);
+    this.props.dispatch(unsetVisual());
+  }
 
   render(){
     return(
@@ -12,7 +20,7 @@ class HomePage extends React.Component{
         <div className="thumbnail--grid">
           { Object.keys(visuals).map((visual) => {
             const currentVis = visuals[visual];
-            
+
             return(
               <Link className="thumbnail--item" key={visual} to={`/${visual}`}>
                 <div className="thumbnail--background"
@@ -35,4 +43,4 @@ class HomePage extends React.Component{
   }
 }
 
-export default HomePage;
+export default connect()(HomePage);

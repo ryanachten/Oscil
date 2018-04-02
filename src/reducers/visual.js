@@ -17,6 +17,12 @@ export default (state = visualReducerDefaultState, action) => {
         };
       break;
 
+    case 'UNSET_VISUAL':
+      return {
+        requiresInit: false
+      }
+      break;
+
     case 'UPDATE_VISUAL_SETTINGS':
         return {
           ...state,

@@ -24,3 +24,8 @@ export const updateVisualSettings = ({ settings, requiresInit }) => ({
 export const resolveInit = () => ({
   type: 'RESOLVE_INIT'
 });
+
+// Used by HomePage to reset visual store to avoid component conflicts
+export const unsetVisual = () => ({
+  type: 'UNSET_VISUAL'
+});
