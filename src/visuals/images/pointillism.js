@@ -148,6 +148,7 @@ export default {
   draw,
   type: 'image',
   renderer: 'html',
+  frameRate: 10,
   settings: {
 		drawMode: {
       active: 'ellipse',
@@ -159,7 +160,8 @@ export default {
 		sampleSize: {
       active: 16,
       min: 2,
-      max: 30
+      max: 30,
+      requiresInitOnChange: true
     },
 		maxSize: {
       active: 5,

@@ -93,6 +93,7 @@ const draw = ({
     draw,
     type: 'shape',
     renderer: 'html',
+    frameRate: 15,
     settings: {
       freqX: {
         active: 29,

@@ -202,6 +202,7 @@ export default {
   draw,
   type: 'shape',
   renderer: 'html',
+  frameRate: 30,
   settings: {
     nodeDamping: {
       active: 10,
