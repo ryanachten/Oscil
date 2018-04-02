@@ -63,14 +63,14 @@ const draw = ({
     visualSettings, ownSettings,
     canvWidth, canvHeight,
     bufferLength, dataArray,
-    stats, renderer
+    renderer
   }) => {
 
   const { scene, camera, controls,
     terrainGeo, simplex, } = ownSettings;
   let { yOff, xOff, daIndex } = ownSettings;
 
-  stats.begin();
+
 
   controls.update();
 
@@ -102,7 +102,7 @@ const draw = ({
 
   renderer.render(scene, camera);
 
-  stats.end();
+
 
   return {
     scene, camera, controls,

@@ -89,6 +89,8 @@ class ThreeCanvas extends React.Component{
   }
 
   drawVisual(){
+    this.stats.end();
+    this.stats.begin();
     this.frameId = requestAnimationFrame(this.drawVisual);
     this.ownSettings = this.props.visualDraw({
       visualSettings: this.props.visualSettings,
@@ -96,7 +98,6 @@ class ThreeCanvas extends React.Component{
       canvHeight: this.state.canvHeight,
       bufferLength: this.props.bufferLength,
       dataArray: this.props.dataArray,
-      stats: this.stats,
       renderer: this.renderer,
       ownSettings: this.ownSettings,
     });

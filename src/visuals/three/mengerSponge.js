@@ -117,10 +117,8 @@ const draw = ({
     visualSettings, ownSettings,
     canvWidth, canvHeight,
     bufferLength, dataArray,
-    stats, renderer
+    renderer
   }) => {
-
-  stats.begin();
 
   let { scene, camera,
     sponge, worldMat, delta } = ownSettings;
@@ -177,8 +175,6 @@ const draw = ({
     scene, camera,
     sponge, worldMat, delta
   };
-
-  stats.end();
 }
 
 export default {

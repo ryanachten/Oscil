@@ -118,10 +118,8 @@ const draw = ({
     visualSettings, ownSettings,
     canvWidth, canvHeight,
     bufferLength, dataArray,
-    stats, renderer
+    renderer
   }) => {
-
-  stats.begin();
 
   const {centralTorusMesh, reactParticles,
         scene, camera} = ownSettings;
@@ -176,8 +174,6 @@ const draw = ({
   scene.fog.color = new THREE.Color('hsl('+hue+', 50%, 79%)');
 
   renderer.render(scene, camera);
-
-  stats.end();
 
   return ownSettings;
 }

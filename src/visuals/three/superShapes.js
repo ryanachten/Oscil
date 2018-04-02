@@ -155,7 +155,7 @@ const draw = ({
     visualSettings, ownSettings,
     canvWidth, canvHeight,
     bufferLength, dataArray,
-    stats, renderer
+    renderer
   }) => {
 
   let { scene, camera, controls,
@@ -201,8 +201,6 @@ const draw = ({
     colOffset += 5;
     sphereGeo.colorsNeedUpdate = true;
   }
-
-  stats.begin();
 
   controls.update();
 
@@ -258,8 +256,6 @@ const draw = ({
   sphereMesh.rotation.y += 0.01;
 
   renderer.render(scene, camera);
-
-  stats.end();
 
   ownSettings = {
     scene, camera, controls,
