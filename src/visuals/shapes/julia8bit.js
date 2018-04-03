@@ -19,7 +19,7 @@ const init = ({p, visualSettings, canvWidth, canvHeight, video}) => {
 const draw = ({
     p, visualSettings, ownSettings,
     canvWidth, canvHeight,
-    bufferLength, dataArray
+    bufferLength, dataArray, bgColour,
   }) => {
 
 	p.background(0);
@@ -69,7 +69,7 @@ const draw = ({
 			if (n === maxIterations) {
 				bright = 0;
 			}
-			p.fill(Math.sin(bright)*255, 200, Math.sin(bright)*255);
+			p.fill(125+Math.sin(bright)*125, 200, 125+Math.sin(bright)*125);
 			p.ellipseMode(p.CENTER);
 			p.ellipse(x*sampleWidth, y*sampleHeight, sampleWidth, sampleHeight);
 		}

@@ -26,7 +26,7 @@ import tesserae from '../visuals/video/tesserae';
 import slitScan from '../visuals/video/slitScan';
 
 // 3D visuals
-import threeTest from '../visuals/three/threeTest';
+import nucleiOrbit from '../visuals/three/nucleiOrbit';
 import mengerSponge from '../visuals/three/mengerSponge';
 import superShapes from '../visuals/three/superShapes';
 import terrainGen from '../visuals/three/terrainGen';
@@ -57,7 +57,7 @@ const visuals = {
   tesserae,
   slitScan,
 
-  threeTest,
+  nucleiOrbit,
   mengerSponge,
   superShapes,
   terrainGen

@@ -87,6 +87,7 @@ export default {
   draw,
   type: 'video',
   renderer: 'p5',
+  description: 'Video distorted by waves of refraction',
   settings: {
     xReact : {
       active: true,

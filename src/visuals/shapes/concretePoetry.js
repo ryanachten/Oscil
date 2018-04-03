@@ -110,6 +110,9 @@ export default {
   draw,
   type: 'shape',
   renderer: 'html',
+  description: 'Paragraph typewriter effect looped continuously',
+  thumbImg: 'https://c2.staticflickr.com/6/5555/14762774001_0a312d74ca_q.jpg',
+  frameRate: 30,
   settings: {
     textInput : {
       active: 'there is always soma, delicious soma, half a gramme for a half-holiday, a gramme for a week-end, two grammes for a trip to the gorgeous East, three for a dark eternity on the moon',
@@ -125,6 +128,5 @@ export default {
       min: 10,
       max: window.innerHeight/2
     }
-  },
-  thumbImg: 'https://c2.staticflickr.com/6/5555/14762774001_0a312d74ca_q.jpg'
+  }
 }

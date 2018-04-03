@@ -89,6 +89,8 @@ export default {
   type: 'shape',
   renderer: 'html',
   frameRate: 10,
+  description: 'Webs plotted from multiple lissajous points',
+  thumbImg: 'https://c2.staticflickr.com/4/3881/14773907335_49efdd9819_q.jpg',
   settings: {
     freqX: {
       active: 7,
@@ -121,6 +123,5 @@ export default {
       max: 1000,
       requiresInitOnChange: true
     }
-  },
-  thumbImg: 'https://c2.staticflickr.com/4/3881/14773907335_49efdd9819_q.jpg'
+  }
 }
