@@ -191,13 +191,14 @@ const draw = ({
 		canvasCtx.closePath();
 
 		const rand = Math.floor(Math.random()*2);
-		if(i%5 === 0){
-			canvasCtx.fillStyle = 'hsl(282, 100%, 50%)';
-		}else if(i%3 === 0){
-			canvasCtx.fillStyle = 'hsl(332, 100%, 50%)';
-		}else{
-			canvasCtx.fillStyle = 'hsl(182, 100%, 50%)';
-		}
+		// if(i%5 === 0){
+		// 	canvasCtx.fillStyle = 'hsl(282, 100%, 50%)';
+		// }else if(i%3 === 0){
+		// 	canvasCtx.fillStyle = 'hsl(332, 100%, 50%)';
+		// }else{
+		// 	canvasCtx.fillStyle = 'hsl(182, 100%, 50%)';
+		// }
+    	canvasCtx.fillStyle = 'black';
 
 		canvasCtx.fill();
 	}
