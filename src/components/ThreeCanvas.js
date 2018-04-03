@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import stats from 'stats.js';
 import * as THREE from 'three';
+import $ from 'jquery';
 
 import {setupThreeCanvas} from '../utilities/setupCanvas';
 import selectVisual from '../selectors/visual';
@@ -48,6 +49,7 @@ class ThreeCanvas extends React.Component{
     checkAudioPermissions.then( (analyser) => {
 
       this.initVisual();
+      window.addEventListener("resize", this.resize);
       this.canvIsMounted = true;
     }).catch( (reason) => {
         // Do something
@@ -75,6 +77,10 @@ class ThreeCanvas extends React.Component{
       canvWidth: $(window).width(),
       canvHeight: $(window).height()
     });
+    const camera = this.ownSettings.camera;
+    camera.aspect =  this.state.canvWidth / this.state.canvHeight;
+    camera.updateProjectionMatrix();
+    this.renderer.setSize(this.state.canvWidth, this.state.canvHeight);
   }
 
   initVisual(){
