@@ -45,7 +45,7 @@ const init = ({visualSettings, canvWidth, canvHeight}) => {
       // Particle nucleus
       const nucleusGeo = new THREE.IcosahedronGeometry(50, 1);
       const nucleusMat = new THREE.MeshStandardMaterial(
-        { color: 0xbd95ef, metalness: 1, roughness: 0.50, transparent: true, opacity: 0.7} );
+        { color: 0xffffff, metalness: 1, roughness: 0.50, transparent: true, opacity: 0.7} );
       const nucleusMesh = new THREE.Mesh(nucleusGeo, nucleusMat);
       nucleusMesh.name = 'nucleusMesh';
       reactParticle.add(nucleusMesh);
@@ -133,6 +133,10 @@ const draw = ({
   reactParticles.rotation.y += 0.01;
   reactParticles.rotation.z += 0.01;
 
+  const hue = (dataArray[0]/255)
+            *360 //range
+            +0; //base colour
+
   function updateReactParticle(particle, curDa){
     particle.rotation.x += 0.01;
     particle.rotation.y += 0.01;
@@ -147,6 +151,8 @@ const draw = ({
 
     for (let i = 0; i < sphereParticles.children.length; i++) {
       sphereParticles.children[i].scale.x = sphereParticles.children[i].scale.y = sphereParticles.children[i].scale.z = 1-curDa;
+
+      sphereParticles.children[i].material.color.setHSL(1-(hue/360), 0.5, 0.8);
     }
     sphereParticles.rotation.x -= 0.01;
     sphereParticles.rotation.y -= 0.01;
@@ -168,9 +174,7 @@ const draw = ({
   }
 
   // Update environment
-  const hue = (dataArray[0]/255)
-            *40 //range
-            +172; //base colour
+
   scene.fog.color = new THREE.Color('hsl('+hue+', 50%, 79%)');
 
   renderer.render(scene, camera);
