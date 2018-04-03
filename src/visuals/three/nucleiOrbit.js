@@ -96,15 +96,6 @@ const init = ({visualSettings, canvWidth, canvHeight}) => {
 
     scene.add(reactParticles);
 
-    // Central Torus
-      //r, t, ts, rs, p, q
-    const centralTorusGeo = new THREE.TorusKnotGeometry(250, 5, 50, 4, 2, 5);
-    const centralTorusMat = new THREE.MeshStandardMaterial(
-      { color: 0xbd95ef, metalness: 1, roughness: 0.50, transparent: true, opacity: 0.7} );
-    const centralTorusMesh = new THREE.Mesh(centralTorusGeo, centralTorusMat);
-    scene.add(centralTorusMesh);
-
-
     const ownSettings = {
         scene, camera, controls,
         centralTorusMesh, reactParticles
@@ -123,10 +114,6 @@ const draw = ({
 
   const {centralTorusMesh, reactParticles,
         scene, camera} = ownSettings;
-
-  centralTorusMesh.rotation.x -= 0.01;
-  centralTorusMesh.rotation.y -= 0.01;
-  centralTorusMesh.rotation.z -= 0.01;
 
   // // Rotate main grid
   reactParticles.rotation.x += 0.01;
