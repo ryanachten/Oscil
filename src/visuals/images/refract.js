@@ -10,7 +10,7 @@ const init = ({
     canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
     const img = new Image();
-    img.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Various_Arecaceae.jpg/630px-Various_Arecaceae.jpg' + '?' + new Date().getTime();
+    img.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Various_Cactaceae.jpg/800px-Various_Cactaceae.jpg' + '?' + new Date().getTime();
     img.setAttribute('crossOrigin', '');
 
     img.onerror = () => {

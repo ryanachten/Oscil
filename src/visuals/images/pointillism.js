@@ -24,7 +24,7 @@ const init = ({
     document.getElementById('HtmlCanvas').appendChild(canvas2);
     canvas2.style.display = 'none';
 
-    let imgUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Antonio_de_Pereda_-_El_sue%C3%B1o_del_caballero_-_Google_Art_Project.jpg/640px-Antonio_de_Pereda_-_El_sue%C3%B1o_del_caballero_-_Google_Art_Project.jpg';
+    let imgUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Various_Cactaceae.jpg/800px-Various_Cactaceae.jpg';
     imgUrl += ('?' + new Date().getTime());
     const img = new Image();
     img.src = imgUrl;

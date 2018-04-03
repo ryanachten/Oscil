@@ -7,7 +7,7 @@ const init = ({canvasCtx, visualSettings, canvWidth, canvHeight}) => {
 		const {offsetY, offsetX} = offsetRand(canvWidth, canvHeight);
 
     const img = new Image();
-    img.src = 'https://upload.wikimedia.org/wikipedia/commons/4/44/Jelly_cc11.jpg' + '?' + new Date().getTime();
+    img.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Various_Cactaceae.jpg/800px-Various_Cactaceae.jpg' + '?' + new Date().getTime();
     img.setAttribute('crossOrigin', '');
 
     const ownSettings = {
