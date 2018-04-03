@@ -44,15 +44,13 @@ const init = ({visualSettings, canvWidth, canvHeight, bgColour}) => {
 
     let terrainGeo, terrainMesh, simplex;
     const yOff = 100;
-    const xOff = 100;
-    const daIndex = 0;
 
     setupTerrain(2500, 2500, 50);
 
     const ownSettings = {
       scene, camera, controls,
-      terrainGeo, simplex,
-      yOff, xOff, daIndex
+      terrainGeo, terrainMesh, simplex,
+      yOff
     }
 
     resolve(ownSettings);
@@ -68,46 +66,37 @@ const draw = ({
   }) => {
 
   const { scene, camera, controls,
-    terrainGeo, simplex, } = ownSettings;
-  let { yOff, xOff, daIndex } = ownSettings;
+    terrainGeo, terrainMesh, simplex, } = ownSettings;
+  let { yOff } = ownSettings;
 
-
+  const hue = (dataArray[0]/255).toFixed(2);
+  // console.log(terrainGeo);
+  terrainMesh.material.color.setHSL(hue, 0.5, 0.8);
+  scene.fog.color.setHSL(1-hue, 0.8, 0.8);
 
   controls.update();
 
-  const amplitude = (dataArray[50]/255) //normalise
-              *150+50;
+  const amplitude = (dataArray[0]/255) //normalise
+              *200+50;
 
   for (let i = 0; i < terrainGeo.vertices.length; i++) {
-      terrainGeo.vertices[i].z = simplex.noise2D(terrainGeo.vertices[i].x/500 -xOff, terrainGeo.vertices[i].y/500 - yOff) *100;
+      terrainGeo.vertices[i].z = simplex.noise2D(terrainGeo.vertices[i].x/500, terrainGeo.vertices[i].y/500 - yOff) *amplitude;
   }
 
   terrainGeo.verticesNeedUpdate = true;
 
   const speed = (dataArray[0]/25500) //normalise
-              *20-0.01;
-  const speed2 = (dataArray[20]/25500) //normalise
-              *10-0.03;
+              *30-0.01;
 
   if (!isNaN(speed)) {
     yOff -= speed;
   }
-  if (!isNaN(speed2)) {
-    xOff -= speed2;
-  }
-
-  daIndex++;
-  if (daIndex >= dataArray.length) {
-    daIndex = 0;
-  }
 
   renderer.render(scene, camera);
 
-
-
   return {
     scene, camera, controls,
-    terrainGeo, simplex, yOff, xOff, daIndex
+    terrainGeo, terrainMesh, simplex, yOff
   };
 }
 
