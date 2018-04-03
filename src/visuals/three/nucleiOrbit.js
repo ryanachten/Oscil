@@ -98,7 +98,7 @@ const init = ({visualSettings, canvWidth, canvHeight}) => {
 
     const ownSettings = {
         scene, camera, controls,
-        centralTorusMesh, reactParticles
+        reactParticles
     };
 
     resolve(ownSettings);
@@ -112,8 +112,7 @@ const draw = ({
     renderer
   }) => {
 
-  const {centralTorusMesh, reactParticles,
-        scene, camera} = ownSettings;
+  const {reactParticles, scene, camera} = ownSettings;
 
   // // Rotate main grid
   reactParticles.rotation.x += 0.01;

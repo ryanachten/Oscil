@@ -71,7 +71,7 @@ const draw = ({
 
   const hue = (dataArray[0]/255).toFixed(2);
   // console.log(terrainGeo);
-  terrainMesh.material.color.setHSL(hue, 0.5, 0.8);
+  terrainMesh.material.color.setHSL(hue, 0.8, 0.8);
   scene.fog.color.setHSL(1-hue, 0.8, 0.8);
 
   controls.update();
