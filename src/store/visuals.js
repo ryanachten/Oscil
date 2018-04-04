@@ -44,7 +44,7 @@ const visuals = {
   nodeAttraction,
   chladniPlate,
   julia8bit,
-  
+
   refract,
   macroblocks,
   repeatPix,
@@ -56,11 +56,11 @@ const visuals = {
   rippleTank,
   tesserae,
   slitScan,
-  //
-  // nucleiOrbit,
-  // mengerSponge,
-  // superShapes,
-  // terrainGen
+
+  nucleiOrbit,
+  mengerSponge,
+  superShapes,
+  terrainGen
 };
 
 export default visuals;

@@ -106,5 +106,5 @@ export default {
   type: 'three',
   renderer: 'three',
   description: 'Simplex noise generative terrain',
-  thumbImg: 'https://c1.staticflickr.com/9/8663/16531600749_8969f842a0_q.jpg'
+  thumbImg: 'three/oscil_thumb_terraingen.jpg'
 }

@@ -184,5 +184,5 @@ export default {
   type: 'three',
   renderer: 'three',
   description: 'Generalization of the Cantor set and Sierpinski carpet',
-  thumbImg: 'https://c2.staticflickr.com/4/3858/14765126015_92224cd569_q.jpg'
+  thumbImg: 'three/oscil_thumb_mengersponge.jpg'
 };

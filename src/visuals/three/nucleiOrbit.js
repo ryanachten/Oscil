@@ -174,5 +174,5 @@ export default {
   type: 'three',
   renderer: 'three',
   description: 'Nuclei reacting to different parts of audio waveform',
-  thumbImg: 'https://c2.staticflickr.com/6/5486/11003331984_c4064c9eec_q.jpg'
+  thumbImg: 'three/oscil_thumb_nucleiorbit.jpg'
 };
