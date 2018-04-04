@@ -106,5 +106,5 @@ export default {
       max: 100
     }
   },
-  thumbImg: 'https://c1.staticflickr.com/3/2920/14578571629_a84b607696_q.jpg'
+  thumbImg: 'video/oscil_thumb_rippletank.jpg'
 }

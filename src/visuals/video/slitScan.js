@@ -62,5 +62,5 @@ export default {
     }
   },
   description: 'Based on the slit-scan photographic technique',
-  thumbImg: 'https://c1.staticflickr.com/1/739/20640510998_9751f63048_q.jpg'
+  thumbImg: 'video/oscil_thumb_slitscan.jpg'
 };

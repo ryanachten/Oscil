@@ -75,5 +75,5 @@ export default {
     },
   },
   description: 'Moving infinity mirror cam',
-  thumbImg: 'https://c1.staticflickr.com/9/8888/18438501761_c26ec73209_q.jpg'
+  thumbImg: 'video/oscil_thumb_videofeedback.jpg'
 }

@@ -87,5 +87,5 @@ export default {
       }
   },
   description: 'Grid-based stop motion stream',
-  thumbImg: 'https://c2.staticflickr.com/4/3217/5711527578_9a8bcf7d93_q.jpg'
+  thumbImg: 'video/oscil_thumb_muybridge.jpg'
 }

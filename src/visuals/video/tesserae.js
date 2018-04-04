@@ -102,5 +102,5 @@ export default {
     }
   },
   description: 'Mosaic based on pixel brightness',
-  thumbImg: 'https://c2.staticflickr.com/4/3882/14781900731_2b5475e2da_q.jpg'
+  thumbImg: 'video/oscil_thumb_tesserae.jpg'
 }

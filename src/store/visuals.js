@@ -51,11 +51,11 @@ const visuals = {
   // imgShuffle,
   // pointillism,
   //
-  // videoFeedback,
-  // muybridge,
-  // rippleTank,
-  // tesserae,
-  // slitScan,
+  videoFeedback,
+  muybridge,
+  rippleTank,
+  tesserae,
+  slitScan,
   //
   // nucleiOrbit,
   // mengerSponge,
