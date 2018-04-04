@@ -12,9 +12,11 @@ const waveformDraw = ({
   const sliceWidth = canvWidth / bufferLength;
   let x = 0;
 
+  const hue = (dataArray[0] / 255) * 360;
+  canvasCtx.strokeStyle = 'hsl('+ hue +',80%,50%)';
+
   for(let i = 0; i < bufferLength; i++){
     const da = dataArray[i] / 255;
-    canvasCtx.strokeStyle = 'hsl('+ da*360 +',80%,70%)';
     const y = canvHeight/2 - (da * (canvHeight/2));
 
     if(i===0){
@@ -34,5 +36,5 @@ export default {
   type: 'shape',
   renderer: 'html',
   description: 'Waveform for testing and calibrating audio',
-  thumbImg: 'https://c2.staticflickr.com/4/3900/14784363445_fc54b8cb85_q.jpg'
+  thumbImg: 'oscil_thumb_waveform.jpg'
 }

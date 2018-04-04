@@ -204,7 +204,7 @@ export default {
   renderer: 'html',
   frameRate: 30,
   description: 'Attraction patterns reminiscent of Chladni figures',
-  thumbImg: 'https://c1.staticflickr.com/3/2936/14764020945_8929458f57_q.jpg',
+  thumbImg: 'oscil_thumb_chladniplate.jpg',
   settings: {
     nodeDamping: {
       active: 10,

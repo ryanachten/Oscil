@@ -132,5 +132,5 @@ const draw = ({
       },
     },
     description: 'Graph of a system of parametric equations',
-    thumbImg: 'https://c1.staticflickr.com/1/565/20667874262_8e2d59381d_q.jpg'
+    thumbImg: 'oscil_thumb_lissajousfigure.jpg'
   };

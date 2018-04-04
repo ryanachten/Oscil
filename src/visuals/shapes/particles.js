@@ -103,5 +103,5 @@ export default {
     }
   },
   description: 'Reactive particle system',
-  thumbImg: 'https://c1.staticflickr.com/1/501/20506686861_c48dddabac_q.jpg'
+  thumbImg: 'oscil_thumb_particles.jpg'
 };

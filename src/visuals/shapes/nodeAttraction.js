@@ -214,7 +214,7 @@ export default {
   renderer: 'html',
   frameRate: 10,
   description: 'Randomly moving magnetic attraction / repulsion',
-  thumbImg: 'https://c2.staticflickr.com/4/3890/14587030670_727b688651_q.jpg',
+  thumbImg: 'oscil_thumb_nodeattraction.jpg',
   settings: {
     nodeDamping: {
       active: 40,

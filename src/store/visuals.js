@@ -33,17 +33,17 @@ import terrainGen from '../visuals/three/terrainGen';
 
 
 const visuals = {
-  // waveform,
+  waveform,
   barGraph,
-  // gradient,
-  // particles,
-  // brownianTree,
-  // concretePoetry,
-  // lissajousFigure,
-  // lissajousWebs,
-  // nodeAttraction,
-  // chladniPlate,
-  // julia8bit,
+  gradient,
+  particles,
+  brownianTree,
+  concretePoetry,
+  lissajousFigure,
+  lissajousWebs,
+  nodeAttraction,
+  chladniPlate,
+  julia8bit,
   //
   // refract,
   // macroblocks,
