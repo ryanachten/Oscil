@@ -33,34 +33,34 @@ import terrainGen from '../visuals/three/terrainGen';
 
 
 const visuals = {
-  waveform,
+  // waveform,
   barGraph,
-  gradient,
-  particles,
-  brownianTree,
-  concretePoetry,
-  lissajousFigure,
-  lissajousWebs,
-  nodeAttraction,
-  chladniPlate,
-  julia8bit,
-
-  refract,
-  macroblocks,
-  repeatPix,
-  imgShuffle,
-  pointillism,
-
-  videoFeedback,
-  muybridge,
-  rippleTank,
-  tesserae,
-  slitScan,
-
-  nucleiOrbit,
-  mengerSponge,
-  superShapes,
-  terrainGen
+  // gradient,
+  // particles,
+  // brownianTree,
+  // concretePoetry,
+  // lissajousFigure,
+  // lissajousWebs,
+  // nodeAttraction,
+  // chladniPlate,
+  // julia8bit,
+  //
+  // refract,
+  // macroblocks,
+  // repeatPix,
+  // imgShuffle,
+  // pointillism,
+  //
+  // videoFeedback,
+  // muybridge,
+  // rippleTank,
+  // tesserae,
+  // slitScan,
+  //
+  // nucleiOrbit,
+  // mengerSponge,
+  // superShapes,
+  // terrainGen
 };
 
 export default visuals;

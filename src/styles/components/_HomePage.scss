@@ -13,12 +13,14 @@
   text-decoration: none;
 }
 .thumbnail--background{
-  height: 100%;
-  text-align: center;
   // Align content at bottom of thumb:
-  display: flex;
   align-items: flex-end;
+  background-position: center;
+  background-size: cover;
+  height: 100%;
+  display: flex;
   justify-content: center;
+  text-align: center;
 }
 .thumbnail--info{
   background: $background-colour;

@@ -53,7 +53,7 @@ class VisualSelection extends React.Component{
                      return(
                        <Link key={visual} to={`/${visual}`}
                        className="visselect--thumbitem"
-                       style={{backgroundImage: `url(${currentVis.thumbImg})`}}>
+                       style={{backgroundImage: `url('/img/thumbs/${currentVis.thumbImg}')`}}>
                           <h3>{visual}</h3>
                        </Link>
                      )

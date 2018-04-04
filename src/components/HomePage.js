@@ -19,11 +19,12 @@ class HomePage extends React.Component{
         <div className="thumbnail--grid">
           { Object.keys(visuals).map((visual) => {
             const currentVis = visuals[visual];
-
             return(
               <Link className="thumbnail--item" key={visual} to={`/${visual}`}>
                 <div className="thumbnail--background"
-                  style={{backgroundImage: `url(${currentVis.thumbImg})`}}>
+                  style={{backgroundImage:
+                    `url('/img/thumbs/${currentVis.thumbImg}')`
+                  }}>
                   <div className="thumbnail--info">
                     <h3 className="thumbnail--title">{visual[0].toUpperCase() + visual.slice(1)}</h3>
                     <p>{currentVis.description}</p>
