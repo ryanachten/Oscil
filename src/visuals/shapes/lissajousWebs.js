@@ -90,7 +90,7 @@ export default {
   renderer: 'html',
   frameRate: 10,
   description: 'Webs plotted from multiple lissajous points',
-  thumbImg: 'oscil_thumb_lissajouswebs.jpg',
+  thumbImg: 'shapes/oscil_thumb_lissajouswebs.jpg',
   settings: {
     freqX: {
       active: 7,

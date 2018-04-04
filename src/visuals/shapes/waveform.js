@@ -36,5 +36,5 @@ export default {
   type: 'shape',
   renderer: 'html',
   description: 'Waveform for testing and calibrating audio',
-  thumbImg: 'oscil_thumb_waveform.jpg'
+  thumbImg: 'shapes/oscil_thumb_waveform.jpg'
 }

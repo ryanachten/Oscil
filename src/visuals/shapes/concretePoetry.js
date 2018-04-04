@@ -111,7 +111,7 @@ export default {
   type: 'shape',
   renderer: 'html',
   description: 'Paragraph typewriter effect looped continuously',
-  thumbImg: 'oscil_thumb_concretepoetry.jpg',
+  thumbImg: 'shapes/oscil_thumb_concretepoetry.jpg',
   frameRate: 30,
   settings: {
     textInput : {

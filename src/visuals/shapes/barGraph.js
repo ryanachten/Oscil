@@ -28,5 +28,5 @@ export default {
   type: 'shape',
 	renderer: 'html',
   // thumbImg: 'https://c1.staticflickr.com/3/2912/14763226235_c97c9a4aba_q.jpg'
-	thumbImg: 'oscil_thumb_bargraph.jpg'
+	thumbImg: 'shapes/oscil_thumb_bargraph.jpg'
 }

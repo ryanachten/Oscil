@@ -93,6 +93,8 @@ const draw = ({
     draw,
     type: 'shape',
     renderer: 'html',
+    description: 'Graph of a system of parametric equations',
+    thumbImg: 'shapes/oscil_thumb_lissajousfigure.jpg',
     frameRate: 15,
     settings: {
       freqX: {
@@ -130,7 +132,5 @@ const draw = ({
         active: false,
         requiresInitOnChange: true
       },
-    },
-    description: 'Graph of a system of parametric equations',
-    thumbImg: 'oscil_thumb_lissajousfigure.jpg'
+    }
   };

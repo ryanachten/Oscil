@@ -37,5 +37,5 @@ export default {
     }
   },
   description: 'Simple linear and radial gradients',
-  thumbImg: 'oscil_thumb_gradient.jpg'
+  thumbImg: 'shapes/oscil_thumb_gradient.jpg'
 }

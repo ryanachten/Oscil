@@ -118,5 +118,5 @@ export default {
     }
   },
   description: 'Mathematical models of dendritic structures',
-  thumbImg: 'oscil_thumb_browniantree.jpg'
+  thumbImg: 'shapes/oscil_thumb_browniantree.jpg'
 };

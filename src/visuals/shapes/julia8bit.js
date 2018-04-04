@@ -81,7 +81,7 @@ export default {
   draw,
   type: 'shape',
   renderer: 'p5',
-  thumbImg: 'oscil_thumb_julia8bit.jpg',
+  thumbImg: 'shapes/oscil_thumb_julia8bit.jpg',
   description: 'Lo-fi representation of the Julia set fractal',
   settings: {
     sampleRes: {
