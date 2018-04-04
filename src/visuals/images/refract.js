@@ -108,5 +108,5 @@ export default {
     }
   },
   description: 'Reflect and rotate into patterns',
-  thumbImg: 'https://c2.staticflickr.com/6/5553/14763710395_b870d547ce_m.jpg'
+  thumbImg: 'images/oscil_thumb_refract.jpg'
 };

@@ -44,13 +44,13 @@ const visuals = {
   nodeAttraction,
   chladniPlate,
   julia8bit,
-  //
-  // refract,
-  // macroblocks,
-  // repeatPix,
-  // imgShuffle,
-  // pointillism,
-  //
+  
+  refract,
+  macroblocks,
+  repeatPix,
+  imgShuffle,
+  pointillism,
+
   videoFeedback,
   muybridge,
   rippleTank,

@@ -159,5 +159,5 @@ export default {
     },
   },
   description: 'Pixels repeated and stretched',
-  thumbImg: 'https://c2.staticflickr.com/4/3863/14577192530_190923db3c_q.jpg'
+  thumbImg: 'images/oscil_thumb_repeatpix.jpg'
 }

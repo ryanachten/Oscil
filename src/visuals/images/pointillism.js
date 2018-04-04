@@ -150,7 +150,7 @@ export default {
   renderer: 'html',
   description: 'Dots of color in patterns to represent an image',
   frameRate: 10,
-  thumbImg: 'https://c2.staticflickr.com/4/3899/14742277911_f79a87222f_q.jpg',
+  thumbImg: 'images/oscil_thumb_pointilism.jpg',
   settings: {
 		drawMode: {
       active: 'ellipse',

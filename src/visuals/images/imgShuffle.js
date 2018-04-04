@@ -176,5 +176,5 @@ export default {
     }
   },
   description: 'Images divided and rearranged',
-  thumbImg: 'https://c2.staticflickr.com/4/3837/14765898692_2bab2ee739_q.jpg'
+  thumbImg: 'images/oscil_thumb_imgshuffle.jpg'
 }
