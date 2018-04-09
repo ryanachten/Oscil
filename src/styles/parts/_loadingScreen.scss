@@ -9,16 +9,14 @@
   width: 100vw;
 }
 .loading__icon{
-  max-width: 300px;
-  min-width: 100px;
-  width: 20vw;
+  width: 200px;
 }
 .loading__title{
   font-family: $type-logo;
-  font-size: 100px;
+  font-size: 80px;
   margin: 10px 0;
 }
 .loading__instruction{
-  font-size: 36px;
+  font-size: 30px;
   font-weight: bold;
 }
