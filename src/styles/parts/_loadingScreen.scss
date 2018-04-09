@@ -1,0 +1,24 @@
+.loading__screen{
+  align-items: center;
+  background-image: linear-gradient(120deg, #fccb90 0%, #d57eeb 100%);
+  color: $main-colour;
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+  width: 100vw;
+}
+.loading__icon{
+  max-width: 300px;
+  min-width: 100px;
+  width: 20vw;
+}
+.loading__title{
+  font-family: $type-logo;
+  font-size: 100px;
+  margin: 10px 0;
+}
+.loading__instruction{
+  font-size: 36px;
+  font-weight: bold;
+}
