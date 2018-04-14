@@ -20,7 +20,7 @@ class VisualSelection extends React.Component{
   }
 
   onTypeChange = (e) => {
-    let newType = e.target.value;
+    let newType = e.target.id;
     this.setState( (prevState) => {
       if (newType === prevState.openPanelType) {
         newType = undefined;
@@ -38,12 +38,11 @@ class VisualSelection extends React.Component{
         {this.state.allTypes.map((type) => {
           return (
             <div key={type.value}>
-              <div className="visselect--info">
+              <div className="visselect--info" onClick={this.onTypeChange}
+                id={type.value}>
                 <div className={`visselect--typeicon ${type.value}`}></div>
                 <h3 className="visselect--title">{type.label}</h3>
-                <button className={type.value === this.state.openPanelType ? "visselect--toggle active" : "visselect--toggle"}
-                  value={type.value}
-                  onClick={this.onTypeChange}></button>
+                <button className={type.value === this.state.openPanelType ? "visselect--toggle active" : "visselect--toggle"}></button>
               </div>
 
               {type.value === this.state.openPanelType && (
