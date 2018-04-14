@@ -1,6 +1,8 @@
+// Calibration visuals
+import waveform from '../visuals/calibrate/waveform';
+import barGraph from '../visuals/calibrate/barGraph';
+
 // Shape visuals
-import waveform from '../visuals/shapes/waveform';
-import barGraph from '../visuals/shapes/barGraph';
 import gradient from '../visuals/shapes/gradient';
 import particles from '../visuals/shapes/particles';
 import brownianTree from '../visuals/shapes/brownianTree';

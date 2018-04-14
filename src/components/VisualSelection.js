@@ -8,8 +8,9 @@ class VisualSelection extends React.Component{
     super(props);
 
     this.state = {
-      openPanelType: this.props.type,
+      openPanelType: 'shape',
       allTypes: [
+        {value: 'calibrate', label: 'Calibration'},
         {value: 'shape', label: 'Shape'},
         {value: 'image', label: 'Image'},
         {value: 'video', label: 'Video'},

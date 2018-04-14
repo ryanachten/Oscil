@@ -33,7 +33,7 @@ const waveformDraw = ({
 
 export default {
   draw: waveformDraw,
-  type: 'shape',
+  type: 'calibrate',
   renderer: 'html',
   description: 'Waveform for testing and calibrating audio',
   thumbImg: 'shapes/oscil_thumb_waveform.jpg'

@@ -11,7 +11,9 @@
   display: inline-block;
   height: 30px;
   width: 30px;
-
+  &.calibrate{
+    background-image: url('../img/icons/oscil_type_calibrate.svg');
+  }
   &.shape{
     background-image: url('../img/icons/oscil_type_shape.svg');
   }

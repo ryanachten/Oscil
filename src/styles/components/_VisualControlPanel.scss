@@ -65,7 +65,9 @@
   height: 25px;
   width: 25px;
   margin-right: 20px;
-
+  &.calibrate{
+    background-image: url('../img/icons/oscil_type_calibrate.svg');
+  }
   &.shape{
     background-image: url('../img/icons/oscil_type_shape.svg');
   }

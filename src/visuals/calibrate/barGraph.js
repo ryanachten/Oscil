@@ -25,7 +25,7 @@ const barGraphDraw = ({
 export default {
   draw: barGraphDraw,
 	description: 'Bargraph for testing and calibrating audio',
-  type: 'shape',
+  type: 'calibrate',
 	renderer: 'html',
   // thumbImg: 'https://c1.staticflickr.com/3/2912/14763226235_c97c9a4aba_q.jpg'
 	thumbImg: 'shapes/oscil_thumb_bargraph.jpg'
