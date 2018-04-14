@@ -28,10 +28,10 @@ class VisualControlPanel extends React.Component{
       activeMenu = 'select';
     }
     if (activeMenu === undefined) {
-      $('#stats-graph').hide();
+      $('#stats-graph').fadeOut();
     }
     else{
-      $('#stats-graph').show();
+      $('#stats-graph').fadeIn();
     }
     this.setState( () => ({activeMenu}));
   };
