@@ -27,6 +27,12 @@ class VisualControlPanel extends React.Component{
     else if ($(clickedButton).hasClass('select')) {
       activeMenu = 'select';
     }
+    if (activeMenu === undefined) {
+      $('#stats-graph').hide();
+    }
+    else{
+      $('#stats-graph').show();
+    }
     this.setState( () => ({activeMenu}));
   };
 
