@@ -24,10 +24,10 @@ class AudioDatGui extends React.Component{
   addSettings(defaultSettings){
     const audioGuiSettings = defaultSettings;
 
-    this.audioGui.add(audioGuiSettings, 'fftsize', [256]).onChange(
-      () => {
-        this.updateAudioSettings(audioGuiSettings)
-      });
+    // this.audioGui.add(audioGuiSettings, 'fftsize', [256]).onChange(
+    //   () => {
+    //     this.updateAudioSettings(audioGuiSettings)
+    //   });
 
     this.audioGui.add(audioGuiSettings, 'minDb').min(-150).max(-50).onChange(
       ()=> {
