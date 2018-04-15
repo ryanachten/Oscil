@@ -64,8 +64,10 @@ class VisualControlPanel extends React.Component{
 
             <h1 className="viscontrol--vistitle">{this.props.title}</h1>
             <hr />
-            <div className={`viscontrol--typeicon ${this.props.type}`}></div>
-            <div className={`viscontrol--renderericon ${this.props.renderer}`}></div>
+            <div className="viscontrol--infoicons">
+              <div className={`viscontrol--typeicon ${this.props.type}`}></div>
+              <div className={`viscontrol--renderericon ${this.props.renderer}`}></div>
+            </div>
             <p>{this.props.description}</p>
 
             { this.props.settings && (
