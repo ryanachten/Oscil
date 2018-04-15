@@ -19,6 +19,7 @@ const init = ({canvasCtx, visualSettings, canvWidth, canvHeight}) => {
     this.radius = Math.random()*(partMaxSize-partMinSize);
     this.hue = 360/count * (Math.random()*(count-1));
     this.colour = 'hsl(' + this.hue + ', 70%, 70%)';
+    this.colour2 = 'hsl(' + (360-this.hue) + ', 70%, 70%)';
     this.x = Math.random()*canvWidth;
     this.y = Math.random()*canvHeight;
 
@@ -63,14 +64,14 @@ const draw = ({
         if (da !== 0){
           p.hue = p.hue + 1;
           p.colour = 'hsl(' + p.hue + ', 70%, 70%)';
-
+          p.colour2 = 'hsl(' + (360 - p.hue) + ', 70%, 70%)';
           p.x += p.vx;
           p.y += p.vy;
         }
 
-        grad.addColorStop(0, 'white');
-        grad.addColorStop(0.4, p.colour);
-        grad.addColorStop(0.4, 'white');
+        grad.addColorStop(0, p.colour2);
+        // grad.addColorStop(0.4, p.colour);
+        // grad.addColorStop(0.4, 'white');
         grad.addColorStop(1, p.colour);
 
         canvasCtx.fillStyle = grad;
