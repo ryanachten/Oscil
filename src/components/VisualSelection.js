@@ -8,7 +8,7 @@ class VisualSelection extends React.Component{
     super(props);
 
     this.state = {
-      openPanelType: 'shape',
+      openPanelType: this.props.type,
       allTypes: [
         {value: 'calibrate', label: 'Calibration'},
         {value: 'shape', label: 'Shape'},
@@ -40,9 +40,9 @@ class VisualSelection extends React.Component{
             <div key={type.value}>
               <div className="visselect--info" onClick={this.onTypeChange}
                 id={type.value}>
-                <div className={`visselect--typeicon ${type.value}`}></div>
-                <h3 className="visselect--title">{type.label}</h3>
-                <button className={type.value === this.state.openPanelType ? "visselect--toggle active" : "visselect--toggle"}></button>
+                <div id={type.value} className={`visselect--typeicon ${type.value}`}></div>
+                <h3 id={type.value} className="visselect--title">{type.label}</h3>
+                <button id={type.value} className={type.value === this.state.openPanelType ? "visselect--toggle active" : "visselect--toggle"}></button>
               </div>
 
               {type.value === this.state.openPanelType && (
