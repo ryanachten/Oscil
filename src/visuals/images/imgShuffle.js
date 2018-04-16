@@ -142,7 +142,7 @@ export default {
   settings: {
     imgUrl: {
       active: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Various_Cactaceae.jpg/800px-Various_Cactaceae.jpg',
-      requiresInitOnChange: true,
+      requiresInitOnChange: true
     },
     tileCount: {
       active: 25,

@@ -24,10 +24,8 @@ const init = ({
     document.getElementById('HtmlCanvas').appendChild(canvas2);
     canvas2.style.display = 'none';
 
-    let imgUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Various_Cactaceae.jpg/800px-Various_Cactaceae.jpg';
-    imgUrl += ('?' + new Date().getTime());
     const img = new Image();
-    img.src = imgUrl;
+    img.src = visualSettings.imgUrl.active + ('?' + new Date().getTime());
     img.width = canv2Width;
     img.height = canv2Height;
     img.setAttribute('crossOrigin', '');
@@ -42,7 +40,7 @@ const init = ({
 
       const shapeDataAr = [];
 
-      const sampleCount = visualSettings.sampleSize.active;
+      const sampleCount = Math.round(visualSettings.sampleSize.active);
       const maxSize = visualSettings.maxSize.active;
       const minSize = 0;
 
@@ -51,7 +49,7 @@ const init = ({
           imgData = canvas2Ctx.getImageData(i,j, 1,1);
           const data = imgData.data;
           const avg = (data[0] + data[1] + data[2])/3;
-          const size = (avg/255)*maxSize+minSize;
+          const size = (avg/255);
 
           const shapeData = {	r: data[0],	g: data[1], b: data[2],
                     avg: avg,
@@ -97,7 +95,7 @@ const draw = ({
 
 	const da = dataArray[0];
 
-	let sizeRand;
+	let sizeRand = 0;
 	if(!randPerPixel){
 		sizeRand = Math.floor(Math.random()*(da/randMax)+(da/randMax)/2);
 	}
@@ -115,7 +113,7 @@ const draw = ({
 		if(randPerPixel){
 			sizeRand = Math.floor(Math.random()*(da/randMax)+(da/randMax)/2);
 		}
-		const tempSize = shapeDataAr[i].size + sizeRand;
+		const tempSize = (shapeDataAr[i].size * visualSettings.maxSize.active) + sizeRand;
 
 		canvasCtx.beginPath();
 		canvasCtx.arc(shapeDataAr[i].x+(tempSize),shapeDataAr[i].y+(tempSize),tempSize, 0, Math.PI*2);
@@ -128,7 +126,7 @@ const draw = ({
 		if(randPerPixel){
 			sizeRand = Math.floor(Math.random()*(da/randMax)+(da/randMax)/2);
 		}
-		const tempSize = shapeDataAr[i].size + sizeRand;
+		const tempSize = (shapeDataAr[i].size * visualSettings.maxSize.active) + sizeRand;
 		canvasCtx.lineWidth = tempSize;
 		canvasCtx.beginPath();
 		canvasCtx.moveTo(shapeDataAr[i].x,shapeDataAr[i].y);
@@ -152,6 +150,10 @@ export default {
   frameRate: 10,
   thumbImg: 'images/oscil_thumb_pointilism.jpg',
   settings: {
+    imgUrl: {
+      active: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Various_Cactaceae.jpg/800px-Various_Cactaceae.jpg',
+      requiresInitOnChange: true
+    },
 		drawMode: {
       active: 'ellipse',
       options: ['ellipse', 'line']
@@ -168,7 +170,7 @@ export default {
 		maxSize: {
       active: 5,
       min: 2,
-      max: 30
+      max: 100
     },
 		maxRandomSize: {
       active: 20,
