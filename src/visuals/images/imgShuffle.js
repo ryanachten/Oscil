@@ -10,30 +10,30 @@ const init = ({
 		canvasCtx.fillStyle = bgColour;
 		canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
-		const tileCount = 10; //add to GUI
-		if(visualSettings.drawMode.active === 'random'){
-			imgMode = 'random';
-		}else if(visualSettings.drawMode.active === 'move'){
-			imgMode = 'move';
-		}
+		const tileCount = Math.round(visualSettings.tileCount.active);
 
 		tileCoords = [];
 		initialised = false;
 		counter = 0;
 
-		const img = new Image();
-		img.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Various_Cactaceae.jpg/800px-Various_Cactaceae.jpg';
-		img.setAttribute('crossOrigin', '');
+    // make sure image url contains correct extension
+    if (visualSettings.imgUrl.active.match(/\.(jpeg|jpg|gif|png)$/) != null) {
+  		const img = new Image();
+  		img.src = visualSettings.imgUrl.active;
+  		img.setAttribute('crossOrigin', '');
 
-    const ownSettings = {
-      img, imgMode,
-      counter, initialised, tileCoords,
-      tileCount
+      const ownSettings = {
+        img, imgMode,
+        counter, initialised, tileCoords,
+        tileCount
+      }
+
+  		img.onload = function(){
+  			resolve(ownSettings);
+  		}
+    }else{
+      console.log('Image does not have correct extension');
     }
-
-		img.onload = function(){
-			resolve(ownSettings);
-		}
   });
 };
 
@@ -52,7 +52,7 @@ const draw = ({
     tileCount
   } = ownSettings;
 
-  const subDivisionLevel = (visualSettings.subdivisions.active/10)*100;
+  const subDivisionLevel = (visualSettings.friction.active/10)*100;
   // console.log(sumDivisionLevel);
 
 	canvasCtx.clearRect(0,0,canvWidth, canvHeight);
@@ -67,30 +67,6 @@ const draw = ({
       moveTileImg();
     }
   }
-
-	function randomTileImg(){
-
-		var maxTileCount = Math.floor(da/subDivisionLevel+4);
-		var minTileCount = Math.floor((da/subDivisionLevel)/2+4);
-		const tileCount = Math.floor((Math.random()*maxTileCount)+minTileCount);
-
-		for (var i = 0; i < tileCount; i++) {
-			for (var j = 0; j < tileCount; j++){
-
-				var imgWidth = canvWidth/tileCount;
-				var imgHeight = canvHeight/tileCount;
-
-				var randClipX = Math.floor(Math.random()*(img.width-imgWidth));
-				var randClipY = Math.floor(Math.random()*(img.height-imgHeight));
-
-				canvasCtx.drawImage(img, 	randClipX, randClipY, //clip pos
-											imgWidth, imgHeight, //clip size
-											imgWidth*i, imgHeight*j, //place pos
-											imgWidth, imgHeight); //place size
-
-			}
-		}
-	}
 
 	function moveTileImg(){
 
@@ -164,15 +140,20 @@ export default {
   type: 'image',
   renderer: 'html',
   settings: {
-    drawMode: {
-        active: 'move',
-        options: ['random', 'move'],
-        requiresInitOnChange: true
+    imgUrl: {
+      active: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Various_Cactaceae.jpg/800px-Various_Cactaceae.jpg',
+      requiresInitOnChange: true,
     },
-    subdivisions: {
+    tileCount: {
+      active: 25,
+      min: 2,
+      max: 50,
+      requiresInitOnChange: true
+    },
+    friction: {
       active: 5,
       min: 1,
-      max: 10,
+      max: 50,
     }
   },
   description: 'Images divided and rearranged',
