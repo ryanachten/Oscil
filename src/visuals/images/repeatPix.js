@@ -7,7 +7,7 @@ const init = ({canvasCtx, visualSettings, canvWidth, canvHeight}) => {
 		const {offsetY, offsetX} = offsetRand(canvWidth, canvHeight);
 
     const img = new Image();
-    img.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Various_Cactaceae.jpg/800px-Various_Cactaceae.jpg' + '?' + new Date().getTime();
+    img.src = visualSettings.imgUrl.active + ('?' + new Date().getTime());
     img.setAttribute('crossOrigin', '');
 
     const ownSettings = {
@@ -16,8 +16,9 @@ const init = ({canvasCtx, visualSettings, canvWidth, canvHeight}) => {
       offsetSampleRate,
       frameCount: 0
     };
-
+    img.onerror = () => {}
     img.onload = function(){
+      console.log(img.height);
       resolve(ownSettings);
     };
   });
@@ -51,23 +52,15 @@ const draw = ({
 
   const imgdata = canvasCtx.getImageData(0,0, canvWidth, canvHeight);
   const data = imgdata.data;
-  const modWidth = visualSettings.modifyWidth.active;
+  const modSize = visualSettings.modifySize.active;
 
   for(let i = 0; i < bufferLength; i+=50) {
 
     const da = dataArray[i];
-    const da2 = dataArray[i+10];
-    const da3 = dataArray[i+20];
-    let logda, logda2, logda3;
 
+    let logda;
     if (da !== 0){
       logda = Math.floor(Math.log(da) / Math.log(1.05));
-    }
-    if (da2 !== 0){
-      logda2 = Math.floor(Math.log(da2) / Math.log(1.1));
-    }
-    if (da3 !== 0){
-      logda3 = Math.floor(Math.log(da3) / Math.log(1.5));
     }
 
     function repeatY(){
@@ -82,12 +75,14 @@ const draw = ({
           }
         }
 
-      let sampleHeight;
-        if(isNaN(logda2) || logda2 == 0 || !modWidth){
-          sampleHeight = 1;
-        }else{
-          sampleHeight = Math.abs(logda2);
+      let sampleHeight  = 1;
+      if(modSize && !isNaN(da) && da > 0){
+        const sampleSize = (visualSettings.sampleSize.active/100) * canvHeight;
+        sampleHeight = Math.ceil((da/255) * sampleSize);
+        if (sampleY + sampleHeight > canvHeight) {
+          sampleY = canvHeight - sampleHeight;
         }
+      }
 
       const frstRow = canvasCtx.getImageData(0,sampleY, canvWidth, sampleHeight);
       canvasCtx.clearRect(0,0, canvWidth, canvHeight);
@@ -109,12 +104,14 @@ const draw = ({
           }
         }
 
-      let sampleWidth;
-        if(isNaN(logda2) || logda2 == 0 || !modWidth){
-          sampleWidth = 1;
-        }else{
-          sampleWidth = Math.abs(logda2);
+      let sampleWidth = 1;
+      if(modSize && !isNaN(da) && da > 0){
+        const sampleSize = (visualSettings.sampleSize.active/100) * canvWidth;
+        sampleWidth = Math.ceil((da/255) * sampleSize);
+        if (sampleX + sampleWidth > canvHeight) {
+          sampleX = canvWidth - sampleWidth;
         }
+      }
 
       const frstCol = canvasCtx.getImageData(sampleX,0, sampleWidth, canvHeight);
       canvasCtx.clearRect(0,0, canvWidth, canvHeight);
@@ -149,9 +146,19 @@ export default {
   draw,
   type: 'image',
   renderer: 'html',
+  frameRate: 15,
   settings:{
-    modifyWidth: {
+    imgUrl: {
+      active: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Haeckel_Actiniae.jpg/800px-Haeckel_Actiniae.jpg',
+      requiresInitOnChange: true
+    },
+    modifySize: {
       active: false
+    },
+    sampleSize: {
+      active: 50,
+      min: 1,
+      max: 90
     },
     sampleMode: {
       active: 'vertical',
