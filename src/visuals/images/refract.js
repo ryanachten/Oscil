@@ -10,7 +10,7 @@ const init = ({
     canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
     const img = new Image();
-    img.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Various_Cactaceae.jpg/800px-Various_Cactaceae.jpg' + '?' + new Date().getTime();
+    img.src = visualSettings.imgUrl.active + ('?' + new Date().getTime());
     img.setAttribute('crossOrigin', '');
 
     img.onerror = () => {
@@ -100,7 +100,12 @@ export default {
   draw,
   type: 'image',
   renderer: 'html',
+  frameRate: 15,
   settings: {
+    imgUrl: {
+      active: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Haeckel_Actiniae.jpg/800px-Haeckel_Actiniae.jpg',
+      requiresInitOnChange: true
+    },
     maxImgSize: {
       active: 20,
       min: 6,
