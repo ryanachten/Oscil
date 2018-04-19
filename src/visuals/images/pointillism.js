@@ -24,47 +24,50 @@ const init = ({
     document.getElementById('HtmlCanvas').appendChild(canvas2);
     canvas2.style.display = 'none';
 
-    const img = new Image();
-    img.src = visualSettings.imgUrl.active + ('?' + new Date().getTime());
-    img.width = canv2Width;
-    img.height = canv2Height;
-    img.setAttribute('crossOrigin', '');
+    if (visualSettings.imgUrl.active.match(/\.(jpeg|jpg|gif|png)$/) != null) {
+      const img = new Image();
+      img.src = visualSettings.imgUrl.active + ('?' + new Date().getTime());
+      img.width = canv2Width;
+      img.height = canv2Height;
+      img.setAttribute('crossOrigin', '');
 
-    let imgData, data;
-    img.onload = function(){
-      canvas2Ctx.drawImage(img, 0,0, canvWidth,canvHeight);
+      let imgData, data;
+      img.onload = function(){
+        canvas2Ctx.drawImage(img, 0,0, canvWidth,canvHeight);
 
-      canvasCtx.clearRect(0,0, canvWidth, canvHeight);
-      canvasCtx.fillStyle = bgColour;
-      canvasCtx.fillRect(0,0, canvWidth, canvHeight);
+        canvasCtx.clearRect(0,0, canvWidth, canvHeight);
+        canvasCtx.fillStyle = bgColour;
+        canvasCtx.fillRect(0,0, canvWidth, canvHeight);
 
-      const shapeDataAr = [];
+        const shapeDataAr = [];
 
-      const sampleCount = Math.round(visualSettings.sampleSize.active);
-      const maxSize = visualSettings.maxSize.active;
-      const minSize = 0;
+        const sampleCount = Math.round(visualSettings.sampleSize.active);
+        const maxSize = visualSettings.maxSize.active;
+        const minSize = 0;
 
-      for (let i = 0; i < canvWidth; i+=sampleCount) {
-        for (let j = 0; j < canvHeight; j+=sampleCount) {
-          imgData = canvas2Ctx.getImageData(i,j, 1,1);
-          const data = imgData.data;
-          const avg = (data[0] + data[1] + data[2])/3;
-          const size = (avg/255);
+        for (let i = 0; i < canvWidth; i+=sampleCount) {
+          for (let j = 0; j < canvHeight; j+=sampleCount) {
+            imgData = canvas2Ctx.getImageData(i,j, 1,1);
+            const data = imgData.data;
+            const avg = (data[0] + data[1] + data[2])/3;
+            const size = (avg/255);
 
-          const shapeData = {	r: data[0],	g: data[1], b: data[2],
-                    avg: avg,
-                    size: size,
-                    x: i, y: j
+            const shapeData = {	r: data[0],	g: data[1], b: data[2],
+                      avg: avg,
+                      size: size,
+                      x: i, y: j
+            }
+            shapeDataAr.push(shapeData);
           }
-          shapeDataAr.push(shapeData);
         }
-      }
 
-      const ownSettings = {
-        shapeDataAr
+        const ownSettings = {
+          shapeDataAr
+        }
+        resolve(ownSettings);
       }
-      resolve(ownSettings);
     }
+
   });
 };
 
@@ -151,7 +154,7 @@ export default {
   thumbImg: 'images/oscil_thumb_pointilism.jpg',
   settings: {
     imgUrl: {
-      active: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Various_Cactaceae.jpg/800px-Various_Cactaceae.jpg',
+      active: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Haeckel_Siphonophorae.jpg/734px-Haeckel_Siphonophorae.jpg',
       requiresInitOnChange: true
     },
 		drawMode: {
