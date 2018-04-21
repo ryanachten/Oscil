@@ -6,19 +6,14 @@ import barGraph from '../visuals/calibrate/barGraph';
 import gradient from '../visuals/shapes/gradient';
 import particles from '../visuals/shapes/particles';
 import brownianTree from '../visuals/shapes/brownianTree';
-import concretePoetry from '../visuals/shapes/concretePoetry';
-import lissajousFigure from '../visuals/shapes/lissajousFigure';
 import lissajousWebs from '../visuals/shapes/lissajousWebs';
 import nodeAttraction from '../visuals/shapes/nodeAttraction';
 import chladniPlate from '../visuals/shapes/chladniPlate';
-import julia8bit from '../visuals/shapes/julia8bit';
 
 // Image visuals
 import refract from '../visuals/images/refract';
-import macroblocks from '../visuals/images/macroblocks';
 import repeatPix from '../visuals/images/repeatPix';
 import imgShuffle from '../visuals/images/imgShuffle';
-import pointillism from '../visuals/images/pointillism';
 
 // Video visuals
 import videoFeedback from '../visuals/video/videoFeedback';
@@ -40,18 +35,13 @@ const visuals = {
   gradient,
   particles,
   brownianTree,
-  // concretePoetry,
-  // lissajousFigure,
   lissajousWebs,
   nodeAttraction,
   chladniPlate,
-  // julia8bit,
 
   refract,
-  // macroblocks,
   repeatPix,
   imgShuffle,
-  // pointillism,
 
   videoFeedback,
   muybridge,
