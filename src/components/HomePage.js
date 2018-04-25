@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import $ from 'jquery';
 
 import Header from './Header';
 import visuals from '../store/visuals';
@@ -10,6 +11,18 @@ class HomePage extends React.Component{
 
   componentWillMount(){
     this.props.dispatch(unsetVisual());
+    let bgImgs = {};
+    Object.keys(visuals).map((visual) => {
+      const currentImg = visuals[visual].thumbImg;
+      const img = new Image();
+      img.src = `/img/thumbs/${currentImg}`;
+      img.onload = () => {
+        bgImgs[visual] = img;
+        if (Object.keys(bgImgs).length === Object.keys(visuals).length) {
+          $(`.thumbnail--item`).fadeIn();
+        }
+      };
+    });
   }
 
   render(){
@@ -20,7 +33,7 @@ class HomePage extends React.Component{
           { Object.keys(visuals).map((visual) => {
             const currentVis = visuals[visual];
             return(
-              <Link className="thumbnail--item" key={visual} to={`/${visual}`}>
+              <Link className={`thumbnail--item ${visual}`} key={visual} to={`/${visual}`}>
                 <div className="thumbnail--background"
                   style={{backgroundImage:
                     `url('/img/thumbs/${currentVis.thumbImg}')`
