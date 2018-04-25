@@ -6,6 +6,8 @@
 ## Overview
 Oscil is an audio-visual web application which takes audio information via a user’s microphone input and uses the resulting waveform to drive various visualisations. These visualisations are intended to be used in both a performance context or simply to accompany leisurely playing of music.
 
+![Oscil Landing Page](https://mir-s3-cdn-cf.behance.net/project_modules/fs/6ef6c264019463.5ad99b8e47190.jpg)
+
 ## Dependencies
 Oscil was originally developed as a static site using plain old JavaScript. Where the previous static site required bloated boilerplates and was unreliably slow when switching visual libraries, the decision to adopt libraries such as React and the Webpack bundler has helped not only increase the application’s performance but also its maintainability.
 
@@ -37,4 +39,14 @@ In addition to their ‘renderer’, the visuals are also categorised by their a
 
 ![Different Types of Visuals](https://mir-s3-cdn-cf.behance.net/project_modules/fs/1d54db64019463.5ada7cb98c586.png)
 
-![Oscil Visuals](https://mir-s3-cdn-cf.behance.net/project_modules/fs/f9ec3964019463.5adab259e7010.jpg)
+#### Shape Visuals
+![Shape Visuals](https://mir-s3-cdn-cf.behance.net/project_modules/fs/0a282164019463.5ad9a680de0fc.jpg)
+
+#### Image Visuals
+![Image Visuals](https://mir-s3-cdn-cf.behance.net/project_modules/fs/12005264019463.5ad99b8e47c21.jpg)
+
+#### Video Visuals
+![Video Visuals](https://mir-s3-cdn-cf.behance.net/project_modules/fs/fdf89d64019463.5ad99b8e4940a.jpg)
+
+#### 3D Visuals
+![3D Visuals](https://mir-s3-cdn-cf.behance.net/project_modules/fs/d422a964019463.5adab2b98f9bb.jpg)
