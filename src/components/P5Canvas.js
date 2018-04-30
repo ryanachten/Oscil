@@ -68,6 +68,9 @@ class P5Canvas extends React.Component{
     }).catch( (reason) => {
         // Do something
         console.log(reason);
+        this.setState( () => (
+          { error: reason }
+        ));
       }
     );
   }
@@ -122,11 +125,22 @@ class P5Canvas extends React.Component{
 
   render(){
     return(
-      <div
-        id="P5Canvas"
-        width={this.state.canvWidth}
-        height={this.state.canvHeight}
-        ref={(container) => {this.container = container}}></div>
+      <div>
+        { this.state.error && (
+          <div className="error__container">
+            <div className="error__message">
+              <h1>Mate... something went wrong:</h1>
+              <h2>{this.state.error}</h2>
+            </div>
+          </div>
+        ) }
+        <div
+          id="P5Canvas"
+          width={this.state.canvWidth}
+          height={this.state.canvHeight}
+          ref={(container) => {this.container = container}}>
+        </div>
+      </div>
     );
   }
 }

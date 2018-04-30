@@ -54,6 +54,9 @@ class ThreeCanvas extends React.Component{
     }).catch( (reason) => {
         // Do something
         console.log(reason);
+        this.setState( () => (
+          { error: reason }
+        ));
       }
     );
   }
@@ -117,11 +120,21 @@ class ThreeCanvas extends React.Component{
 
   render(){
     return(
-      <div
-        id="ThreeCanvas"
-        width={this.state.canvWidth}
-        height={this.state.canvHeight}
-        ref={(canvas) => {this.canvas = canvas}}>
+      <div>
+        { this.state.error && (
+          <div className="error__container">
+            <div className="error__message">
+              <h1>Mate... something went wrong:</h1>
+              <h2>{this.state.error}</h2>
+            </div>
+          </div>
+        ) }
+        <div
+          id="ThreeCanvas"
+          width={this.state.canvWidth}
+          height={this.state.canvHeight}
+          ref={(canvas) => {this.canvas = canvas}}>
+        </div>
       </div>
     );
   }

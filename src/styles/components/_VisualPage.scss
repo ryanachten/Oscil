@@ -1,8 +1,24 @@
 #visualPage--overlay{
   position: absolute;
+  z-index: 2;
 }
 
 body.visual-page{
   background-color: #ede6e0;
   overflow: hidden;
+}
+
+.error__container{
+  align-items: center;
+  color: #343434;
+  display: flex;
+  flex-flow: row wrap;
+  height: 100vh;
+  justify-content: center;
+  position: absolute;
+  width: 100vw;
+}
+
+.error__message{
+  width: 30%;
 }

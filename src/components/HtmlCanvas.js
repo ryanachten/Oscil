@@ -18,7 +18,8 @@ class HtmlCanvas extends React.Component{
     this.state = {
       canvWidth: undefined,
       canvHeight: undefined,
-      bgColour: this.props.bgColour
+      bgColour: this.props.bgColour,
+      error: undefined
     }
   }
 
@@ -48,6 +49,9 @@ class HtmlCanvas extends React.Component{
     }).catch( (reason) => {
         // Do something
         console.log(reason);
+        this.setState( () => (
+          { error: reason }
+        ));
       }
     );
   }
@@ -125,11 +129,22 @@ class HtmlCanvas extends React.Component{
 
   render(){
     return(
-      <canvas
-        id="HtmlCanvas"
-        width={this.state.canvWidth}
-        height={this.state.canvHeight}
-        ref={(canvas) => {this.canvas = canvas}}></canvas>
+      <div>
+        { this.state.error && (
+          <div className="error__container">
+            <div className="error__message">
+              <h1>Mate... something went wrong:</h1>
+              <h2>{this.state.error}</h2>
+            </div>
+          </div>
+        ) }
+        <canvas
+          id="HtmlCanvas"
+          width={this.state.canvWidth}
+          height={this.state.canvHeight}
+          ref={(canvas) => {this.canvas = canvas}}>
+        </canvas>
+      </div>
     );
   }
 }
