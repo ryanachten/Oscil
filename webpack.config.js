@@ -1,5 +1,6 @@
 const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const CompressionPlugin = require("compression-webpack-plugin")
 
 module.exports = (env) => {
   const isProduction = env === 'production';
@@ -43,7 +44,8 @@ module.exports = (env) => {
   		}]
     },
     plugins: [
-      CSSExtract
+      CSSExtract,
+      new CompressionPlugin({ algorithm: 'gzip' })
     ],
     devtool: isProduction ? 'source-map' : 'inline-source-map',
     devServer: {
