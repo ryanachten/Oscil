@@ -34,7 +34,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 8
-          cache: "yarn"
+          # cache: "yarn"
 
       - name: Setup Pages
         uses: actions/configure-pages@v2
@@ -48,11 +48,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          # Upload entire repository
           path: "./public"
 
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
-        # with:
-        #   publish_dir: public
