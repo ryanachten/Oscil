@@ -34,15 +34,14 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 8
-          # cache: "yarn"
 
       - name: Setup Pages
         uses: actions/configure-pages@v2
 
-      - name: Install 🔧
+      - name: Install
         run: yarn install
 
-      - name: Build 🏗️
+      - name: Build
         run: yarn build:prod
 
       - name: Upload artifact

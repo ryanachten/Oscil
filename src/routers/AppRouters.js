@@ -1,14 +1,14 @@
 import React from "react";
-import { BrowserRouter, Route, Switch, Link, NavLink } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import allVisualData from "../store/visuals";
 
 import HomePage from "../components/HomePage";
 import NotFoundPage from "../components/NotFoundPage";
 import VisualPage from "../components/VisualPage";
 
-const AppRouter = (props) => {
+const AppRouter = () => {
   return (
-    <BrowserRouter basename="Oscil">
+    <BrowserRouter basename={BASE_PATH}>
       <div>
         <Switch>
           <Route path="/" component={HomePage} exact={true} />
